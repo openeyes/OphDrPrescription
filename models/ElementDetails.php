@@ -21,12 +21,13 @@
  * The followings are the available columns in table '':
  * @property string $id
  * @property integer $event_id
+ * @property string $comments
  *
  * The followings are the available model relations:
  * @property Event $event
  */
-class ElementExample extends BaseEventTypeElement
-{
+class ElementDetails extends BaseEventTypeElement {
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return ElementOperation the static model class
@@ -41,7 +42,7 @@ class ElementExample extends BaseEventTypeElement
 	 */
 	public function tableName()
 	{
-		return 'example_element';
+		return 'et_ophdrprescription_details';
 	}
 
 	/**
@@ -52,11 +53,11 @@ class ElementExample extends BaseEventTypeElement
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('event_id', 'safe'),
+			array('event_id, comments', 'safe'),
 			//array('', 'required'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, event_id', 'safe', 'on' => 'search'),
+			array('id, event_id, comments', 'safe', 'on' => 'search'),
 		);
 	}
 	
@@ -98,6 +99,7 @@ class ElementExample extends BaseEventTypeElement
 
 		$criteria->compare('id', $this->id, true);
 		$criteria->compare('event_id', $this->event_id, true);
+		$criteria->compare('comments', $this->comments, true);
 		
 		return new CActiveDataProvider(get_class($this), array(
 			'criteria' => $criteria,
