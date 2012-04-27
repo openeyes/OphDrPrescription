@@ -5,81 +5,81 @@
 	<div id="div_Element_OphDrPrescription_Details_prescription_items"
 		class="eventDetail">
 		<div class="label">Items</div>
-		<?php echo CHtml::dropDownList('drug_id', null, $element->getCommonDrugList(), array('empty' => 'Select a drug')); ?>
+		<?php echo CHtml::dropDownList('common_drug_id', null, $element->getCommonDrugList(), array('empty' => 'Add a drug')); ?>
+		<?php
+		$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+			'name' => 'drug_id',
+			'id' => 'autocomplete_drug_id',
+			'source' => $this->createUrl('DrugList'),
+			'options' => array(
+				'select' => "js:function(event, ui) {
+						addItem(ui.item.value, ui.item.id);
+						$(this).val('');
+						return false;
+					}",
+			),
+			'htmlOptions' => array(),
+		));
+		?>
+		<input type="hidden" name="prescription_items_valid" value="1" />
 		<ul id="prescription_items">
-			<?php foreach($element->items as $item) { ?>
-			<li>
-				<?php echo $item->drug->name; ?>
-				<input type="hidden" name="prescription_item[]" value="<?php echo $item->id?>">
-				<a href="#">Remove</a>
-			</li>
+			<?php foreach($element->items as $key => $item) { ?>
+			<li><?php echo $item->drug->name; ?> <input type="hidden"
+				name="prescription_item[<?php echo $key ?>][id]"
+				value="<?php echo $item->id?>" /> <input type="hidden"
+				name="prescription_item[<?php echo $key ?>][drug_id]"
+				value="<?php echo $item->drug_id?>" /> <a class="removeItem"
+				href="#">Remove</a></li>
 			<?php } ?>
 		</ul>
 	</div>
 	<?php echo $form->textArea($element, 'comments', array('rows' => 4, 'cols' => 60)) ?>
 </div>
+
 <script type="text/javascript">
-$(document).ready(function() {
-	$('#drug_id').unbind('change').bind('change',function() {
+
+	// Initialise item count
+	var item_count = $('#prescription_items > li').length;
+
+	// Disable currently prescribed drugs in dropdown
+	$('#prescription_items input[name$="[drug_id]"]').each(function() {
+		var option = $('#common_drug_id option[value="' + $(this).val() + '"]');
+		if(option) {
+			option.attr("disabled", "disabled");
+		}
+	});
+	
+	$('body').delegate('#common_drug_id', 'change', function() {
 		var selected = $(this).children('option:selected');
-		if (selected.val().length) {
-			var new_item = selected.text() + ' <a href="#">Remove</a>';
-			new_item += '<input type="hidden" name="prescription_item[]" value="'+selected.val()+'">';
-			$('#prescription_items').append('<li>' + new_item + '</li>');
-			selected.remove();
+		if(selected.val().length) {
+			addItem(selected.text(), selected.val());
 			$(this).val('');
 		}
 		return false;
 	});
-});
+
+	// Remove item from prescription
+	$('#prescription_items').delegate('a.removeItem', 'click', function() {
+		var item_id = $(this).parent().children('input[name$="[drug_id]"]').first().val();
+		$(this).parent().remove();
+		var option = $('#common_drug_id option[value="' + item_id + '"]');
+		if (option) {
+			option.removeAttr("disabled");
+		}
+		return false;
+	});
+
+	// Add item to prescription
+	function addItem(label, item_id) {
+		var new_item = label + ' <a class="removeItem" href="#">Remove</a>';
+		new_item += '<input type="hidden" name="prescription_item[' + item_count + '][drug_id]" value="' + item_id + '"/>';
+		$('#prescription_items').append('<li>' + new_item + '</li>');
+		var option = $('#common_drug_id option[value="' + item_id + '"]');
+		if (option) {
+			option.attr("disabled", "disabled");
+		}
+		$(this).val('');
+		item_count++;
+	}
+		
 </script>
-
-<!-- 
-(function($){
-
-    // Initialise multiselect field
-    multiSelectFieldInitialise = function(){
-        var multiSelectField = $(this);
-        var sourceField = $('select', multiSelectField);
-        
-        // Add source, destination and control fields
-        sourceField.addClass('hidden');
-        sourceField.before('<select class="multiselect-unselected" multiple="multiple"></select>');
-        sourceField.before('<div class="multiselect-controls"><p><button class="action multiselect-add">Add &gt;</button></p><p><button class="action multiselect-remove">&lt; Remove</button></p></div>');
-        sourceField.before('<select class="multiselect-selected" multiple="multiple"></select>');
-        
-        // Move unselected items to source copy selected items to dest
-        var selectedField = $('.multiselect-selected', multiSelectField);
-        var unselectedField = $('.multiselect-unselected', multiSelectField);
-        $('option:not(:selected)', sourceField).appendTo(unselectedField);
-        $('option:selected', sourceField).clone().appendTo(selectedField).attr('selected', '');
-        
-        // Configure controls
-        $('.multiselect-add', multiSelectField).click(function(){
-            $('option:selected', unselectedField).appendTo(selectedField).attr('selected', '');
-            $('option', sourceField).remove();
-            sourceField.append($('option', selectedField).clone());
-            $('option', sourceField).attr('selected', 'selected');
-            return false;
-        });
-        $('.multiselect-remove', multiSelectField).click(function(){
-            $('option:selected', selectedField).appendTo(unselectedField).attr('selected', '');
-            $('option', sourceField).remove();
-            sourceField.append($('option', selectedField).clone());
-            $('option', sourceField).attr('selected', 'selected');
-            return false;
-        });
-    }
-    
-    if (typeof $(document).livequery != 'undefined') {
-        $('.multiselect').livequery(multiSelectFieldInitialise);
-    }
-    else {
-        $(document).ready(function(){
-            $('.multiselect').each(multiSelectFieldInitialise);
-        });
-    }
-    
-})(jQuery);
-
- -->

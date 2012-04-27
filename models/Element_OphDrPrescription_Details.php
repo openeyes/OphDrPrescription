@@ -126,5 +126,43 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		}
 		return $ids;
 	}
+
+	/**
+	 * Save prescription items
+	 * @todo This probably doesn't belong here, but there doesn't seem to be an easy way
+	 * of doing it through the controller at the moment
+	 */
+	protected function afterSave() {
+		if(isset($_POST['prescription_items_valid']) && $_POST['prescription_items_valid']) {
+			
+			// Get a list of existing item ids so we can keep track of what's been removed
+			$existing_item_ids = array();
+			foreach($this->items as $item) {
+				$existing_item_ids[$item->id] = $item->id;
+			}
+			
+			// Process (any) posted prescription items
+			$new_items = (isset($_POST['prescription_item'])) ? $_POST['prescription_item'] : array();
+			foreach($new_items as $item) {
+				if(isset($item['id']) && isset($existing_item_ids[$item['id']])) {
+					// Item is being updated
+					$item_model = OphDrPrescription_Item::model()->findByPk($item['id']);
+					unset($existing_item_ids[$item['id']]);
+				} else {
+					// Item is new
+					$item_model = new OphDrPrescription_Item();
+					$item_model->prescription_id = $this->id;
+					$item_model->drug_id = $item['drug_id'];
+				}
+				$item_model->save();
+			}
+
+			// Delete remaining (removed) items
+			OphDrPrescription_Item::model()->deleteByPk(array_values($existing_item_ids));
+			
+		}
+		
+		return parent::afterSave();
+	}	
 	
 }
