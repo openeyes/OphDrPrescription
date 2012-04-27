@@ -3,6 +3,10 @@
 </h4>
 <div class="eventHighlight">
 	<h4>
+		Drugs
+		:
+		<?php var_dump($element->items) ?>
+		<br>
 		<?php echo CHtml::encode($element->getAttributeLabel('comments'))?>
 		:
 		<?php echo $element->comments?>

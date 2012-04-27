@@ -18,46 +18,40 @@
  */
 
 /**
- * The followings are the available columns in table '':
+ * The followings are the available columns in table 'ophdrprescription_item':
  * @property string $id
- * @property integer $event_id
- * @property string $comments
- *
- * The followings are the available model relations:
- * @property Event $event
+ * @property integer $prescription_id
+ * @property string $drug_id
  */
-class ElementDetails extends BaseEventTypeElement {
+class OphDrPrescription_Item extends BaseActiveRecord {
 	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return ElementOperation the static model class
 	 */
-	public static function model($className = __CLASS__)
-	{
+	public static function model($className = __CLASS__) {
 		return parent::model($className);
 	}
 
 	/**
 	 * @return string the associated database table name
 	 */
-	public function tableName()
-	{
-		return 'et_ophdrprescription_details';
+	public function tableName() {
+		return 'ophdrprescription_item';
 	}
 
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
-	{
+	public function rules() {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('event_id, comments', 'safe'),
+			array('prescription_id, drug_id', 'safe'),
 			//array('', 'required'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, event_id, comments', 'safe', 'on' => 'search'),
+			array('id, prescription_id, drug_id', 'safe', 'on' => 'search'),
 		);
 	}
 	
@@ -69,9 +63,8 @@ class ElementDetails extends BaseEventTypeElement {
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'element_type' => array(self::HAS_ONE, 'ElementType', 'id','on' => "element_type.class_name='".get_class($this)."'"),
-			'eventType' => array(self::BELONGS_TO, 'EventType', 'event_type_id'),
-			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
+			'prescription' => array(self::BELONGS_TO, 'Element_OphDrPrescription_Details', 'prescription_id'),
+			'drug' => array(self::BELONGS_TO, 'Drug', 'drug_id'),
 			'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
 			'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
 		);
@@ -98,8 +91,8 @@ class ElementDetails extends BaseEventTypeElement {
 		$criteria = new CDbCriteria;
 
 		$criteria->compare('id', $this->id, true);
-		$criteria->compare('event_id', $this->event_id, true);
-		$criteria->compare('comments', $this->comments, true);
+		$criteria->compare('prescription_id', $this->prescription_id, true);
+		$criteria->compare('drug_id', $this->drug_id, true);
 		
 		return new CActiveDataProvider(get_class($this), array(
 			'criteria' => $criteria,

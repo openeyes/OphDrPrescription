@@ -28,16 +28,16 @@ class m120423_114231_initial_migration_for_ophdrprescription extends CDbMigratio
 		->where('name=:name', array(':name'=>'Prescription'))
 		->queryRow();
 
-		// Create an element for the new event type called ElementDetails
+		// Create an element for the new event type called Element_OphDrPrescription_Details
 		$this->insert('element_type', array(
 				'name' => 'Details',
-				'class_name' => 'ElementDetails',
+				'class_name' => 'Element_OphDrPrescription_Details',
 				'event_type_id' => $event_type['id'],
 				'display_order' => 1,
 				'default' => 1,
 		));
 
-		// Create a table to store the ElementDetails element
+		// Create a table to store the Element_OphDrPrescription_Details
 		$this->createTable('et_ophdrprescription_details', array(
 				'id' => 'int(10) unsigned NOT NULL AUTO_INCREMENT',
 				'event_id' => 'int(10) unsigned NOT NULL',
@@ -55,13 +55,34 @@ class m120423_114231_initial_migration_for_ophdrprescription extends CDbMigratio
 				'CONSTRAINT `et_ophdrprescription_details_last_modified_user_id_fk` FOREIGN KEY (`last_modified_user_id`) REFERENCES `user` (`id`)',
 		), 'ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin');
 
+			// Create a table to store the prescription items
+		$this->createTable('ophdrprescription_item', array(
+				'id' => 'int(10) unsigned NOT NULL AUTO_INCREMENT',
+				'prescription_id' => 'int(10) unsigned NOT NULL',
+				'drug_id' => 'int(10) unsigned NOT NULL',
+				'last_modified_user_id' => 'int(10) unsigned NOT NULL DEFAULT 1',
+				'last_modified_date' => 'datetime NOT NULL DEFAULT \'1901-01-01 00:00:00\'',
+				'created_user_id' => 'int(10) unsigned NOT NULL DEFAULT 1',
+				'created_date' => 'datetime NOT NULL DEFAULT \'1901-01-01 00:00:00\'',
+				'PRIMARY KEY (`id`)',
+				'KEY `ophdrprescription_details_prescription_id_fk` (`prescription_id`)',
+				'KEY `ophdrprescription_details_drug_id_fk` (`drug_id`)',
+				'KEY `ophdrprescription_details_created_user_id_fk` (`created_user_id`)',
+				'KEY `ophdrprescription_details_last_modified_user_id_fk` (`last_modified_user_id`)',
+				'CONSTRAINT `ophdrprescription_details_prescription_id_fk` FOREIGN KEY (`prescription_id`) REFERENCES `et_ophdrprescription_details` (`id`)',
+				'CONSTRAINT `ophdrprescription_details_drug_id_fk` FOREIGN KEY (`drug_id`) REFERENCES `drug` (`id`)',
+				'CONSTRAINT `ophdrprescription_details_created_user_id_fk` FOREIGN KEY (`created_user_id`) REFERENCES `user` (`id`)',
+				'CONSTRAINT `ophdrprescription_details_last_modified_user_id_fk` FOREIGN KEY (`last_modified_user_id`) REFERENCES `user` (`id`)',
+		), 'ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin');
+
 	}
 
 	public function down() {
 		
-		// Drop the table created for ElementDetails
+		// Drop the tables created
+		$this->dropTable('ophdrprescription_item');
 		$this->dropTable('et_ophdrprescription_details');
-
+		
 		// Find the event type
 		$event_type = $this->dbConnection->createCommand()
 		->select('id')
