@@ -78,10 +78,8 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
-	{
-		return array(
-		);
+	public function attributeLabels() {
+		return array();
 	}
 
 	/**
