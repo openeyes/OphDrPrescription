@@ -1,15 +1,16 @@
-<h4>
+<h3>
 	<?php echo $element->elementType->name ?>
-</h4>
+</h3>
+<h4>Drugs</h4>
 <div class="eventHighlight">
-	<h4>
-		Drugs
-		:
-		<?php var_dump($element->items) ?>
-		<br>
-		<?php echo CHtml::encode($element->getAttributeLabel('comments'))?>
-		:
-		<?php echo $element->comments?>
-	</h4>
+		<ul>
+			<?php foreach($element->items as $item) { ?>
+			<li><?php echo $item->drug->name?></li>
+			<?php } ?>
+		</ul>
 </div>
 
+<h4><?php echo CHtml::encode($element->getAttributeLabel('comments'))?></h4>
+<div class="eventHighlight comments">
+		<h4><?php echo $element->comments?></h4>
+</div>

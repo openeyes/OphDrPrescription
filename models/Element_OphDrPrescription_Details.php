@@ -22,6 +22,7 @@
  * @property string $id
  * @property integer $event_id
  * @property string $comments
+ * @property Item[] $items
  *
  * The followings are the available model relations:
  * @property Event $event
@@ -30,7 +31,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 	
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return ElementOperation the static model class
+	 * @return Element_OphDrPrescription_Details the static model class
 	 */
 	public static function model($className = __CLASS__) {
 		return parent::model($className);

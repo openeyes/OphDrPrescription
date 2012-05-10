@@ -21,13 +21,15 @@
  * The followings are the available columns in table 'ophdrprescription_item':
  * @property string $id
  * @property integer $prescription_id
- * @property string $drug_id
+ * @property integer $drug_id
+ * @property Drug $drug
+ * @property Prescription $prescription
  */
 class OphDrPrescription_Item extends BaseActiveRecord {
 	
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return ElementOperation the static model class
+	 * @return OphDrPrescription_Item the static model class
 	 */
 	public static function model($className = __CLASS__) {
 		return parent::model($className);

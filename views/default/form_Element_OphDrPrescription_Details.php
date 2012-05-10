@@ -22,16 +22,23 @@
 		));
 		?>
 		<input type="hidden" name="prescription_items_valid" value="1" />
-		<ul id="prescription_items">
-			<?php foreach($element->items as $key => $item) { ?>
-			<li><?php echo $item->drug->name; ?> <input type="hidden"
-				name="prescription_item[<?php echo $key ?>][id]"
-				value="<?php echo $item->id?>" /> <input type="hidden"
-				name="prescription_item[<?php echo $key ?>][drug_id]"
-				value="<?php echo $item->drug_id?>" /> <a class="removeItem"
-				href="#">Remove</a></li>
-			<?php } ?>
-		</ul>
+		<table id="prescription_items">
+			<thead>
+				<tr>
+					<th>Drug</th>
+					<th>Number</th>
+					<th>Route</th>
+					<th>Eye</th>
+					<th>Frequency</th>
+					<th>Duration</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach($element->items as $key => $item) {
+					$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item));
+				} ?>
+			</tbody>
+			</table>
 	</div>
 	<?php echo $form->textArea($element, 'comments', array('rows' => 4, 'cols' => 60)) ?>
 </div>
@@ -39,7 +46,7 @@
 <script type="text/javascript">
 
 	// Initialise item count
-	var item_count = $('#prescription_items > li').length;
+	var item_count = $('#prescription_items tr').length;
 
 	// Disable currently prescribed drugs in dropdown
 	$('#prescription_items input[name$="[drug_id]"]').each(function() {
@@ -60,8 +67,8 @@
 
 	// Remove item from prescription
 	$('#prescription_items').delegate('a.removeItem', 'click', function() {
-		var item_id = $(this).parent().children('input[name$="[drug_id]"]').first().val();
-		$(this).parent().remove();
+		var item_id = $(this).closest('tr').find('input[name$="[drug_id]"]').first().val();
+		$(this).closest('tr').remove();
 		var option = $('#common_drug_id option[value="' + item_id + '"]');
 		if (option) {
 			option.removeAttr("disabled");
@@ -71,9 +78,9 @@
 
 	// Add item to prescription
 	function addItem(label, item_id) {
-		var new_item = label + ' <a class="removeItem" href="#">Remove</a>';
-		new_item += '<input type="hidden" name="prescription_item[' + item_count + '][drug_id]" value="' + item_id + '"/>';
-		$('#prescription_items').append('<li>' + new_item + '</li>');
+		$.get("/OphDrPrescription/Default/ItemForm", { key: item_count, drug_id: item_id }, function(data){
+			$('#prescription_items').append(data);
+		});
 		var option = $('#common_drug_id option[value="' + item_id + '"]');
 		if (option) {
 			option.attr("disabled", "disabled");
