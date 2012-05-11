@@ -20,8 +20,10 @@
 /**
  * The followings are the available columns in table 'ophdrprescription_item':
  * @property string $id
- * @property integer $prescription_id
- * @property integer $drug_id
+ * @property string $dose
+ * @property DrugDuration $drug_duration
+ * @property DrugFrequency $drug_frequency
+ * @property DrugRoute $drug_route
  * @property Drug $drug
  * @property Prescription $prescription
  */
@@ -49,11 +51,11 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('prescription_id, drug_id', 'safe'),
+			array('dose, prescription_id, drug_id, route_id, frequency_id, duration_id', 'safe'),
 			//array('', 'required'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, prescription_id, drug_id', 'safe', 'on' => 'search'),
+			array('id, dose, prescription_id, drug_id, route_id, frequency_id, duration_id', 'safe', 'on' => 'search'),
 		);
 	}
 	
@@ -67,6 +69,9 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 		return array(
 			'prescription' => array(self::BELONGS_TO, 'Element_OphDrPrescription_Details', 'prescription_id'),
 			'drug' => array(self::BELONGS_TO, 'Drug', 'drug_id'),
+			'duration' => array(self::BELONGS_TO, 'DrugDuration', 'duration_id'),
+			'frequency' => array(self::BELONGS_TO, 'DrugFrequency', 'frequency_id'),
+			'route' => array(self::BELONGS_TO, 'DrugRoute', 'route_id'),
 			'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
 			'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
 		);
@@ -93,11 +98,41 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 		$criteria = new CDbCriteria;
 
 		$criteria->compare('id', $this->id, true);
+		$criteria->compare('dose', $this->dose, true);
 		$criteria->compare('prescription_id', $this->prescription_id, true);
 		$criteria->compare('drug_id', $this->drug_id, true);
+		$criteria->compare('duration_id', $this->duration_id, true);
+		$criteria->compare('frequency_id', $this->frequency_id, true);
+		$criteria->compare('route_id', $this->route_id, true);
 		
 		return new CActiveDataProvider(get_class($this), array(
 			'criteria' => $criteria,
 		));
 	}
+	
+	public function getDescription() {
+		return $this->drug->name . ', ' . $this->dose . ' ' . $this->frequency->name . ' ' . $this->route->name . ' for ' . $this->duration->name;
+	}
+	
+	public function loadDefaults() {
+		if($this->drug) {
+			$this->duration_id = $this->drug->default_duration_id;
+			$this->frequency_id = $this->drug->default_frequency_id;
+			$this->route_id = $this->drug->default_route_id;
+			$this->dose = $this->drug->default_dose . ' ' . $this->drug->dose_unit;
+		}
+	}
+	
+	public function availableDurations() {
+		return DrugDuration::model()->findAll(array('order' => 'name'));
+	}
+	
+	public function availableFrequencies() {
+		return DrugFrequency::model()->findAll(array('order' => 'name'));
+	}
+	
+	public function availableRoutes() {
+		return DrugRoute::model()->findAll(array('order' => 'name'));
+	}
+	
 }

@@ -5,19 +5,16 @@
 		<input type="hidden" name="prescription_item[<?php echo $key ?>][drug_id]" value="<?php echo $item->drug_id?>" />
 	</td>
 	<td>
-		TODO
+		<?php echo CHtml::textField('prescription_item['.$key.'][dose]', $item->dose) ?>
 	</td>
 	<td>
-		<?php echo CHtml::dropDownList('prescription_item['.$key.'][route_id]', null, array(0 => 'Topical'), array('empty' => 'Select Route')); ?>
+		<?php echo CHtml::dropDownList('prescription_item['.$key.'][route_id]', $item->route_id, CHtml::listData($item->availableRoutes(), 'id', 'name'), array('empty' => '-- Select --')); ?>
 	</td>
 	<td>
-		<?php echo CHtml::dropDownList('prescription_item['.$key.'][eye_id]', null, array(0 => 'LE'), array('empty' => 'Select Eye')); ?>
+		<?php echo CHtml::dropDownList('prescription_item['.$key.'][frequency_id]', $item->frequency_id, CHtml::listData($item->availableFrequencies(), 'id', 'name'), array('empty' => '-- Select --')); ?>
 	</td>
 	<td>
-		<?php echo CHtml::dropDownList('prescription_item['.$key.'][frequency_id]', null, array(0 => 'qid'), array('empty' => 'Select Frequency')); ?>
-	</td>
-	<td>
-		<?php echo CHtml::dropDownList('prescription_item['.$key.'][duration_id]', null, array(0 => '1 Month'), array('empty' => 'Select Duration')); ?>
+		<?php echo CHtml::dropDownList('prescription_item['.$key.'][duration_id]', $item->duration_id, CHtml::listData($item->availableDurations(), 'id', 'name'), array('empty' => '-- Select --')); ?>
 	</td>
 	<td>
 		<a class="removeItem"	href="#">Remove</a>

@@ -19,10 +19,21 @@ class DefaultController extends BaseEventTypeController {
 	}
 	
 	public function actionDrugList() {
-		if(Yii::app()->request->isAjaxRequest && isset($_GET['term'])) {
-			$drugs = Drug::model()->findAll('LOWER(name) LIKE :term', array(
-				':term' => '%' . strtolower(strtr($_GET['term'], array('%' => '\%'))) . '%',
-			));
+		if(Yii::app()->request->isAjaxRequest) {
+			$criteria = new CDbCriteria();
+			if(isset($_GET['term']) && $term = $_GET['term']) {
+				$criteria->addCondition('LOWER(name) LIKE :term');
+				$params[':term'] = '%' . strtolower(strtr($term, array('%' => '\%'))) . '%';
+			}
+			if(isset($_GET['type_id']) && $type_id = $_GET['type_id']) {
+				$criteria->addCondition('type_id = :type_id');
+				$params[':type_id'] = $type_id;
+			}
+			if(isset($_GET['preservative_free']) && $preservative_free = $_GET['preservative_free']) {
+				$criteria->addCondition('preservative_free = 1');
+			}
+			$criteria->params = $params;
+			$drugs = Drug::model()->findAll($criteria);
 			$return = array();
 			foreach($drugs as $drug) {
 				$return[] = array(
@@ -38,6 +49,7 @@ class DefaultController extends BaseEventTypeController {
 	public function actionItemForm($key, $drug_id) {
 		$item = new OphDrPrescription_Item();
 		$item->drug_id = $drug_id;
+		$item->loadDefaults();
 		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item));
 	}
 	

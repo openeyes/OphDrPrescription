@@ -1,2 +1,4 @@
-
 /* Module-specific css can be placed here */
+#div_Element_OphDrPrescription_Details_prescription_items .data > div {
+	margin: 10px 0;
+}

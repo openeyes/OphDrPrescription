@@ -5,7 +5,7 @@
 <div class="eventHighlight">
 		<ul>
 			<?php foreach($element->items as $item) { ?>
-			<li><?php echo $item->drug->name?></li>
+			<li><?php echo $item->description ?></li>
 			<?php } ?>
 		</ul>
 </div>

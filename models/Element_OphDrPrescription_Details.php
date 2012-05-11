@@ -103,29 +103,25 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		));
 	}
 	
-	public function getCommonDrugList() {
+	public function commonDrugs() {
 		$firm = Firm::model()->findByPk(Yii::app()->session['selected_firm_id']);
 		$subspecialty_id = $firm->serviceSubspecialtyAssignment->subspecialty_id;
 		$site_id = Yii::app()->request->cookies['site_id']->value;
 		$params = array(':subSpecialtyId' => $subspecialty_id, ':siteId' => $site_id);
+		return Drug::model()->findAll(array(
+				'condition' => 'ssd.subspecialty_id = :subSpecialtyId AND ssd.site_id = :siteId',
+				'join' => 'JOIN site_subspecialty_drug ssd ON ssd.drug_id = t.id',
+				'order' => 'name',
+				'params' => $params,
+		));
+	}
+
+	public function drugTypes() {
+		return DrugType::model()->findAll(array(
+				'order' => 'name',
+		));
+	}
 	
-		return CHtml::listData(Yii::app()->db->createCommand()
-				->select('drug.id, drug.name')
-				->from('drug')
-				->join('site_subspecialty_drug','site_subspecialty_drug.drug_id = drug.id')
-				->where('site_subspecialty_drug.subspecialty_id = :subSpecialtyId AND site_subspecialty_drug.site_id = :siteId', $params)
-				->order('drug.name')
-				->queryAll(), 'id', 'name');
-	}
-
-	public function getDrugDefaults() {
-		$ids = array();
-		foreach ($this->getCommonDrugList() as $id => $drug) {
-			$ids[] = $id;
-		}
-		return $ids;
-	}
-
 	/**
 	 * Save prescription items
 	 * @todo This probably doesn't belong here, but there doesn't seem to be an easy way
@@ -153,6 +149,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 					$item_model->prescription_id = $this->id;
 					$item_model->drug_id = $item['drug_id'];
 				}
+				$item_model->attributes = $item;
 				$item_model->save();
 			}
 
