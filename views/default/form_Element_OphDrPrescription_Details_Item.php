@@ -1,6 +1,6 @@
 <tr>
 	<td>
-		<?php echo $item->drug->name; ?>
+		<?php echo $item->drug->label; ?>
 		<?php if($item->id) { ?><input type="hidden" name="prescription_item[<?php echo $key ?>][id]" value="<?php echo $item->id?>" /><?php } ?>
 		<input type="hidden" name="prescription_item[<?php echo $key ?>][drug_id]" value="<?php echo $item->drug_id?>" />
 	</td>

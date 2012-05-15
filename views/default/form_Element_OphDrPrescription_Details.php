@@ -8,7 +8,7 @@
 		<div class="data">
 			<h5>Add Item</h5>
 			<div>
-				<?php echo CHtml::dropDownList('common_drug_id', null, CHtml::listData($element->commonDrugs(), 'id', 'name'), array('empty' => '-- Select --')); ?>
+				<?php echo CHtml::dropDownList('common_drug_id', null, CHtml::listData($element->commonDrugs(), 'id', 'label'), array('empty' => '-- Select --')); ?>
 				or
 				<?php
 				$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
@@ -40,7 +40,7 @@
 			</div>
 			<h5>Add Standard Set</h5>
 			<div>
-					<?php echo CHtml::dropDownList('standard_set_id', null, array(1 => 'Post Op'), array('empty' => '-- Select --')); ?>
+					<?php echo CHtml::dropDownList('drug_set_id', null, CHtml::listData($element->drugSets(), 'id', 'name'), array('empty' => '-- Select --')); ?>
 			</div>
 			<h5>Current Items</h5>
 			<div class="grid-view">
@@ -90,10 +90,21 @@
 		}
 	});
 	
+	// Add selected common drug to prescription
 	$('body').delegate('#common_drug_id', 'change', function() {
 		var selected = $(this).children('option:selected');
 		if(selected.val().length) {
 			addItem(selected.text(), selected.val());
+			$(this).val('');
+		}
+		return false;
+	});
+
+	// Add selected drug set to prescription
+	$('body').delegate('#drug_set_id', 'change', function() {
+		var selected = $(this).children('option:selected');
+		if(selected.val().length) {
+			addSet(selected.val());
 			$(this).val('');
 		}
 		return false;
@@ -110,10 +121,24 @@
 		return false;
 	});
 
+	// Apply selected drug filter
 	$('body').delegate('.drugFilter', 'change', function() {
 		applyFilter();
 		return false;
 	});
+
+	// Add set to prescription
+	function addSet(set_id) {
+		$.get("/OphDrPrescription/Default/SetForm", { key: item_count, set_id: set_id }, function(data){
+			$('#prescription_items').append(data);
+		});
+		var option = $('#common_drug_id option[value="' + item_id + '"]');
+		if (option) {
+			option.attr("disabled", "disabled");
+		}
+		$(this).val('');
+		item_count++;
+	}
 	
 	// Add item to prescription
 	function addItem(label, item_id) {

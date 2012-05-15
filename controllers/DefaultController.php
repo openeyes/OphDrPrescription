@@ -37,7 +37,7 @@ class DefaultController extends BaseEventTypeController {
 			$return = array();
 			foreach($drugs as $drug) {
 				$return[] = array(
-						'label' => $drug->name,
+						'label' => $drug->label,
 						'value' => $drug->name,
 						'id' => $drug->id,
 				);

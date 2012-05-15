@@ -22,10 +22,10 @@
  * @property string $id
  * @property integer $event_id
  * @property string $comments
- * @property Item[] $items
  *
  * The followings are the available model relations:
  * @property Event $event
+ * @property Item[] $items
  */
 class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 	
@@ -111,6 +111,17 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		return Drug::model()->findAll(array(
 				'condition' => 'ssd.subspecialty_id = :subSpecialtyId AND ssd.site_id = :siteId',
 				'join' => 'JOIN site_subspecialty_drug ssd ON ssd.drug_id = t.id',
+				'order' => 'name',
+				'params' => $params,
+		));
+	}
+
+	public function drugSets() {
+		$firm = Firm::model()->findByPk(Yii::app()->session['selected_firm_id']);
+		$subspecialty_id = $firm->serviceSubspecialtyAssignment->subspecialty_id;
+		$params = array(':subspecialty_id' => $subspecialty_id);
+		return DrugSet::model()->findAll(array(
+				'condition' => 'subspecialty_id = :subspecialty_id',
 				'order' => 'name',
 				'params' => $params,
 		));
