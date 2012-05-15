@@ -32,6 +32,7 @@ class DefaultController extends BaseEventTypeController {
 			if(isset($_GET['preservative_free']) && $preservative_free = $_GET['preservative_free']) {
 				$criteria->addCondition('preservative_free = 1');
 			}
+			$criteria->order = 'name';
 			$criteria->params = $params;
 			$drugs = Drug::model()->findAll($criteria);
 			$return = array();
