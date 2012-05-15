@@ -86,9 +86,10 @@
 	$('#prescription_items input[name$="[drug_id]"]').each(function() {
 		var option = $('#common_drug_id option[value="' + $(this).val() + '"]');
 		if(option) {
-			option.attr("disabled", "disabled");
+			option.data('used', false);
 		}
 	});
+	applyFilter();
 	
 	$('body').delegate('#common_drug_id', 'change', function() {
 		var selected = $(this).children('option:selected');
@@ -105,7 +106,8 @@
 		$(this).closest('tr').remove();
 		var option = $('#common_drug_id option[value="' + item_id + '"]');
 		if (option) {
-			option.removeAttr("disabled");
+			option.data('used', false);
+			applyFilter();
 		}
 		return false;
 	});
@@ -122,7 +124,8 @@
 		});
 		var option = $('#common_drug_id option[value="' + item_id + '"]');
 		if (option) {
-			option.attr("disabled", "disabled");
+			option.data('used', true);
+			applyFilter();
 		}
 		$(this).val('');
 		item_count++;
@@ -142,7 +145,14 @@
 				if(filter_preservative_free && !common_drug_metadata[drug_id].preservative_free) {
 					show = false;
 				}
-				$(this).toggle(show);
+				if($(this).data('used')) {
+					show = false;
+				}
+				if(show) {
+					$(this).removeAttr("disabled");
+				} else {
+					$(this).attr("disabled", "disabled");
+				}
 			}
 		});
 	}
