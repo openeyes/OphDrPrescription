@@ -102,4 +102,13 @@ class DefaultController extends BaseEventTypeController {
 		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $patient));
 	}
 
+	public function actionRouteOptions($key, $route_id) {
+		$options = DrugRouteOption::model()->findAllByAttributes(array('drug_route_id' => $route_id));
+		if($options) {
+			echo CHtml::dropDownList('prescription_item['.$key.'][route_option_id]', null, CHtml::listData($options, 'id', 'name'), array('empty' => '-- Select --'));
+		} else {
+			echo '-';
+		}
+	}
+
 }

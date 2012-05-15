@@ -8,7 +8,14 @@
 		<?php echo CHtml::textField('prescription_item['.$key.'][dose]', $item->dose) ?>
 	</td>
 	<td>
-		<?php echo CHtml::dropDownList('prescription_item['.$key.'][route_id]', $item->route_id, CHtml::listData($item->availableRoutes(), 'id', 'name'), array('empty' => '-- Select --')); ?>
+		<?php echo CHtml::dropDownList('prescription_item['.$key.'][route_id]', $item->route_id, CHtml::listData($item->availableRoutes(), 'id', 'name'), array('empty' => '-- Select --', 'class' => 'drugRoute')); ?>
+	</td>
+	<td>
+		<?php if($item->route && $options = $item->route->options) {
+			echo CHtml::dropDownList('prescription_item['.$key.'][route_option_id]', $item->route_option_id, CHtml::listData($options, 'id', 'name'), array('empty' => '-- Select --'));
+		} else {
+			echo '-';
+		}?>
 	</td>
 	<td>
 		<?php echo CHtml::dropDownList('prescription_item['.$key.'][frequency_id]', $item->frequency_id, CHtml::listData($item->availableFrequencies(), 'id', 'name'), array('empty' => '-- Select --')); ?>

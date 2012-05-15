@@ -51,6 +51,7 @@
 							<th>Drug</th>
 							<th>Dose</th>
 							<th>Route</th>
+							<th>Options</th>
 							<th>Frequency</th>
 							<th>Duration</th>
 						</tr>
@@ -110,6 +111,20 @@
 		if(selected.val().length) {
 			addSet(selected.val());
 			$(this).val('');
+		}
+		return false;
+	});
+
+	// Update drug route options for selected route
+	$('body').delegate('select.drugRoute', 'change', function() {
+		var selected = $(this).children('option:selected');
+		if(selected.val().length) {
+			var options_td = $(this).parent().next();
+			var key = $(this).attr('name').replace(/prescription_item\[(\d+)\].*/,"$1");
+			
+			$.get("/OphDrPrescription/Default/RouteOptions", { key: key, route_id: selected.val() }, function(data){
+				options_td.html(data);
+			});
 		}
 		return false;
 	});

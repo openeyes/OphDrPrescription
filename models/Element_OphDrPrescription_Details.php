@@ -151,9 +151,14 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 			$new_items = (isset($_POST['prescription_item'])) ? $_POST['prescription_item'] : array();
 			foreach($new_items as $item) {
 				if(isset($item['id']) && isset($existing_item_ids[$item['id']])) {
+					
 					// Item is being updated
 					$item_model = OphDrPrescription_Item::model()->findByPk($item['id']);
 					unset($existing_item_ids[$item['id']]);
+					
+					// Clear existing route option (not all routes have options)
+					$item_model->route_option_id = null;
+					
 				} else {
 					// Item is new
 					$item_model = new OphDrPrescription_Item();
