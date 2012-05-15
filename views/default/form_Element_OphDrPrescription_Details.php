@@ -57,7 +57,7 @@
 					</thead>
 					<tbody>
 						<?php foreach($element->items as $key => $item) {
-							$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item));
+							$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $this->patient));
 				} ?>
 					</tbody>
 				</table>
@@ -70,7 +70,10 @@
 <script type="text/javascript">
 
 	// Initialise item count
-	var item_count = $('#prescription_items tr').length;
+	var item_count = $('#prescription_items tbody tr').length;
+
+	// Initialise patient
+	var patient_id = <?php echo $this->patient->id ?>
 
 	// Initialise common drug metadata
 	var common_drug_metadata = {
@@ -83,10 +86,10 @@
 	}
 
 	// Disable currently prescribed drugs in dropdown
-	$('#prescription_items input[name$="[drug_id]"]').each(function() {
+	$('#prescription_items input[name$="[drug_id]"]').each(function(index) {
 		var option = $('#common_drug_id option[value="' + $(this).val() + '"]');
 		if(option) {
-			option.data('used', false);
+			option.data('used', true);
 		}
 	});
 	applyFilter();
@@ -131,20 +134,19 @@
 
 	// Add set to prescription
 	function addSet(set_id) {
-		$.get("/OphDrPrescription/Default/SetForm", { key: item_count, set_id: set_id }, function(data){
+		var current_item_count = $('#prescription_items tbody tr').length;
+		$.get("/OphDrPrescription/Default/SetForm", { key: item_count, patient_id: patient_id, set_id: set_id }, function(data){
 			$('#prescription_items').append(data);
+			markUsed();
+			applyFilter();
+			$(this).val('');
+			item_count += $('#prescription_items tbody tr').length - current_item_count;
 		});
-		var option = $('#common_drug_id option[value="' + item_id + '"]');
-		if (option) {
-			option.attr("disabled", "disabled");
-		}
-		$(this).val('');
-		item_count++;
 	}
 	
 	// Add item to prescription
 	function addItem(label, item_id) {
-		$.get("/OphDrPrescription/Default/ItemForm", { key: item_count, drug_id: item_id }, function(data){
+		$.get("/OphDrPrescription/Default/ItemForm", { key: item_count, patient_id: patient_id, drug_id: item_id }, function(data){
 			$('#prescription_items').append(data);
 		});
 		var option = $('#common_drug_id option[value="' + item_id + '"]');
@@ -156,6 +158,16 @@
 		item_count++;
 	}
 
+	// Mark used common drugs
+	function markUsed() {
+		$('#prescription_items input[name$="\[drug_id\]"]').each(function(index) {
+			var option = $('#common_drug_id option[value="' + $(this).val() + '"]');
+			if (option) {
+				option.data('used', true);
+			}
+		});
+	}
+	
 	// Filter drug choices
 	function applyFilter() {
 		var filter_type_id = $('#drug_type_id').val();

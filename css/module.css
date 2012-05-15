@@ -2,3 +2,12 @@
 #div_Element_OphDrPrescription_Details_prescription_items .data > div {
 	margin: 10px 0;
 }
+
+.allergyWarning {
+	background: #f66;
+}
+
+.eventHighlight li {
+	font-size: 16px;
+	padding: 2px 4px;
+}

@@ -1,4 +1,4 @@
-<tr>
+<tr<?php if($patient->hasAllergy($item->drug_id)) { ?> class="allergyWarning"<?php } ?>>
 	<td>
 		<?php echo $item->drug->label; ?>
 		<?php if($item->id) { ?><input type="hidden" name="prescription_item[<?php echo $key ?>][id]" value="<?php echo $item->id?>" /><?php } ?>
