@@ -33,7 +33,8 @@
 	foreach($item->tapers as $taper) {
 ?>
 <tr data-key="<?php echo $key ?>" data-taper="<?php echo $count ?>" class="prescriptionTaper">
-	<td>
+	<td class="prescriptionLabel">
+		then
 		<?php if($taper->id) { ?><input type="hidden" name="prescription_item[<?php echo $key ?>][taper][<?php echo $count ?>][id]" value="<?php echo $taper->id?>" /><?php } ?>
 	</td>
 	<td>

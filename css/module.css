@@ -11,3 +11,15 @@
 	font-size: 16px;
 	padding: 2px 4px;
 }
+
+#prescription_items td {
+	padding: 5px 10px;
+}
+
+#prescription_items tr.prescriptionTaper {
+	background: #c6dcef;
+}
+
+#prescription_items tr.prescriptionTaper .prescriptionLabel {
+	text-align: right;
+}
