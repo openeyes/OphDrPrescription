@@ -141,10 +141,14 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 	protected function afterSave() {
 		if(isset($_POST['prescription_items_valid']) && $_POST['prescription_items_valid']) {
 			
-			// Get a list of existing item ids so we can keep track of what's been removed
+			// Get a list of ids so we can keep track of what's been removed
 			$existing_item_ids = array();
+			$existing_taper_ids = array();
 			foreach($this->items as $item) {
 				$existing_item_ids[$item->id] = $item->id;
+				foreach($item->tapers as $taper) {
+					$existing_taper_ids[$taper->id] = $taper->id;
+				}
 			}
 			
 			// Process (any) posted prescription items
@@ -156,20 +160,52 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 					$item_model = OphDrPrescription_Item::model()->findByPk($item['id']);
 					unset($existing_item_ids[$item['id']]);
 					
-					// Clear existing route option (not all routes have options)
-					$item_model->route_option_id = null;
-					
 				} else {
+					
 					// Item is new
 					$item_model = new OphDrPrescription_Item();
 					$item_model->prescription_id = $this->id;
 					$item_model->drug_id = $item['drug_id'];
+					
 				}
-				$item_model->attributes = $item;
+				
+				// Save main item attributes
+				$item_model->dose = $item['dose'];
+				$item_model->route_id = $item['route_id'];
+				if(isset($item['route_option_id']) && $item['route_option_id']) {
+					$item_model->route_option_id = $item['route_option_id'];
+				} else {
+					$item_model->route_option_id = null;
+				}
+				$item_model->frequency_id = $item['frequency_id'];
+				$item_model->duration_id = $item['duration_id'];
 				$item_model->save();
+				
+				// Tapering
+				$new_tapers = (isset($item['taper'])) ? $item['taper'] : array();
+				foreach($new_tapers as $taper) {
+					if(isset($taper['id']) && isset($existing_taper_ids[$taper['id']])) {
+						
+						// Taper is being updated
+						$taper_model = OphDrPrescription_ItemTaper::model()->findByPk($taper['id']);
+						unset($existing_taper_ids[$taper['id']]);
+						
+					} else {
+						
+						// Taper is new
+						$taper_model = new OphDrPrescription_ItemTaper();
+						$taper_model->item_id = $item_model->id;
+						
+					}
+					$taper_model->dose = $taper['dose'];
+					$taper_model->frequency_id = $taper['frequency_id'];
+					$taper_model->duration_id = $taper['duration_id'];
+					$taper_model->save();
+				}
 			}
 
-			// Delete remaining (removed) items
+			// Delete remaining (removed) ids
+			OphDrPrescription_ItemTaper::model()->deleteByPk(array_values($existing_taper_ids));
 			OphDrPrescription_Item::model()->deleteByPk(array_values($existing_item_ids));
 			
 		}

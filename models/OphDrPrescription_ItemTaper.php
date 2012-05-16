@@ -18,22 +18,18 @@
  */
 
 /**
- * The followings are the available columns in table 'ophdrprescription_item':
+ * The followings are the available columns in table 'ophdrprescription_item_taper':
  * @property string $id
  * @property string $dose
  * @property DrugDuration $duration
  * @property DrugFrequency $frequency
- * @property DrugRoute $route
- * @property DrugRouteOption $route_option
- * @property Drug $drug
- * @property Prescription $prescription
- * @property OphDrPrescription_ItemTaper[] $tapers
+ * @property OphDrPrescription_Item $item
  */
-class OphDrPrescription_Item extends BaseActiveRecord {
+class OphDrPrescription_ItemTaper extends BaseActiveRecord {
 
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return OphDrPrescription_Item the static model class
+	 * @return OphDrPrescription_ItemTaper the static model class
 	 */
 	public static function model($className = __CLASS__) {
 		return parent::model($className);
@@ -43,7 +39,7 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return 'ophdrprescription_item';
+		return 'ophdrprescription_item_taper';
 	}
 
 	/**
@@ -53,12 +49,12 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-				array('prescription_id, drug_id, route_id, frequency_id, duration_id', 'required'),
-				array('dose, route_option_id', 'safe'),
+				array('frequency_id, duration_id', 'required'),
+				array('dose, item_id', 'safe'),
 				//array('', 'required'),
 				// The following rule is used by search().
 				// Please remove those attributes that should not be searched.
-				array('id, dose, prescription_id, drug_id, route_id, route_option_id, frequency_id, duration_id', 'safe', 'on' => 'search'),
+				array('id, item_id, dose, frequency_id, duration_id', 'safe', 'on' => 'search'),
 		);
 	}
 
@@ -69,13 +65,9 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-				'tapers' => array(self::HAS_MANY, 'OphDrPrescription_ItemTaper', 'item_id'),
-				'prescription' => array(self::BELONGS_TO, 'Element_OphDrPrescription_Details', 'prescription_id'),
-				'drug' => array(self::BELONGS_TO, 'Drug', 'drug_id'),
+				'item' => array(self::BELONGS_TO, 'OphDrPrescription_Item', 'item_id'),
 				'duration' => array(self::BELONGS_TO, 'DrugDuration', 'duration_id'),
 				'frequency' => array(self::BELONGS_TO, 'DrugFrequency', 'frequency_id'),
-				'route' => array(self::BELONGS_TO, 'DrugRoute', 'route_id'),
-				'route_option' => array(self::BELONGS_TO, 'DrugRouteOption', 'route_option_id'),
 				'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
 				'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
 		);
@@ -101,48 +93,13 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 
 		$criteria->compare('id', $this->id, true);
 		$criteria->compare('dose', $this->dose, true);
-		$criteria->compare('prescription_id', $this->prescription_id, true);
-		$criteria->compare('drug_id', $this->drug_id, true);
+		$criteria->compare('item_id', $this->item_id, true);
 		$criteria->compare('duration_id', $this->duration_id, true);
 		$criteria->compare('frequency_id', $this->frequency_id, true);
-		$criteria->compare('route_id', $this->route_id, true);
 
 		return new CActiveDataProvider(get_class($this), array(
 				'criteria' => $criteria,
 		));
-	}
-
-	public function getDescription() {
-		$return = $this->drug->name;
-		$return .= ', ' . $this->dose;
-		$return .= ' ' . $this->frequency->name;
-		$return .= ' ' . $this->route->name;
-		if($this->route_option) {
-			$return .= ' (' . $this->route_option->name . ')';
-		}
-		$return .= ' for ' . $this->duration->name;
-		return $return;
-	}
-
-	public function loadDefaults() {
-		if($this->drug) {
-			$this->duration_id = $this->drug->default_duration_id;
-			$this->frequency_id = $this->drug->default_frequency_id;
-			$this->route_id = $this->drug->default_route_id;
-			$this->dose = $this->drug->default_dose . ' ' . $this->drug->dose_unit;
-		}
-	}
-
-	public function availableDurations() {
-		return DrugDuration::model()->findAll(array('order' => 'name'));
-	}
-
-	public function availableFrequencies() {
-		return DrugFrequency::model()->findAll(array('order' => 'name'));
-	}
-
-	public function availableRoutes() {
-		return DrugRoute::model()->findAll(array('order' => 'name'));
 	}
 
 }

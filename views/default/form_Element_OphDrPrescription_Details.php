@@ -120,9 +120,8 @@
 		var selected = $(this).children('option:selected');
 		if(selected.val().length) {
 			var options_td = $(this).parent().next();
-			var key = $(this).attr('name').replace(/prescription_item\[(\d+)\].*/,"$1");
-			
-			$.get("/OphDrPrescription/Default/RouteOptions", { key: key, route_id: selected.val() }, function(data){
+			var key = $(this).closest('tr').attr('data-key');
+			$.get("/OphDrPrescription/Default/RouteOptions", { key: key, route_id: selected.val() }, function(data) {
 				options_td.html(data);
 			});
 		}
@@ -131,13 +130,50 @@
 
 	// Remove item from prescription
 	$('#prescription_items').delegate('a.removeItem', 'click', function() {
-		var item_id = $(this).closest('tr').find('input[name$="[drug_id]"]').first().val();
-		$(this).closest('tr').remove();
-		var option = $('#common_drug_id option[value="' + item_id + '"]');
+		var row =  $(this).closest('tr');
+		var drug_id = row.find('input[name$="[drug_id]"]').first().val();
+		var key = row.attr('data-key');
+		$('#prescription_items tr[data-key="'+key+'"]').remove();
+		var option = $('#common_drug_id option[value="' + drug_id + '"]');
 		if (option) {
 			option.data('used', false);
 			applyFilter();
 		}
+		return false;
+	});
+
+	// Add taper to item
+	$('#prescription_items').delegate('a.taperItem:not(.processing)', 'click', function() {
+		var row = $(this).closest('tr');
+		var key = row.attr('data-key');
+		var last_row = $('#prescription_items tr[data-key="'+key+'"]').last();
+		var taper_key = (last_row.attr('data-taper')) ? parseInt(last_row.attr('data-taper')) + 1 : 0;
+		
+		// Clone item fields to create taper row
+		var dose_input = row.find('td.prescriptionItemDose input').first().clone();
+		dose_input.attr('name', dose_input.attr('name').replace(/\[dose\]/, "[taper]["+taper_key+"][dose]"));
+		dose_input.attr('id', dose_input.attr('id').replace(/_dose$/, "_taper_"+taper_key+"_dose"));
+		var frequency_input = row.find('td.prescriptionItemFrequencyId select').first().clone();
+		frequency_input.attr('name', frequency_input.attr('name').replace(/\[frequency_id\]/, "[taper]["+taper_key+"][frequency_id]"));
+		frequency_input.attr('id', frequency_input.attr('id').replace(/_frequency_id$/, "_taper_"+taper_key+"_frequency_id"));
+		frequency_input.val(row.find('td.prescriptionItemFrequencyId select').val());
+		var duration_input = row.find('td.prescriptionItemDurationId select').first().clone();
+		duration_input.attr('name', duration_input.attr('name').replace(/\[duration_id\]/, "[taper]["+taper_key+"][duration_id]"));
+		duration_input.attr('id', duration_input.attr('id').replace(/_duration_id$/, "_taper_"+taper_key+"_duration_id"));
+		duration_input.val(row.find('td.prescriptionItemDurationId select').val());
+		
+		// Insert taper row
+		var new_row = $('<tr data-key="'+key+'" data-taper="'+taper_key+'" class="prescriptionTaper"></tr>');
+		new_row.append($('<td></td>'), $('<td></td>').append(dose_input), $('<td colspan="2"></td>'), $('<td></td>').append(frequency_input), $('<td></td>').append(duration_input), $('<td><a class="removeTaper"	href="#">Remove</a></td>'));
+		last_row.after(new_row);
+		
+		return false;
+	});
+
+	// Remove taper from item
+	$('#prescription_items').delegate('a.removeTaper', 'click', function() {
+		var row =  $(this).closest('tr');
+		row.remove();
 		return false;
 	});
 
@@ -150,7 +186,7 @@
 	// Add set to prescription
 	function addSet(set_id) {
 		var current_item_count = $('#prescription_items tbody tr').length;
-		$.get("/OphDrPrescription/Default/SetForm", { key: item_count, patient_id: patient_id, set_id: set_id }, function(data){
+		$.get("/OphDrPrescription/Default/SetForm", { key: item_count, patient_id: patient_id, set_id: set_id }, function(data) {
 			$('#prescription_items').append(data);
 			markUsed();
 			applyFilter();
