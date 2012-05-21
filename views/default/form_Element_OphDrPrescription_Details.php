@@ -57,9 +57,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach($element->items as $key => $item) {
+						<?php foreach($this->getPrescriptionItems($element) as $key => $item) {
 							$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $this->patient));
-				} ?>
+						} ?>
 					</tbody>
 				</table>
 			</div>

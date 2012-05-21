@@ -111,4 +111,29 @@ class DefaultController extends BaseEventTypeController {
 		}
 	}
 
+	public function getPrescriptionItems($element) {
+		$items = $element->items;
+		if(isset($_POST['prescription_item'])) {
+			
+			// Form has been posted, so we should return the submitted values instead
+			$items = array();
+			foreach($_POST['prescription_item'] as $item) {
+				$item_model = new OphDrPrescription_Item();
+				$item_model->attributes = $item;
+				if(isset($item['taper'])) {
+					$tapers = array();
+					foreach($item['taper'] as $taper) {
+						$taper_model = new OphDrPrescription_ItemTaper();
+						$taper_model->attributes = $taper;
+						$tapers[] = $taper_model;
+					}
+					$item_model->tapers = $tapers;
+				}
+				$items[] = $item_model;
+			}
+			
+		}
+		return $items;
+	}
+	
 }

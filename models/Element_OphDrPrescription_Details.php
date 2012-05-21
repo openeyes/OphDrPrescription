@@ -28,7 +28,7 @@
  * @property Item[] $items
  */
 class Element_OphDrPrescription_Details extends BaseEventTypeElement {
-	
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return Element_OphDrPrescription_Details the static model class
@@ -51,14 +51,14 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('event_id, comments', 'safe'),
-			//array('', 'required'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, event_id, comments', 'safe', 'on' => 'search'),
+				array('event_id, comments', 'safe'),
+				//array('', 'required'),
+				// The following rule is used by search().
+				// Please remove those attributes that should not be searched.
+				array('id, event_id, comments', 'safe', 'on' => 'search'),
 		);
 	}
-	
+
 	/**
 	 * @return array relational rules.
 	 */
@@ -67,12 +67,12 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'element_type' => array(self::HAS_ONE, 'ElementType', 'id','on' => "element_type.class_name='".get_class($this)."'"),
-			'eventType' => array(self::BELONGS_TO, 'EventType', 'event_type_id'),
-			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
-			'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
-			'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
-			'items' => array(self::HAS_MANY, 'OphDrPrescription_Item', 'prescription_id'),
+				'element_type' => array(self::HAS_ONE, 'ElementType', 'id','on' => "element_type.class_name='".get_class($this)."'"),
+				'eventType' => array(self::BELONGS_TO, 'EventType', 'event_type_id'),
+				'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
+				'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
+				'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
+				'items' => array(self::HAS_MANY, 'OphDrPrescription_Item', 'prescription_id'),
 		);
 	}
 
@@ -97,12 +97,12 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		$criteria->compare('id', $this->id, true);
 		$criteria->compare('event_id', $this->event_id, true);
 		$criteria->compare('comments', $this->comments, true);
-		
+
 		return new CActiveDataProvider(get_class($this), array(
-			'criteria' => $criteria,
+				'criteria' => $criteria,
 		));
 	}
-	
+
 	public function commonDrugs() {
 		$firm = Firm::model()->findByPk(Yii::app()->session['selected_firm_id']);
 		$subspecialty_id = $firm->serviceSubspecialtyAssignment->subspecialty_id;
@@ -132,7 +132,60 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 				'order' => 'name',
 		));
 	}
-	
+
+	/**
+	 * Validate prescription items
+	 * @todo This probably doesn't belong here, but there doesn't seem to be an easy way
+	 * of doing it through the controller at the moment
+	 */
+	protected function beforeValidate() {
+		if(isset($_POST['prescription_items_valid']) && $_POST['prescription_items_valid']) {
+				
+			// Empty prescription not allowed
+			if(!isset($_POST['prescription_item']) || !$prescription_items = $_POST['prescription_item']) {
+				$this->addError('prescription_item', 'Prescription cannot be empty');
+			}
+				
+			// Check that fields on prescription items are set
+			foreach($prescription_items as $key => $item) {
+				$item_model = new OphDrPrescription_Item();
+				$item_model->drug_id = $item['drug_id'];
+				$item_model->dose = $item['dose'];
+				$item_model->route_id = $item['route_id'];
+				$item_model->frequency_id = $item['frequency_id'];
+				$item_model->duration_id = $item['duration_id'];
+				if(isset($item['route_option_id'])) {
+					$item_model->route_option_id = $item['route_option_id'];
+				}
+
+				// id and prescription_id are not yet available, so exclude from validation
+				$validate_attributes = array_keys($item_model->getAttributes(false));
+				if(!$item_model->validate($validate_attributes)) {
+					$this->addErrors($item_model->getErrors());
+				}
+
+				if(isset($item['taper'])) {
+					
+					// Check that the taper fields are valid
+					foreach($item['taper'] as $taper) {
+						$taper_model = new OphDrPrescription_ItemTaper();
+						$taper_model->dose = $taper['dose'];
+						$taper_model->frequency_id = $taper['frequency_id'];
+						$taper_model->duration_id = $taper['duration_id'];
+
+						// id and item_id are not yet available, so exclude from validation
+						$validate_attributes = array_keys($taper_model->getAttributes(false));
+						if(!$taper_model->validate($validate_attributes)) {
+							$this->addErrors($taper_model->getErrors());
+						}
+					}
+				}
+			}
+
+		}
+		return parent::beforeValidate();
+	}
+
 	/**
 	 * Save prescription items
 	 * @todo This probably doesn't belong here, but there doesn't seem to be an easy way
@@ -140,7 +193,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 	 */
 	protected function afterSave() {
 		if(isset($_POST['prescription_items_valid']) && $_POST['prescription_items_valid']) {
-			
+				
 			// Get a list of ids so we can keep track of what's been removed
 			$existing_item_ids = array();
 			$existing_taper_ids = array();
@@ -150,29 +203,29 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 					$existing_taper_ids[$taper->id] = $taper->id;
 				}
 			}
-			
+				
 			// Process (any) posted prescription items
 			$new_items = (isset($_POST['prescription_item'])) ? $_POST['prescription_item'] : array();
 			foreach($new_items as $item) {
 				if(isset($item['id']) && isset($existing_item_ids[$item['id']])) {
-					
+						
 					// Item is being updated
 					$item_model = OphDrPrescription_Item::model()->findByPk($item['id']);
 					unset($existing_item_ids[$item['id']]);
-					
+						
 				} else {
-					
+						
 					// Item is new
 					$item_model = new OphDrPrescription_Item();
 					$item_model->prescription_id = $this->id;
 					$item_model->drug_id = $item['drug_id'];
-					
+						
 				}
-				
+
 				// Save main item attributes
 				$item_model->dose = $item['dose'];
 				$item_model->route_id = $item['route_id'];
-				if(isset($item['route_option_id']) && $item['route_option_id']) {
+				if(isset($item['route_option_id'])) {
 					$item_model->route_option_id = $item['route_option_id'];
 				} else {
 					$item_model->route_option_id = null;
@@ -180,22 +233,22 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 				$item_model->frequency_id = $item['frequency_id'];
 				$item_model->duration_id = $item['duration_id'];
 				$item_model->save();
-				
+
 				// Tapering
 				$new_tapers = (isset($item['taper'])) ? $item['taper'] : array();
 				foreach($new_tapers as $taper) {
 					if(isset($taper['id']) && isset($existing_taper_ids[$taper['id']])) {
-						
+
 						// Taper is being updated
 						$taper_model = OphDrPrescription_ItemTaper::model()->findByPk($taper['id']);
 						unset($existing_taper_ids[$taper['id']]);
-						
+
 					} else {
-						
+
 						// Taper is new
 						$taper_model = new OphDrPrescription_ItemTaper();
 						$taper_model->item_id = $item_model->id;
-						
+
 					}
 					$taper_model->dose = $taper['dose'];
 					$taper_model->frequency_id = $taper['frequency_id'];
@@ -207,10 +260,10 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 			// Delete remaining (removed) ids
 			OphDrPrescription_ItemTaper::model()->deleteByPk(array_values($existing_taper_ids));
 			OphDrPrescription_Item::model()->deleteByPk(array_values($existing_item_ids));
-			
+				
 		}
-		
+
 		return parent::afterSave();
-	}	
-	
+	}
+
 }
