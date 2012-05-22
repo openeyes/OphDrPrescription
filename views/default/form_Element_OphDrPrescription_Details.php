@@ -70,10 +70,8 @@
 
 <script type="text/javascript">
 
-	// Initialise item count
+	// Initialise variables
 	var item_count = $('#prescription_items tbody tr').length;
-
-	// Initialise patient
 	var patient_id = <?php echo $this->patient->id ?>
 
 	// Initialise common drug metadata

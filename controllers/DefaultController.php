@@ -99,6 +99,15 @@ class DefaultController extends BaseEventTypeController {
 		$item = new OphDrPrescription_Item();
 		$item->drug_id = $drug_id;
 		$item->loadDefaults();
+		
+		// Populate route option from episode for Eye
+		if($episode = $patient->getEpisodeForCurrentSubspecialty()) {
+			if($principle_eye = $episode->getPrincipleEye()) {
+				$route_option_id = DrugRouteOption::model()->find('name = :eye_name', array(':eye_name' => $principle_eye->name));
+				$item->route_option_id = ($route_option_id) ? $route_option_id : null;
+			}
+		}
+		
 		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $patient));
 	}
 
