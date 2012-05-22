@@ -103,6 +103,15 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		));
 	}
 
+	public function getLetterText() {
+		$return = '';
+		foreach($this->items as $item) {
+			$return .= $item->getDescription();
+			$return .= "\n";
+		}
+		return $return;
+	}
+	
 	public function commonDrugs() {
 		$firm = Firm::model()->findByPk(Yii::app()->session['selected_firm_id']);
 		$subspecialty_id = $firm->serviceSubspecialtyAssignment->subspecialty_id;
