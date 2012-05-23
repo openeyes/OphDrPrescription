@@ -86,16 +86,17 @@ class DefaultController extends BaseEventTypeController {
 		$patient = Patient::model()->findByPk($patient_id);
 		$drug_set_items = DrugSetItem::model()->findAllByAttributes(array('drug_set_id' => $set_id));
 		foreach($drug_set_items as $drug_set_item) {
-			$item = new OphDrPrescription_Item();
-			$item->drug_id = $drug_set_item->drug_id;
-			$item->loadDefaults();
-			$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $patient));
+			$this->renderPrescriptionItem($key, $patient, $drug_set_item->drug_id);
 			$key++;
 		}
 	}
 
 	public function actionItemForm($key, $patient_id, $drug_id) {
 		$patient = Patient::model()->findByPk($patient_id);
+		$this->renderPrescriptionItem($key, $patient, $drug_id);
+	}
+
+	protected function renderPrescriptionItem($key, $patient, $drug_id) {
 		$item = new OphDrPrescription_Item();
 		$item->drug_id = $drug_id;
 		$item->loadDefaults();
@@ -110,7 +111,7 @@ class DefaultController extends BaseEventTypeController {
 		
 		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $patient));
 	}
-
+	
 	public function actionRouteOptions($key, $route_id) {
 		$options = DrugRouteOption::model()->findAllByAttributes(array('drug_route_id' => $route_id));
 		if($options) {

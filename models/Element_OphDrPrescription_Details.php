@@ -151,12 +151,13 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		if(isset($_POST['prescription_items_valid']) && $_POST['prescription_items_valid']) {
 				
 			// Empty prescription not allowed
-			if(!isset($_POST['prescription_item']) || !$prescription_items = $_POST['prescription_item']) {
+			if(!isset($_POST['prescription_item']) || !$_POST['prescription_item']) {
 				$this->addError('prescription_item', 'Prescription cannot be empty');
+				return parent::beforeValidate();
 			}
 				
 			// Check that fields on prescription items are set
-			foreach($prescription_items as $key => $item) {
+			foreach($_POST['prescription_item'] as $key => $item) {
 				$item_model = new OphDrPrescription_Item();
 				$item_model->drug_id = $item['drug_id'];
 				$item_model->dose = $item['dose'];
