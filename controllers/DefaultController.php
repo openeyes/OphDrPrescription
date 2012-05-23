@@ -82,6 +82,23 @@ class DefaultController extends BaseEventTypeController {
 		}
 	}
 
+	public function actionRepeatForm($key, $patient_id) {
+		$patient = Patient::model()->findByPk($patient_id);
+		$episode = $patient->getEpisodeForCurrentSubspecialty();
+		$prescription = Element_OphDrPrescription_Details::model()->find(array(
+				'condition' => 'episode_id = :episode_id',
+				'join' => 'JOIN event ON event.id = t.event_id',
+				'order' => 'created_date DESC',
+				'params' => array(':episode_id' => $episode->id),
+		));
+		if($prescription) {
+			foreach($prescription->items as $item) {
+				$this->renderPrescriptionItem($key, $patient, $item);
+				$key++;
+			}
+		}
+	}
+
 	public function actionSetForm($key, $patient_id, $set_id) {
 		$patient = Patient::model()->findByPk($patient_id);
 		$drug_set_items = DrugSetItem::model()->findAllByAttributes(array('drug_set_id' => $set_id));
@@ -96,19 +113,39 @@ class DefaultController extends BaseEventTypeController {
 		$this->renderPrescriptionItem($key, $patient, $drug_id);
 	}
 
-	protected function renderPrescriptionItem($key, $patient, $drug_id) {
+	protected function renderPrescriptionItem($key, $patient, $source) {
 		$item = new OphDrPrescription_Item();
-		$item->drug_id = $drug_id;
-		$item->loadDefaults();
-		
-		// Populate route option from episode for Eye
-		if($episode = $patient->getEpisodeForCurrentSubspecialty()) {
-			if($principle_eye = $episode->getPrincipleEye()) {
-				$route_option_id = DrugRouteOption::model()->find('name = :eye_name', array(':eye_name' => $principle_eye->name));
-				$item->route_option_id = ($route_option_id) ? $route_option_id : null;
+		if(is_a($source,'OphDrPrescription_Item')) {
+			
+			// Source is a prescription item, so we should clone it
+			foreach(array('drug_id','duration_id','frequency_id','dose','route_option_id','route_id') as $field) {
+				$item->$field = $source->$field;
+			}
+			if($source->tapers) {
+				$tapers = array();
+				foreach($source->tapers as $taper) {
+					$taper_model = new OphDrPrescription_ItemTaper();
+					$taper_model->dose = $taper->dose;
+					$taper_model->frequency_id = $taper->frequency_id;
+					$taper_model->duration_id = $taper->duration_id;
+					$tapers[] = $taper_model;
+				}
+				$item->tapers = $tapers;
+			}
+		} else {
+			
+			// Source is an integer, so we use it as a drug_id
+			$item->drug_id = $source;
+			$item->loadDefaults();
+
+			// Populate route option from episode for Eye
+			if($episode = $patient->getEpisodeForCurrentSubspecialty()) {
+				if($principle_eye = $episode->getPrincipleEye()) {
+					$route_option_id = DrugRouteOption::model()->find('name = :eye_name', array(':eye_name' => $principle_eye->name));
+					$item->route_option_id = ($route_option_id) ? $route_option_id : null;
+				}
 			}
 		}
-		
 		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $patient));
 	}
 	

@@ -42,6 +42,10 @@
 			<div>
 					<?php echo CHtml::dropDownList('drug_set_id', null, CHtml::listData($element->drugSets(), 'id', 'name'), array('empty' => '-- Select --')); ?>
 			</div>
+			<h5>Add Repeat</h5>
+			<div>
+					<button type="button" class="classy green mini" id="repeat_prescription" name="repeat_prescription"><span class="button-span button-span-green">Add</span></button>
+			</div>
 			<h5>Current Items</h5>
 			<div class="grid-view">
 				<input type="hidden" name="prescription_items_valid" value="1" />
@@ -113,6 +117,12 @@
 		return false;
 	});
 
+	// Add repeat to prescription
+	$('body').delegate('#repeat_prescription', 'click', function() {
+		addRepeat();
+		return false;
+	});
+
 	// Update drug route options for selected route
 	$('body').delegate('select.drugRoute', 'change', function() {
 		var selected = $(this).children('option:selected');
@@ -181,6 +191,17 @@
 		return false;
 	});
 
+	// Add repeat to prescription
+	function addRepeat() {
+		var current_item_count = $('#prescription_items tbody tr').length;
+		$.get("/OphDrPrescription/Default/RepeatForm", { key: item_count, patient_id: patient_id }, function(data) {
+			$('#prescription_items').append(data);
+			markUsed();
+			applyFilter();
+			item_count += $('#prescription_items tbody tr').length - current_item_count;
+		});
+	}
+	
 	// Add set to prescription
 	function addSet(set_id) {
 		var current_item_count = $('#prescription_items tbody tr').length;
@@ -188,7 +209,6 @@
 			$('#prescription_items').append(data);
 			markUsed();
 			applyFilter();
-			$(this).val('');
 			item_count += $('#prescription_items tbody tr').length - current_item_count;
 		});
 	}
@@ -203,7 +223,6 @@
 			option.data('used', true);
 			applyFilter();
 		}
-		$(this).val('');
 		item_count++;
 	}
 
