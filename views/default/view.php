@@ -17,9 +17,6 @@
 <div class="form_button">
 	<img class="loader" style="display: none;" src="/img/ajax-loader.gif" alt="loading..." />
 	<button type="submit" class="classy blue venti" id="et_print" name="print"><span class="button-span button-span-blue">Print</span></button>
-	<?php if ($this->event->canDelete()) {?>
-		<button type="submit" class="classy red venti" id="et_delete" name="delete"><span class="button-span button-span-red">Delete</span></button>
-	<?php }?>
 </div>
 
 <?php $this->footer() ?>
