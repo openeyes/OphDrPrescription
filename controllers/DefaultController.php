@@ -95,18 +95,20 @@ class DefaultController extends BaseEventTypeController {
 
 	public function getPreviousPrescription($patient, $current_id = null) {
 		$episode = $patient->getEpisodeForCurrentSubspecialty();
-		$condition = 'episode_id = :episode_id';
-		$params = array(':episode_id' => $episode->id);
-		if($current_id) {
-			$condition .= ' AND t.id != :current_id';
-			$params[':current_id'] = $current_id;
+		if($episode) {
+			$condition = 'episode_id = :episode_id';
+			$params = array(':episode_id' => $episode->id);
+			if($current_id) {
+				$condition .= ' AND t.id != :current_id';
+				$params[':current_id'] = $current_id;
+			}
+			return Element_OphDrPrescription_Details::model()->find(array(
+					'condition' => $condition,
+					'join' => 'JOIN event ON event.id = t.event_id',
+					'order' => 'created_date DESC',
+					'params' => $params,
+			));
 		}
-		return Element_OphDrPrescription_Details::model()->find(array(
-				'condition' => $condition,
-				'join' => 'JOIN event ON event.id = t.event_id',
-				'order' => 'created_date DESC',
-				'params' => $params,
-		));
 	}
 	
 	public function actionSetForm($key, $patient_id, $set_id) {
