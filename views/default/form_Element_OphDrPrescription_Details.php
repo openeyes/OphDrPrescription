@@ -44,7 +44,9 @@
 			</div>
 			<h5>Other Actions</h5>
 			<div>
+				<?php if($this->getPreviousPrescription($this->patient)) { ?>
 				<button type="button" class="classy green mini" id="repeat_prescription" name="repeat_prescription"><span class="button-span button-span-green">Add Repeat Prescription</span></button>
+				<?php } ?>
 				<button type="button" class="classy mini" id="clear_prescription" name="clear_prescription"><span class="button-span">Clear Prescription</span></button>
 			</div>
 			<h5>Current Items</h5>

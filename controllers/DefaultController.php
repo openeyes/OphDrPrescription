@@ -1,6 +1,7 @@
 <?php
 
 class DefaultController extends BaseEventTypeController {
+	
 	public function actionCreate() {
 		if (!$patient = Patient::model()->findByPk($_REQUEST['patient_id'])) {
 			throw new CHttpException(403, 'Invalid patient_id.');
@@ -84,14 +85,7 @@ class DefaultController extends BaseEventTypeController {
 
 	public function actionRepeatForm($key, $patient_id) {
 		$patient = Patient::model()->findByPk($patient_id);
-		$episode = $patient->getEpisodeForCurrentSubspecialty();
-		$prescription = Element_OphDrPrescription_Details::model()->find(array(
-				'condition' => 'episode_id = :episode_id',
-				'join' => 'JOIN event ON event.id = t.event_id',
-				'order' => 'created_date DESC',
-				'params' => array(':episode_id' => $episode->id),
-		));
-		if($prescription) {
+		if($prescription = $this->getPreviousPrescription($patient)) {
 			foreach($prescription->items as $item) {
 				$this->renderPrescriptionItem($key, $patient, $item);
 				$key++;
@@ -99,6 +93,16 @@ class DefaultController extends BaseEventTypeController {
 		}
 	}
 
+	public function getPreviousPrescription($patient) {
+		$episode = $patient->getEpisodeForCurrentSubspecialty();
+		return Element_OphDrPrescription_Details::model()->find(array(
+				'condition' => 'episode_id = :episode_id',
+				'join' => 'JOIN event ON event.id = t.event_id',
+				'order' => 'created_date DESC',
+				'params' => array(':episode_id' => $episode->id),
+		));
+	}
+	
 	public function actionSetForm($key, $patient_id, $set_id) {
 		$patient = Patient::model()->findByPk($patient_id);
 		$drug_set_items = DrugSetItem::model()->findAllByAttributes(array('drug_set_id' => $set_id));
