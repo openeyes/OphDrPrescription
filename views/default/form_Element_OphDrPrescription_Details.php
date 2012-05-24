@@ -42,9 +42,10 @@
 			<div>
 					<?php echo CHtml::dropDownList('drug_set_id', null, CHtml::listData($element->drugSets(), 'id', 'name'), array('empty' => '-- Select --')); ?>
 			</div>
-			<h5>Add Repeat</h5>
+			<h5>Other Actions</h5>
 			<div>
-					<button type="button" class="classy green mini" id="repeat_prescription" name="repeat_prescription"><span class="button-span button-span-green">Add</span></button>
+				<button type="button" class="classy green mini" id="repeat_prescription" name="repeat_prescription"><span class="button-span button-span-green">Add Repeat Prescription</span></button>
+				<button type="button" class="classy mini" id="clear_prescription" name="clear_prescription"><span class="button-span">Clear Prescription</span></button>
 			</div>
 			<h5>Current Items</h5>
 			<div class="grid-view">
@@ -120,6 +121,15 @@
 	// Add repeat to prescription
 	$('body').delegate('#repeat_prescription', 'click', function() {
 		addRepeat();
+		return false;
+	});
+
+	// Clear prescription
+	$('body').delegate('#clear_prescription', 'click', function() {
+		$('#prescription_items tbody tr').remove();
+		$('#common_drug_id option').data('used', false);
+		item_count = 0;
+		applyFilter();
 		return false;
 	});
 
