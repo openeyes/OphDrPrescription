@@ -54,12 +54,28 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 		// will receive user inputs.
 		return array(
 				array('prescription_id, drug_id, route_id, frequency_id, duration_id', 'required'),
+				array('route_option_id', 'validateRouteOption'),
 				array('dose, route_option_id', 'safe'),
 				//array('', 'required'),
 				// The following rule is used by search().
 				// Please remove those attributes that should not be searched.
 				array('id, dose, prescription_id, drug_id, route_id, route_option_id, frequency_id, duration_id', 'safe', 'on' => 'search'),
 		);
+	}
+	
+	public function validateRouteOption($attribute, $params) {
+		if($this->route && $this->route->options) {
+			foreach($this->route->options as $option) {
+				if($option->id == $this->route_option_id) {
+					// Option is valid for this route
+					return;
+				}
+			}
+		} else {
+			// Route options are ignored
+			return;
+		}
+		$this->addError($attribute, 'Route requires option selection');
 	}
 
 	/**

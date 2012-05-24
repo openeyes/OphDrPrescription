@@ -42,6 +42,13 @@
 			<div>
 					<?php echo CHtml::dropDownList('drug_set_id', null, CHtml::listData($element->drugSets(), 'id', 'name'), array('empty' => '-- Select --')); ?>
 			</div>
+			<h5>Other Actions</h5>
+			<div>
+				<?php if($this->getPreviousPrescription($this->patient, $element->id)) { ?>
+				<button type="button" class="classy green mini" id="repeat_prescription" name="repeat_prescription"><span class="button-span button-span-green">Add Repeat Prescription</span></button>
+				<?php } ?>
+				<button type="button" class="classy mini" id="clear_prescription" name="clear_prescription"><span class="button-span">Clear Prescription</span></button>
+			</div>
 			<h5>Current Items</h5>
 			<div class="grid-view">
 				<input type="hidden" name="prescription_items_valid" value="1" />
@@ -57,9 +64,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach($element->items as $key => $item) {
+						<?php foreach($this->getPrescriptionItems($element) as $key => $item) {
 							$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $this->patient));
-				} ?>
+						} ?>
 					</tbody>
 				</table>
 			</div>
@@ -70,10 +77,8 @@
 
 <script type="text/javascript">
 
-	// Initialise item count
+	// Initialise variables
 	var item_count = $('#prescription_items tbody tr').length;
-
-	// Initialise patient
 	var patient_id = <?php echo $this->patient->id ?>
 
 	// Initialise common drug metadata
@@ -112,6 +117,21 @@
 			addSet(selected.val());
 			$(this).val('');
 		}
+		return false;
+	});
+
+	// Add repeat to prescription
+	$('body').delegate('#repeat_prescription', 'click', function() {
+		addRepeat();
+		return false;
+	});
+
+	// Clear prescription
+	$('body').delegate('#clear_prescription', 'click', function() {
+		$('#prescription_items tbody tr').remove();
+		$('#common_drug_id option').data('used', false);
+		item_count = 0;
+		applyFilter();
 		return false;
 	});
 
@@ -183,6 +203,17 @@
 		return false;
 	});
 
+	// Add repeat to prescription
+	function addRepeat() {
+		var current_item_count = $('#prescription_items tbody tr').length;
+		$.get("/OphDrPrescription/Default/RepeatForm", { key: item_count, patient_id: patient_id }, function(data) {
+			$('#prescription_items').append(data);
+			markUsed();
+			applyFilter();
+			item_count += $('#prescription_items tbody tr').length - current_item_count;
+		});
+	}
+	
 	// Add set to prescription
 	function addSet(set_id) {
 		var current_item_count = $('#prescription_items tbody tr').length;
@@ -190,7 +221,6 @@
 			$('#prescription_items').append(data);
 			markUsed();
 			applyFilter();
-			$(this).val('');
 			item_count += $('#prescription_items tbody tr').length - current_item_count;
 		});
 	}
@@ -205,7 +235,6 @@
 			option.data('used', true);
 			applyFilter();
 		}
-		$(this).val('');
 		item_count++;
 	}
 

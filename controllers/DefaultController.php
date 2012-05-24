@@ -1,6 +1,7 @@
 <?php
 
 class DefaultController extends BaseEventTypeController {
+	
 	public function actionCreate() {
 		if (!$patient = Patient::model()->findByPk($_REQUEST['patient_id'])) {
 			throw new CHttpException(403, 'Invalid patient_id.');
@@ -82,26 +83,84 @@ class DefaultController extends BaseEventTypeController {
 		}
 	}
 
+	public function actionRepeatForm($key, $patient_id, $current_id = null) {
+		$patient = Patient::model()->findByPk($patient_id);
+		if($prescription = $this->getPreviousPrescription($patient, $current_id)) {
+			foreach($prescription->items as $item) {
+				$this->renderPrescriptionItem($key, $patient, $item);
+				$key++;
+			}
+		}
+	}
+
+	public function getPreviousPrescription($patient, $current_id = null) {
+		$episode = $patient->getEpisodeForCurrentSubspecialty();
+		if($episode) {
+			$condition = 'episode_id = :episode_id';
+			$params = array(':episode_id' => $episode->id);
+			if($current_id) {
+				$condition .= ' AND t.id != :current_id';
+				$params[':current_id'] = $current_id;
+			}
+			return Element_OphDrPrescription_Details::model()->find(array(
+					'condition' => $condition,
+					'join' => 'JOIN event ON event.id = t.event_id',
+					'order' => 'created_date DESC',
+					'params' => $params,
+			));
+		}
+	}
+	
 	public function actionSetForm($key, $patient_id, $set_id) {
 		$patient = Patient::model()->findByPk($patient_id);
 		$drug_set_items = DrugSetItem::model()->findAllByAttributes(array('drug_set_id' => $set_id));
 		foreach($drug_set_items as $drug_set_item) {
-			$item = new OphDrPrescription_Item();
-			$item->drug_id = $drug_set_item->drug_id;
-			$item->loadDefaults();
-			$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $patient));
+			$this->renderPrescriptionItem($key, $patient, $drug_set_item->drug_id);
 			$key++;
 		}
 	}
 
 	public function actionItemForm($key, $patient_id, $drug_id) {
 		$patient = Patient::model()->findByPk($patient_id);
-		$item = new OphDrPrescription_Item();
-		$item->drug_id = $drug_id;
-		$item->loadDefaults();
-		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $patient));
+		$this->renderPrescriptionItem($key, $patient, $drug_id);
 	}
 
+	protected function renderPrescriptionItem($key, $patient, $source) {
+		$item = new OphDrPrescription_Item();
+		if(is_a($source,'OphDrPrescription_Item')) {
+			
+			// Source is a prescription item, so we should clone it
+			foreach(array('drug_id','duration_id','frequency_id','dose','route_option_id','route_id') as $field) {
+				$item->$field = $source->$field;
+			}
+			if($source->tapers) {
+				$tapers = array();
+				foreach($source->tapers as $taper) {
+					$taper_model = new OphDrPrescription_ItemTaper();
+					$taper_model->dose = $taper->dose;
+					$taper_model->frequency_id = $taper->frequency_id;
+					$taper_model->duration_id = $taper->duration_id;
+					$tapers[] = $taper_model;
+				}
+				$item->tapers = $tapers;
+			}
+		} else {
+			
+			// Source is an integer, so we use it as a drug_id
+			$item->drug_id = $source;
+			$item->loadDefaults();
+
+			// Populate route option from episode for Eye
+			if($episode = $patient->getEpisodeForCurrentSubspecialty()) {
+				if($principle_eye = $episode->getPrincipleEye()) {
+					$route_option_id = DrugRouteOption::model()->find('name = :eye_name', array(':eye_name' => $principle_eye->name));
+					$item->route_option_id = ($route_option_id) ? $route_option_id : null;
+				}
+			}
+		}
+		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $patient));
+	}
+	
 	public function actionRouteOptions($key, $route_id) {
 		$options = DrugRouteOption::model()->findAllByAttributes(array('drug_route_id' => $route_id));
 		if($options) {
@@ -111,4 +170,29 @@ class DefaultController extends BaseEventTypeController {
 		}
 	}
 
+	public function getPrescriptionItems($element) {
+		$items = $element->items;
+		if(isset($_POST['prescription_item'])) {
+			
+			// Form has been posted, so we should return the submitted values instead
+			$items = array();
+			foreach($_POST['prescription_item'] as $item) {
+				$item_model = new OphDrPrescription_Item();
+				$item_model->attributes = $item;
+				if(isset($item['taper'])) {
+					$tapers = array();
+					foreach($item['taper'] as $taper) {
+						$taper_model = new OphDrPrescription_ItemTaper();
+						$taper_model->attributes = $taper;
+						$tapers[] = $taper_model;
+					}
+					$item_model->tapers = $tapers;
+				}
+				$items[] = $item_model;
+			}
+			
+		}
+		return $items;
+	}
+	
 }
