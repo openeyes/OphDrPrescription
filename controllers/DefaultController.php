@@ -83,9 +83,9 @@ class DefaultController extends BaseEventTypeController {
 		}
 	}
 
-	public function actionRepeatForm($key, $patient_id) {
+	public function actionRepeatForm($key, $patient_id, $current_id = null) {
 		$patient = Patient::model()->findByPk($patient_id);
-		if($prescription = $this->getPreviousPrescription($patient)) {
+		if($prescription = $this->getPreviousPrescription($patient, $current_id)) {
 			foreach($prescription->items as $item) {
 				$this->renderPrescriptionItem($key, $patient, $item);
 				$key++;
@@ -93,13 +93,19 @@ class DefaultController extends BaseEventTypeController {
 		}
 	}
 
-	public function getPreviousPrescription($patient) {
+	public function getPreviousPrescription($patient, $current_id = null) {
 		$episode = $patient->getEpisodeForCurrentSubspecialty();
+		$condition = 'episode_id = :episode_id';
+		$params = array(':episode_id' => $episode->id);
+		if($current_id) {
+			$condition .= ' AND t.id != :current_id';
+			$params[':current_id'] = $current_id;
+		}
 		return Element_OphDrPrescription_Details::model()->find(array(
-				'condition' => 'episode_id = :episode_id',
+				'condition' => $condition,
 				'join' => 'JOIN event ON event.id = t.event_id',
 				'order' => 'created_date DESC',
-				'params' => array(':episode_id' => $episode->id),
+				'params' => $params,
 		));
 	}
 	
