@@ -20,9 +20,6 @@
 	<script type="text/javascript">
 		var module_css_path = "<?php echo $this->cssPath ?>";
 	</script>
-	<?php if ($this->event->canDelete()) {?>
-		<button type="submit" class="classy red venti" id="et_delete" name="delete"><span class="button-span button-span-red">Delete</span></button>
-	<?php }?>
 </div>
 
 <?php $this->footer() ?>
