@@ -1,0 +1,9 @@
+@import url('/css/printcontent.css');
+
+#prescription_header th {
+	width: 15%;
+}
+
+#prescription_header td {
+	width: 35%;
+}
