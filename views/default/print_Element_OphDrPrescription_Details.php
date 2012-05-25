@@ -1,9 +1,6 @@
 <?php foreach(array('','Copy for notes','Copy for patient') as $copy) { ?>
 <?php if($copy) {?>
 <div class="pageBreak"></div>
-<div class="watermark">
-	<div><?php echo $copy ?></div>
-</div>
 <?php } ?>
 <div class="banner">
 	<div class="seal">
@@ -13,6 +10,11 @@
 		<img src="/img/_print/letterhead_Moorfields_NHS.jpg"
 			alt="letterhead_Moorfields_NHS" />
 	</div>
+	<?php if($copy) { ?>
+	<div class="watermark">
+		<?php echo $copy; ?>
+	</div>
+	<?php } ?>
 </div>
 <div class="fromAddress">
 	<?php echo $this->site->letterhtml ?>
@@ -53,15 +55,8 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 		<th>Service</th>
 		<td><?php echo $subspecialty->name ?></td>
 	</tr>
-	<tr>
-		<th>Prescribed by</th>
-		<td><?php echo $element->user->fullname ?></td>
-		<th>Prescription Date</th>
-		<td><?php echo $element->NHSDate('last_modified_date') ?></td>
-	</tr>
 </table>
 
-<h2>Prescription</h2>
 <table id="prescription_items">
 	<thead>
 		<tr>
@@ -99,64 +94,61 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 
 <p>Trust policy limits supply to a maximum of 2 weeks</p>
 
+<h2>Allergies</h2>
+<p class="box">
+	<?php echo $this->patient->getAllergiesString() ?>
+</p>
+
 <h2>Comments</h2>
-<p>
+<p class="box">
 	<?php echo $element->comments?>
 </p>
 
-<h4>Pharmacy Use Only</h4>
-<table>
+<h2>Pharmacy Use Only</h2>
+<table id="pharmacy_checkboxes">
 	<tr>
-		<th></th>
-		<th>Yes</th>
-		<th>No</th>
+		<th>Used medication before?</th>
+		<td>Yes &#10063; / No &#10063;</td>
+		<th>Allergies</th>
+		<td>Yes &#10063; / No &#10063;</td>
 	</tr>
 	<tr>
-		<td>Used medication before?</td>
-		<td></td>
-		<td></td>
+		<th>Heart problems</th>
+		<td>Yes &#10063; / No &#10063;</td>
+		<th>Respiritory problems</th>
+		<td>Yes &#10063; / No &#10063;</td>
 	</tr>
 	<tr>
-		<td>Allergies</td>
+		<th>Drug history</th>
+		<td>Yes &#10063; / No &#10063;</td>
+		<th>Continued from GP?</th>
+		<td>Yes &#10063; / No &#10063;</td>
+	</tr>
+</table>
+<table id="done_bys">
+	<tr>
+		<th>Prescribed by</th>
+		<td><?php echo $element->user->fullname ?>
+		</td>
+		<th>Date</th>
+		<td><?php echo $element->NHSDate('last_modified_date') ?>
+		</td>
+	</tr>
+	<tr class="handWritten">
+		<th>Dispensed by</th>
 		<td></td>
+		<th>Date</th>
 		<td></td>
 	</tr>
-	<tr>
-		<td>Heart problems</td>
+	<tr class="handWritten">
+		<th>Checked by</th>
 		<td></td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>Respiritory problems</td>
-		<td></td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>Drug history</td>
-		<td></td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>Prescription continued from GP?</td>
-		<td></td>
+		<th>Date</th>
 		<td></td>
 	</tr>
 </table>
-<table>
-	<tr>
-		<td>Dispensed by:</td>
-		<td></td>
-		<td>Date:</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td>Checked by:</td>
-		<td></td>
-		<td>Date:</td>
-		<td></td>
-	</tr>
-</table>
+
 <?php if(!$copy) { ?>
-	<p>Doctor's Signature:</p>
+<p>Doctor's Signature:</p>
 <?php } ?>
 <?php } ?>
