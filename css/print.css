@@ -1,0 +1,83 @@
+@import url('/css/printcontent.css');
+
+h1 {
+	font-size: 1.5em;
+	margin: 10px 0;
+}
+
+h2 {
+	font-size: 1.2em;
+	margin: 10px 0 5px;
+}
+
+table {
+	margin: 10px 0;
+}
+
+.banner {
+	position: relative;
+}
+
+.watermark {
+	position: absolute;
+	z-index: -1;
+	left: 0;
+	top: 500px;
+	font-size: 80pt;
+	opacity: 0.1;
+	font-weight: bold;
+	text-align: right;
+	width: 100%;
+	height: 100%;
+	-webkit-transform: rotate(-60deg); 
+	-moz-transform: rotate(-60deg);
+	white-space:nowrap;
+	line-height: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.fromAddress {
+	padding-top: 0;
+}
+
+#prescription_header th,
+#done_bys th {
+	width: 20%;
+}
+
+#prescription_header td,
+#done_bys td {
+	width: 30%;
+}
+
+#prescription_items td,
+#prescription_items th {
+	width: 15%;
+}
+
+#prescription_items td.prescriptionLabel {
+	width: 40%;
+}
+
+#prescription_items .prescriptionTaper td.prescriptionLabel {
+	text-align: right;
+}
+
+.box {
+	border: 1px solid #999;
+	padding: 5px;
+	margin: 5px 0;
+}
+
+#pharmacy_checkboxes th {
+	width: 30%;
+}
+
+#pharmacy_checkboxes td {
+	width: 20%;
+}
+
+tr.handWritten td {
+	height: 30px;
+}

@@ -17,6 +17,9 @@
 <div class="form_button">
 	<img class="loader" style="display: none;" src="/img/ajax-loader.gif" alt="loading..." />
 	<button type="submit" class="classy blue venti" id="et_print" name="print"><span class="button-span button-span-blue">Print</span></button>
+	<script type="text/javascript">
+		var module_css_path = "<?php echo $this->cssPath ?>";
+	</script>
 </div>
 
 <?php $this->footer() ?>
