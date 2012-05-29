@@ -7,6 +7,12 @@ class DefaultController extends BaseEventTypeController {
 			throw new CHttpException(403, 'Invalid patient_id.');
 		}
 		$this->showAllergyWarning($patient);
+		
+		// Save and print clicked, stash print flag
+		if(isset($_POST['saveprint'])) {
+			Yii::app()->session['print_prescription'] = true;
+		}
+
 		parent::actionCreate();
 	}
 
@@ -15,6 +21,12 @@ class DefaultController extends BaseEventTypeController {
 			throw new CHttpException(403, 'Invalid event id.');
 		}
 		$this->showAllergyWarning($event->episode->patient);
+		
+		// Save and print clicked, stash print flag
+		if(isset($_POST['saveprint'])) {
+			Yii::app()->session['print_prescription'] = true;
+		}
+
 		parent::actionUpdate($id);
 	}
 
@@ -35,6 +47,7 @@ class DefaultController extends BaseEventTypeController {
 				break;
 			}
 		}
+		
 		parent::actionView($id);
 	}
 
@@ -44,7 +57,6 @@ class DefaultController extends BaseEventTypeController {
 			foreach($patient->allergies as $allergy) {
 				$allergy_array[] = $allergy->name;
 			}
-			Yii::log('setting flash');
 			Yii::app()->user->setFlash('warning.prescription_allergy', 'Warning: Patient is allergic to '.implode(', ',$allergy_array));
 		}
 	}
