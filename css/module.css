@@ -3,23 +3,15 @@
 	margin: 10px 0;
 }
 
-.allergyWarning {
-	background: #f66;
-}
+/*
+.allergyWarning { background: #f66; }
+.eventHighlight li { font-size: 16px; padding: 2px 4px; }
+#prescription_items td {	padding: 5px 10px;	}
+#prescription_items tr.prescriptionTaper {	background: #c6dcef; }
+#prescription_items tr.prescriptionTaper .prescriptionLabel {	text-align: right; }
+*/
 
-.eventHighlight li {
-	font-size: 16px;
-	padding: 2px 4px;
-}
-
-#prescription_items td {
-	padding: 5px 10px;
-}
-
-#prescription_items tr.prescriptionTaper {
-	background: #c6dcef;
-}
-
-#prescription_items tr.prescriptionTaper .prescriptionLabel {
-	text-align: right;
-}
+table#prescription_items thead th { padding-bottom:10px; }
+.prescriptionItem { border-top:#ccc 1px dotted; } 
+.prescriptionItem td.prescriptionLabel  { font-weight: bold; }
+.prescriptionTaper td.prescriptionLabel { padding-left:35px; color:#666; font-style:italic; background-image: url(../../img/_elements/icons/taper.png); background-position: left center; background-repeat: no-repeat;} 
