@@ -1,9 +1,7 @@
 /* Module-specific css can be placed here */
-#div_Element_OphDrPrescription_Details_prescription_items .data > div {
-	margin: 10px 0;
-}
 
 /*
+#div_Element_OphDrPrescription_Details_prescription_items .data > div { margin: 10px 0; }
 .allergyWarning { background: #f66; }
 .eventHighlight li { font-size: 16px; padding: 2px 4px; }
 #prescription_items td {	padding: 5px 10px;	}
@@ -12,6 +10,14 @@
 */
 
 table#prescription_items thead th { padding-bottom:10px; }
-.prescriptionItem { border-top:#ccc 1px dotted; } 
-.prescriptionItem td.prescriptionLabel  { font-weight: bold; }
-.prescriptionTaper td.prescriptionLabel { padding-left:35px; color:#666; font-style:italic; background-image: url(../../img/_elements/icons/taper.png); background-position: left center; background-repeat: no-repeat;} 
+tr.prescriptionItem { border-top:#ccc 1px dotted; } 
+tr.prescriptionItem td.prescriptionLabel  { font-weight: bold; }
+tr.prescriptionTaper td.prescriptionLabel { padding-left:35px; color:#666; font-style:italic; background-image: url(../../img/_elements/icons/taper.png); background-position: left top; background-repeat: no-repeat;} 
+/* tweak default table class */
+tr.prescriptionItem.odd, tr.prescriptionItem.even, tr.prescriptionTaper.odd, tr.prescriptionTaper.even { border-bottom: none; }
+/* remove / + taper */
+table#prescription_items .removeItem 	{ display:inline-block; font-weight: bold; font-size:11px; }
+table#prescription_items .taperItem  	{ display:inline-block; font-weight: bold; font-size:11px; margin-top:5px; }
+table#prescription_items .removeTaper 	{ display:inline-block; font-style:italic; font-size:11px; }
+
+
