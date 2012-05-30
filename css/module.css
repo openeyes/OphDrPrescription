@@ -2,26 +2,17 @@
 #div_Element_OphDrPrescription_Details_prescription_items .data>div {
 	margin: 10px 0;
 }
-
-.allergyWarning {
-	background: #f66;
-}
-
-.eventHighlight li {
-	font-size: 16px;
-	padding: 2px 4px;
-}
-
-#prescription_items td {
-	padding: 5px 10px;
-}
-
 #prescription_items tr.prescriptionTaper {
 	
 }
 
 #prescription_items tr.prescriptionTaper .prescriptionLabel {
 	text-align: right;
+	color:#666;
+	font-style:italic;
+	background-image: url(../../img/_elements/icons/taper.png);
+	background-position: left top;
+	background-repeat: no-repeat;
 }
 
 tr.prescriptionItem {
