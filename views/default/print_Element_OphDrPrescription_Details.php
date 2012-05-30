@@ -90,8 +90,9 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 			<td>-</td>
 			<td><?php echo $taper->frequency->name ?></td>
 			<td><?php echo $taper->duration->name ?></td>
-			<td colspan="2">-</td>
-			</tr>
+			<td>-</td>
+			<td>-</td>
+		</tr>
 		<?php	} 
 } ?>
 	</tbody>

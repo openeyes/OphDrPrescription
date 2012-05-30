@@ -1,18 +1,23 @@
-/* Module-specific css can be placed here */
-#div_Element_OphDrPrescription_Details_prescription_items .data>div {
+#prescription_items {
 	margin: 10px 0;
 }
+
+#prescription_items td {
+	padding: 5px 10px;
+}
+
 #prescription_items tr.prescriptionTaper {
-	
 }
 
 #prescription_items tr.prescriptionTaper .prescriptionLabel {
 	text-align: right;
 	color:#666;
 	font-style:italic;
-	background-image: url(../../img/_elements/icons/taper.png);
-	background-position: left top;
-	background-repeat: no-repeat;
+}
+
+#prescription_items tr.prescriptionTaper .prescriptionLabel span {
+	background: url(/img/_elements/icons/taper.png) -10px 100% no-repeat;
+	padding-left: 20px;
 }
 
 tr.prescriptionItem {
@@ -32,4 +37,21 @@ tr.prescriptionTaper.even {
 
 #dialog-confirm-cancel {
 	display: none;
+}
+
+#common_drug_id {
+	margin-bottom: 10px;
+}
+
+#drug_type_id {
+	margin-left: 5px;
+}
+
+
+.allergyWarning td {
+	background: #f66;
+}
+
+tr td.prescriptionItemActions {
+	font-size: 11px;
 }
