@@ -1,5 +1,5 @@
 /* Module-specific css can be placed here */
-#div_Element_OphDrPrescription_Details_prescription_items .data > div {
+#div_Element_OphDrPrescription_Details_prescription_items .data>div {
 	margin: 10px 0;
 }
 
@@ -17,9 +17,28 @@
 }
 
 #prescription_items tr.prescriptionTaper {
-	background: #c6dcef;
+	
 }
 
 #prescription_items tr.prescriptionTaper .prescriptionLabel {
 	text-align: right;
+}
+
+tr.prescriptionItem {
+	border-top: #ccc 1px dotted;
+}
+
+tr.prescriptionItem td.prescriptionLabel {
+	font-weight: bold;
+}
+
+tr.prescriptionItem.odd,
+tr.prescriptionItem.even,
+tr.prescriptionTaper.odd,
+tr.prescriptionTaper.even {
+	border-bottom: none;
+}
+
+#dialog-confirm-cancel {
+	display: none;
 }

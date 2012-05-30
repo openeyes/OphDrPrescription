@@ -51,6 +51,23 @@ class DefaultController extends BaseEventTypeController {
 		parent::actionView($id);
 	}
 
+	public function actionPrint($id) {
+		if (!$prescription = Element_OphDrPrescription_Details::model()->find('event_id=?',array($id))) {
+			throw new Exception('Prescription not found: '.$id);
+		}
+		$prescription->printed = 1;
+		if (!$prescription->save()) {
+			throw new Exception('Unable to save prescription: '.print_r($prescription->getErrors(),true));
+		}
+		$event = $prescription->event;
+		$event->info = $prescription->infotext;
+		if(!$event->save()) {
+			throw new Exception('Unable to save event: '.print_r($event->getErrors(),true));
+		}
+		
+		parent::actionPrint($id);
+	}
+	
 	protected function showAllergyWarning($patient) {
 		if($patient->allergies) {
 			$allergy_array = array();

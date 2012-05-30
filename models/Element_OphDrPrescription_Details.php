@@ -142,6 +142,21 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		));
 	}
 
+	public function isEditable() {
+		if($this->locked) {
+			return false;
+		} else if($this->printed && date('Y-m-d') != date('Y-m-d', strtotime($this->last_modified_date))) {
+			$this->locked = true;
+			$this->save();
+			$this->event->deleteIssues();
+			$this->event->info = 'Prescription is locked';
+			$this->event->save();
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	/**
 	 * Validate prescription items
 	 * @todo This probably doesn't belong here, but there doesn't seem to be an easy way
@@ -273,7 +288,21 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 				
 		}
 
+		// Update event issues
+		$this->event->deleteIssues();
+		if($this->printed && !$this->locked) {
+			$this->event->addIssue("This prescription will be locked at midnight");
+		}
+
 		return parent::afterSave();
+	}
+
+	public function getInfotext() {
+		if (!$this->printed) {
+			return 'Draft';
+		} else {
+			return 'Printed';
+		}
 	}
 
 }

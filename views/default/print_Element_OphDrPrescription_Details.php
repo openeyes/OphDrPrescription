@@ -65,6 +65,8 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 			<th>Route</th>
 			<th>Frequency</th>
 			<th>Duration</th>
+			<th>Dispensed</th>
+			<th>Checked</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -78,15 +80,18 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 			} ?></td>
 			<td><?php echo $item->frequency->name ?></td>
 			<td><?php echo $item->duration->name ?></td>
+			<td></td>
+			<td></td>
 		</tr>
 		<?php foreach($item->tapers as $taper) { ?>
 		<tr class="prescriptionTaper">
 			<td class="prescriptionLabel">then</td>
 			<td><?php echo $taper->dose ?></td>
-			<td></td>
+			<td>-</td>
 			<td><?php echo $taper->frequency->name ?></td>
 			<td><?php echo $taper->duration->name ?></td>
-		</tr>
+			<td colspan="2">-</td>
+			</tr>
 		<?php	} 
 } ?>
 	</tbody>
@@ -94,10 +99,12 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 
 <p>Trust policy limits supply to a maximum of 2 weeks</p>
 
+<!-- 
 <h2>Allergies</h2>
 <p class="box">
 	<?php echo $this->patient->getAllergiesString() ?>
 </p>
+ -->
 
 <h2>Comments</h2>
 <p class="box">
@@ -109,7 +116,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 	<tr>
 		<th>Used medication before?</th>
 		<td>Yes &#10063; / No &#10063;</td>
-		<th>Allergies</th>
+		<th>Allergies / reactions</th>
 		<td>Yes &#10063; / No &#10063;</td>
 	</tr>
 	<tr>
@@ -135,13 +142,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 		</td>
 	</tr>
 	<tr class="handWritten">
-		<th>Dispensed by</th>
-		<td></td>
-		<th>Date</th>
-		<td></td>
-	</tr>
-	<tr class="handWritten">
-		<th>Checked by</th>
+		<th>Clinical Checked by</th>
 		<td></td>
 		<th>Date</th>
 		<td></td>
