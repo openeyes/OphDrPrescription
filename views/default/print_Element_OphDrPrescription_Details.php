@@ -100,12 +100,10 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 
 <p>Trust policy limits supply to a maximum of 2 weeks</p>
 
-<!-- 
 <h2>Allergies</h2>
 <p class="box">
-	<?php echo $this->patient->getAllergiesString() ?>
+	<?php if($this->patient->allergies) { echo $this->patient->getAllergiesString(); } else { ?>Unknown / no known<?php } ?>
 </p>
- -->
 
 <h2>Comments</h2>
 <p class="box">
