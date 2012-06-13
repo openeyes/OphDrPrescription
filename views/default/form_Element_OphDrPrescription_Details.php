@@ -89,7 +89,6 @@
 <script type="text/javascript">
 
 	// Initialise variables
-	var item_count = $('#prescription_items tbody tr').length;
 	var patient_id = <?php echo $this->patient->id ?>
 
 	// Initialise common drug metadata
@@ -141,7 +140,6 @@
 	$('body').delegate('#clear_prescription', 'click', function() {
 		$('#prescription_items tbody tr').remove();
 		$('#common_drug_id option').data('used', false);
-		item_count = 0;
 		applyFilter();
 		return false;
 	});
@@ -165,6 +163,7 @@
 		var drug_id = row.find('input[name$="[drug_id]"]').first().val();
 		var key = row.attr('data-key');
 		$('#prescription_items tr[data-key="'+key+'"]').remove();
+		keyRows();
 		var option = $('#common_drug_id option[value="' + drug_id + '"]');
 		if (option) {
 			option.data('used', false);
@@ -194,7 +193,8 @@
 		duration_input.val(row.find('td.prescriptionItemDurationId select').val());
 		
 		// Insert taper row
-		var new_row = $('<tr data-key="'+key+'" data-taper="'+taper_key+'" class="prescriptionTaper"></tr>');
+		var odd_even = (row.hasClass('odd')) ? 'odd' : 'even';
+		var new_row = $('<tr data-key="'+key+'" data-taper="'+taper_key+'" class="prescriptionTaper '+odd_even+'"></tr>');
 		new_row.append($('<td class="prescriptionLabel">then</td>'), $('<td></td>').append(dose_input), $('<td colspan="2"></td>'), $('<td></td>').append(frequency_input), $('<td></td>').append(duration_input), $('<td class="prescriptionItemActions"><a class="removeTaper"	href="#">Remove</a></td>'));
 		last_row.after(new_row);
 		
@@ -216,29 +216,25 @@
 
 	// Add repeat to prescription
 	function addRepeat() {
-		var current_item_count = $('#prescription_items tbody tr').length;
-		$.get("/OphDrPrescription/Default/RepeatForm", { key: item_count, patient_id: patient_id }, function(data) {
+		$.get("/OphDrPrescription/Default/RepeatForm", { key: itemCount(), patient_id: patient_id }, function(data) {
 			$('#prescription_items').append(data);
 			markUsed();
 			applyFilter();
-			item_count += $('#prescription_items tbody tr').length - current_item_count;
 		});
 	}
 	
 	// Add set to prescription
 	function addSet(set_id) {
-		var current_item_count = $('#prescription_items tbody tr').length;
-		$.get("/OphDrPrescription/Default/SetForm", { key: item_count, patient_id: patient_id, set_id: set_id }, function(data) {
+		$.get("/OphDrPrescription/Default/SetForm", { key: itemCount(), patient_id: patient_id, set_id: set_id }, function(data) {
 			$('#prescription_items').append(data);
 			markUsed();
 			applyFilter();
-			item_count += $('#prescription_items tbody tr').length - current_item_count;
 		});
 	}
 	
 	// Add item to prescription
 	function addItem(label, item_id) {
-		$.get("/OphDrPrescription/Default/ItemForm", { key: item_count, patient_id: patient_id, drug_id: item_id }, function(data){
+		$.get("/OphDrPrescription/Default/ItemForm", { key: itemCount(), patient_id: patient_id, drug_id: item_id }, function(data){
 			$('#prescription_items').append(data);
 		});
 		var option = $('#common_drug_id option[value="' + item_id + '"]');
@@ -246,7 +242,6 @@
 			option.data('used', true);
 			applyFilter();
 		}
-		item_count++;
 	}
 
 	// Mark used common drugs
@@ -283,6 +278,30 @@
 				}
 			}
 		});
+	}
+
+	function keyRows() {
+		$('#prescription_items .prescriptionItem').each(function(i) {
+			if(i % 2) {
+				$(this).removeClass('even').addClass('odd');
+			} else {
+				$(this).removeClass('odd').addClass('even');
+			}
+			var key = $(this).attr('data-key');
+			$('#prescription_items .prescriptionTaper[data-key="'+key+'"]').each(function() {
+				if(i % 2) {
+					$(this).removeClass('even').addClass('odd');
+				} else {
+					$(this).removeClass('odd').addClass('even');
+				}
+				$(this).attr('data-key',i);
+			});
+			$(this).attr('data-key',i);
+		});
+	}
+
+	function itemCount() {
+		return $('#prescription_items .prescriptionItem').length;
 	}
 
 </script>

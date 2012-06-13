@@ -78,7 +78,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 			<td><?php echo $item->route->name ?> <?php if($item->route_option) { 
 				echo ' ('.$item->route_option->name.')';
 			} ?></td>
-			<td><?php echo $item->frequency->name ?></td>
+			<td><?php if($copy == 'Copy for patient') { echo $item->frequency->long_name; } else { echo $item->frequency->name; } ?></td>
 			<td><?php echo $item->duration->name ?></td>
 			<td></td>
 			<td></td>
@@ -88,7 +88,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 			<td class="prescriptionLabel">then</td>
 			<td><?php echo $taper->dose ?></td>
 			<td>-</td>
-			<td><?php echo $taper->frequency->name ?></td>
+			<td><?php if($copy == 'Copy for patient') { echo $item->frequency->long_name; } else { echo $item->frequency->name; } ?></td>
 			<td><?php echo $taper->duration->name ?></td>
 			<td>-</td>
 			<td>-</td>
@@ -100,12 +100,10 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 
 <p>Trust policy limits supply to a maximum of 2 weeks</p>
 
-<!-- 
 <h2>Allergies</h2>
 <p class="box">
-	<?php echo $this->patient->getAllergiesString() ?>
+	<?php if($this->patient->allergies) { echo $this->patient->getAllergiesString(); } else { ?>Unknown / no known<?php } ?>
 </p>
- -->
 
 <h2>Comments</h2>
 <p class="box">

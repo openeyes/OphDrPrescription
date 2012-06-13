@@ -1,4 +1,4 @@
-<tr data-key="<?php echo $key ?>" class="prescriptionItem<?php if($patient->hasAllergy($item->drug_id)) { ?> allergyWarning<?php } ?><?php if($item->getErrors()) { ?> errors<?php } ?> <?php echo (($key % 2) == 0) ? 'even' : 'odd'; ?>">
+<tr data-key="<?php echo $key ?>" class="prescriptionItem<?php if($patient->hasAllergy($item->drug_id)) { ?> allergyWarning<?php } ?><?php if($item->getErrors()) { ?> errors<?php } ?> <?php echo ($key % 2) ? 'odd' : 'even'; ?>">
 	<td class="prescriptionLabel">
 		<?php echo $item->drug->label; ?>
 		<?php if($item->id) { ?><input type="hidden" name="prescription_item[<?php echo $key ?>][id]" value="<?php echo $item->id?>" /><?php } ?>
@@ -32,7 +32,7 @@
 	$count = 0;
 	foreach($item->tapers as $taper) {
 ?>
-<tr data-key="<?php echo $key ?>" data-taper="<?php echo $count ?>" class="prescriptionTaper <?php echo (($key % 2) == 0) ? 'even' : 'odd'; ?>">
+<tr data-key="<?php echo $key ?>" data-taper="<?php echo $count ?>" class="prescriptionTaper <?php echo ($key % 2) ? 'odd' : 'even'; ?>">
 	<td class="prescriptionLabel">
 		<span>then</span>
 		<?php if($taper->id) { ?><input type="hidden" name="prescription_item[<?php echo $key ?>][taper][<?php echo $count ?>][id]" value="<?php echo $taper->id?>" /><?php } ?>
