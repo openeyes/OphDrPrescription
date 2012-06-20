@@ -53,9 +53,9 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-				array('prescription_id, drug_id, route_id, frequency_id, duration_id', 'required'),
+				array('prescription_id, drug_id, dose, route_id, frequency_id, duration_id', 'required'),
 				array('route_option_id', 'validateRouteOption'),
-				array('dose, route_option_id', 'safe'),
+				array('route_option_id', 'safe'),
 				//array('', 'required'),
 				// The following rule is used by search().
 				// Please remove those attributes that should not be searched.

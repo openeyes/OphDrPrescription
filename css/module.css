@@ -1,15 +1,5 @@
-/* Module-specific css can be placed here */
-#div_Element_OphDrPrescription_Details_prescription_items .data > div {
+#prescription_items {
 	margin: 10px 0;
-}
-
-.allergyWarning {
-	background: #f66;
-}
-
-.eventHighlight li {
-	font-size: 16px;
-	padding: 2px 4px;
 }
 
 #prescription_items td {
@@ -17,9 +7,51 @@
 }
 
 #prescription_items tr.prescriptionTaper {
-	background: #c6dcef;
 }
 
 #prescription_items tr.prescriptionTaper .prescriptionLabel {
 	text-align: right;
+	color:#666;
+	font-style:italic;
+}
+
+#prescription_items tr.prescriptionTaper .prescriptionLabel span {
+	background: url(/img/_elements/icons/taper.png) -10px 100% no-repeat;
+	padding-left: 20px;
+}
+
+tr.prescriptionItem {
+	border-top: #ccc 1px dotted;
+}
+
+tr.prescriptionItem td.prescriptionLabel {
+	font-weight: bold;
+}
+
+tr.prescriptionItem.odd,
+tr.prescriptionItem.even,
+tr.prescriptionTaper.odd,
+tr.prescriptionTaper.even {
+	border-bottom: none;
+}
+
+#dialog-confirm-cancel {
+	display: none;
+}
+
+#common_drug_id {
+	margin-bottom: 10px;
+}
+
+#drug_type_id {
+	margin-left: 5px;
+}
+
+
+.allergyWarning td {
+	background: #f66;
+}
+
+tr td.prescriptionItemActions {
+	font-size: 11px;
 }

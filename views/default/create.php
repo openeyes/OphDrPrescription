@@ -28,10 +28,15 @@
 		<div class="cleartall"></div>
 		<div class="form_button">
 			<img class="loader" style="display: none;" src="/img/ajax-loader.gif" alt="loading..." />&nbsp;
-			<button type="submit" class="classy green venti auto" id="save" name="save"><span class="button-span button-span-green">Save</span></button>
-			<button type="submit" class="classy red venti auto" id="cancel" name="cancel"><span class="button-span button-span-red">Cancel</span></button>
+			<button type="submit" class="classy green venti" id="et_save_draft" name="savedraft"><span class="button-span button-span-green">Save draft</span></button>
+			<button type="submit" class="classy green venti" id="et_save_print" name="saveprint"><span class="button-span button-span-green">Save and print</span></button>
+			<button type="submit" class="classy red venti" id="et_cancel" name="cancel"><span class="button-span button-span-red">Cancel</span></button>
 		</div>
 	<?php $this->endWidget(); ?>
+</div>
+
+<div id="dialog-confirm-cancel" title="Cancel">
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>All text entered will be lost. Are you sure?</p>
 </div>
 
 <?php $this->footer() ?>

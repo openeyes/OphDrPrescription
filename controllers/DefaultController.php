@@ -7,6 +7,12 @@ class DefaultController extends BaseEventTypeController {
 			throw new CHttpException(403, 'Invalid patient_id.');
 		}
 		$this->showAllergyWarning($patient);
+		
+		// Save and print clicked, stash print flag
+		if(isset($_POST['saveprint'])) {
+			Yii::app()->session['print_prescription'] = true;
+		}
+
 		parent::actionCreate();
 	}
 
@@ -15,6 +21,12 @@ class DefaultController extends BaseEventTypeController {
 			throw new CHttpException(403, 'Invalid event id.');
 		}
 		$this->showAllergyWarning($event->episode->patient);
+		
+		// Save and print clicked, stash print flag
+		if(isset($_POST['saveprint'])) {
+			Yii::app()->session['print_prescription'] = true;
+		}
+
 		parent::actionUpdate($id);
 	}
 
@@ -35,16 +47,33 @@ class DefaultController extends BaseEventTypeController {
 				break;
 			}
 		}
+		
 		parent::actionView($id);
 	}
 
+	public function actionPrint($id) {
+		if (!$prescription = Element_OphDrPrescription_Details::model()->find('event_id=?',array($id))) {
+			throw new Exception('Prescription not found: '.$id);
+		}
+		$prescription->printed = 1;
+		if (!$prescription->save()) {
+			throw new Exception('Unable to save prescription: '.print_r($prescription->getErrors(),true));
+		}
+		$event = $prescription->event;
+		$event->info = $prescription->infotext;
+		if(!$event->save()) {
+			throw new Exception('Unable to save event: '.print_r($event->getErrors(),true));
+		}
+		
+		parent::actionPrint($id);
+	}
+	
 	protected function showAllergyWarning($patient) {
 		if($patient->allergies) {
 			$allergy_array = array();
 			foreach($patient->allergies as $allergy) {
 				$allergy_array[] = $allergy->name;
 			}
-			Yii::log('setting flash');
 			Yii::app()->user->setFlash('warning.prescription_allergy', 'Warning: Patient is allergic to '.implode(', ',$allergy_array));
 		}
 	}
