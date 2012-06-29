@@ -102,7 +102,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 
 <h2>Allergies</h2>
 <p class="box">
-	<?php if($this->patient->allergies) { echo $this->patient->getAllergiesString(); } else { ?>Unknown / no known<?php } ?>
+	<?php if($this->patient->allergies) { echo $this->patient->getAllergiesString(); } else { ?>None identified<?php } ?>
 </p>
 
 <h2>Comments</h2>
