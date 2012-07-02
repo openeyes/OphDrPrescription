@@ -7,6 +7,12 @@
 
 <?php $this->renderPartial('//base/_messages'); ?>
 
+<?php if ($this->event->info == 'Draft') {?>
+	<div class="alertBox">
+		This prescription is a draft and can still be edited
+	</div>
+<?php }?>
+
 <div>
 	<?php $this->renderDefaultElements($this->action->id); ?>
 	<?php $this->renderOptionalElements($this->action->id); ?>
