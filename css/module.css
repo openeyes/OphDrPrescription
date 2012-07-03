@@ -41,6 +41,7 @@ tr.prescriptionTaper.even {
 
 #common_drug_id {
 	margin-bottom: 10px;
+	width: 250px;
 }
 
 #drug_type_id {
