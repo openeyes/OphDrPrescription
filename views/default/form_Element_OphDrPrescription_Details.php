@@ -1,3 +1,4 @@
+<?php echo $form->hiddenInput($element, 'draft', 1)?>
 <div class="<?php echo $element->elementType->class_name?>">
 	<div id="div_Element_OphDrPrescription_Details_prescription_items">
 		<div class="eventDetail">

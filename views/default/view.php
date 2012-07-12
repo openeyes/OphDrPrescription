@@ -7,7 +7,7 @@
 
 <?php $this->renderPartial('//base/_messages'); ?>
 
-<?php if ($this->event->info == 'Draft') {?>
+<?php if (Element_OphDrPrescription_Details::model()->find('event_id=?',array($this->event->id))->draft) {?>
 	<div class="alertBox">
 		This prescription is a draft and can still be edited
 	</div>
