@@ -269,9 +269,6 @@
 				if(filter_preservative_free && !common_drug_metadata[drug_id].preservative_free) {
 					show = false;
 				}
-				if($(this).data('used')) {
-					show = false;
-				}
 				if(show) {
 					$(this).removeAttr("disabled");
 				} else {
