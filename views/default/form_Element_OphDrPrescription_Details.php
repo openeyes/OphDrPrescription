@@ -1,3 +1,4 @@
+<?php echo $form->hiddenInput($element, 'draft', 1)?>
 <div class="<?php echo $element->elementType->class_name?>">
 	<div id="div_Element_OphDrPrescription_Details_prescription_items">
 		<div class="eventDetail">
@@ -266,9 +267,6 @@
 					show = false;
 				}
 				if(filter_preservative_free && !common_drug_metadata[drug_id].preservative_free) {
-					show = false;
-				}
-				if($(this).data('used')) {
 					show = false;
 				}
 				if(show) {
