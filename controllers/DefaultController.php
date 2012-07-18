@@ -1,13 +1,13 @@
 <?php
 
 class DefaultController extends BaseEventTypeController {
-	
+
 	public function actionCreate() {
 		if (!$patient = Patient::model()->findByPk($_REQUEST['patient_id'])) {
 			throw new CHttpException(403, 'Invalid patient_id.');
 		}
 		$this->showAllergyWarning($patient);
-		
+
 		// Save and print clicked, stash print flag
 		if(isset($_POST['saveprint'])) {
 			Yii::app()->session['print_prescription'] = true;
@@ -21,7 +21,7 @@ class DefaultController extends BaseEventTypeController {
 			throw new CHttpException(403, 'Invalid event id.');
 		}
 		$this->showAllergyWarning($event->episode->patient);
-		
+
 		// Save and print clicked, stash print flag
 		if(isset($_POST['saveprint'])) {
 			Yii::app()->session['print_prescription'] = true;
@@ -34,10 +34,10 @@ class DefaultController extends BaseEventTypeController {
 		if (!$event = Event::model()->findByPk($id)) {
 			throw new CHttpException(403, 'Invalid event id.');
 		}
-		
+
 		// Clear any stale warning
 		Yii::app()->user->getFlash('warning.prescription_allergy');
-		
+
 		// Get prescription details element
 		$element = Element_OphDrPrescription_Details::model()->findByAttributes(array('event_id' => $event->id));
 		$patient = $event->episode->patient;
@@ -47,7 +47,7 @@ class DefaultController extends BaseEventTypeController {
 				break;
 			}
 		}
-		
+
 		parent::actionView($id);
 	}
 
@@ -64,10 +64,10 @@ class DefaultController extends BaseEventTypeController {
 		if(!$event->save()) {
 			throw new Exception('Unable to save event: '.print_r($event->getErrors(),true));
 		}
-		
+
 		parent::actionPrint($id);
 	}
-	
+
 	protected function showAllergyWarning($patient) {
 		if($patient->allergies) {
 			$allergy_array = array();
@@ -77,7 +77,7 @@ class DefaultController extends BaseEventTypeController {
 			Yii::app()->user->setFlash('warning.prescription_allergy', 'Warning: Patient is allergic to '.implode(', ',$allergy_array));
 		}
 	}
-	
+
 	public function updateElements($elements, $data, $event) {
 		// TODO: Move model aftersave stuff in here
 		return parent::updateElements($elements, $data, $event);
@@ -139,7 +139,7 @@ class DefaultController extends BaseEventTypeController {
 			));
 		}
 	}
-	
+
 	public function actionSetForm($key, $patient_id, $set_id) {
 		$patient = Patient::model()->findByPk($patient_id);
 		$drug_set_items = DrugSetItem::model()->findAllByAttributes(array('drug_set_id' => $set_id));
@@ -157,7 +157,7 @@ class DefaultController extends BaseEventTypeController {
 	protected function renderPrescriptionItem($key, $patient, $source) {
 		$item = new OphDrPrescription_Item();
 		if(is_a($source,'OphDrPrescription_Item')) {
-			
+
 			// Source is a prescription item, so we should clone it
 			foreach(array('drug_id','duration_id','frequency_id','dose','route_option_id','route_id') as $field) {
 				$item->$field = $source->$field;
@@ -174,7 +174,7 @@ class DefaultController extends BaseEventTypeController {
 				$item->tapers = $tapers;
 			}
 		} else {
-			
+
 			// Source is an integer, so we use it as a drug_id
 			$item->drug_id = $source;
 			$item->loadDefaults();
@@ -189,7 +189,7 @@ class DefaultController extends BaseEventTypeController {
 		}
 		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $patient));
 	}
-	
+
 	public function actionRouteOptions($key, $route_id) {
 		$options = DrugRouteOption::model()->findAllByAttributes(array('drug_route_id' => $route_id));
 		if($options) {
@@ -202,7 +202,7 @@ class DefaultController extends BaseEventTypeController {
 	public function getPrescriptionItems($element) {
 		$items = $element->items;
 		if(isset($_POST['prescription_item'])) {
-			
+
 			// Form has been posted, so we should return the submitted values instead
 			$items = array();
 			foreach($_POST['prescription_item'] as $item) {
@@ -219,9 +219,33 @@ class DefaultController extends BaseEventTypeController {
 				}
 				$items[] = $item_model;
 			}
-			
+
+		} else if(!$items) {
+
+			// Prepopulate prescription with set by episode status
+			// FIXME: It's brittle relying on the set name matching the status
+			if($episode = $this->patient->getEpisodeForCurrentSubspecialty()) {
+				$items = array();
+				$status_name = $episode->status->name;
+				$firm = Firm::model()->findByPk(Yii::app()->session['selected_firm_id']);
+				$subspecialty_id = $firm->serviceSubspecialtyAssignment->subspecialty_id;
+				$params = array(':subspecialty_id' => $subspecialty_id, ':status_name' => $status_name);
+				$set = DrugSet::model()->find(array(
+						'condition' => 'subspecialty_id = :subspecialty_id AND name = :status_name',
+						'params' => $params,
+				));
+				if($set) {
+					foreach($set->items as $item) {
+						$item_model = new OphDrPrescription_Item();
+						$item_model->drug_id = $item->drug_id;
+						$item_model->loadDefaults();
+						$items[] = $item_model;
+					}
+				}
+			}
+
 		}
 		return $items;
 	}
-	
+
 }
