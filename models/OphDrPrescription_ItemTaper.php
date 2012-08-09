@@ -102,4 +102,10 @@ class OphDrPrescription_ItemTaper extends BaseActiveRecord {
 		));
 	}
 
+	public function getDescription() {
+		$return = 'then '.$this->dose;
+		$return .= ' ' . $this->frequency->name;
+		$return .= ' for ' . $this->duration->name;
+		return $return;
+	}
 }
