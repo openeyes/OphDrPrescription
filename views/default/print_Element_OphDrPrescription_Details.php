@@ -98,7 +98,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 	</tbody>
 </table>
 
-<p>Trust policy limits supply to a maximum of 2 weeks</p>
+<p>Trust policy limits supply to a maximum of 4 weeks</p>
 
 <h2>Allergies</h2>
 <p class="box">
@@ -121,13 +121,13 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 	<tr>
 		<th>Heart problems</th>
 		<td>Yes &#10063; / No &#10063;</td>
-		<th>Respiritory problems</th>
+		<th>Respiratory problems</th>
 		<td>Yes &#10063; / No &#10063;</td>
 	</tr>
 	<tr>
 		<th>Drug history</th>
 		<td>Yes &#10063; / No &#10063;</td>
-		<th>Continued from GP?</th>
+		<th>Continued by GP?</th>
 		<td>Yes &#10063; / No &#10063;</td>
 	</tr>
 </table>
