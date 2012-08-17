@@ -102,6 +102,12 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 	 */
 	public function attributeLabels() {
 		return array(
+				'drug_id' => 'Drug',
+				'dose' => 'Dose',
+				'duration_id' => 'Duration',
+				'frequency_id' => 'Frequency',
+				'route_id' => 'Route',
+				'route_option_id' => 'Options'
 		);
 	}
 
