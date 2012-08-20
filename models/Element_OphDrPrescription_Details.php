@@ -107,7 +107,12 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		$return = '';
 		foreach($this->items as $item) {
 			$return .= $item->getDescription();
-			$return .= "\n";
+
+			if ($item->tapers) {
+				foreach ($item->tapers as $taper) {
+					$return .= ", ".$taper->getDescription();
+				}
+			}
 		}
 		return $return;
 	}
@@ -143,18 +148,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 	}
 
 	public function isEditable() {
-		if($this->locked) {
-			return false;
-		} else if($this->printed && date('Y-m-d') != date('Y-m-d', strtotime($this->last_modified_date))) {
-			$this->locked = true;
-			$this->save();
-			$this->event->deleteIssues();
-			$this->event->info = 'Prescription is locked';
-			$this->event->save();
-			return false;
-		} else {
-			return true;
-		}
+		return true;
 	}
 
 	/**
@@ -286,12 +280,6 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 			OphDrPrescription_ItemTaper::model()->deleteByPk(array_values($existing_taper_ids));
 			OphDrPrescription_Item::model()->deleteByPk(array_values($existing_item_ids));
 				
-		}
-
-		// Update event issues
-		$this->event->deleteIssues();
-		if($this->printed && !$this->locked) {
-			$this->event->addIssue("This prescription will be locked at midnight");
 		}
 
 		return parent::afterSave();
