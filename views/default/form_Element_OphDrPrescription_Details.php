@@ -151,7 +151,7 @@
 		if(selected.val().length) {
 			var options_td = $(this).parent().next();
 			var key = $(this).closest('tr').attr('data-key');
-			$.get("/OphDrPrescription/Default/RouteOptions", { key: key, route_id: selected.val() }, function(data) {
+			$.get(baseUrl+"/OphDrPrescription/Default/RouteOptions", { key: key, route_id: selected.val() }, function(data) {
 				options_td.html(data);
 			});
 		}
@@ -217,7 +217,7 @@
 
 	// Add repeat to prescription
 	function addRepeat() {
-		$.get("/OphDrPrescription/Default/RepeatForm", { key: itemCount(), patient_id: patient_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/RepeatForm", { key: itemCount(), patient_id: patient_id }, function(data) {
 			$('#prescription_items').append(data);
 			markUsed();
 			applyFilter();
@@ -226,7 +226,7 @@
 	
 	// Add set to prescription
 	function addSet(set_id) {
-		$.get("/OphDrPrescription/Default/SetForm", { key: itemCount(), patient_id: patient_id, set_id: set_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/SetForm", { key: itemCount(), patient_id: patient_id, set_id: set_id }, function(data) {
 			$('#prescription_items').append(data);
 			markUsed();
 			applyFilter();
@@ -235,7 +235,7 @@
 	
 	// Add item to prescription
 	function addItem(label, item_id) {
-		$.get("/OphDrPrescription/Default/ItemForm", { key: itemCount(), patient_id: patient_id, drug_id: item_id }, function(data){
+		$.get(baseUrl+"/OphDrPrescription/Default/ItemForm", { key: itemCount(), patient_id: patient_id, drug_id: item_id }, function(data){
 			$('#prescription_items').append(data);
 		});
 		var option = $('#common_drug_id option[value="' + item_id + '"]');

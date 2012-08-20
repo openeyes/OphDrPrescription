@@ -4,10 +4,10 @@
 <?php } ?>
 <div class="banner">
 	<div class="seal">
-		<img src="/img/_print/letterhead_seal.jpg" alt="letterhead_seal" />
+		<img src="<?php echo Yii::app()->createUrl('img/_print/letterhead_seal.jpg')?>" alt="letterhead_seal" />
 	</div>
 	<div class="logo">
-		<img src="/img/_print/letterhead_Moorfields_NHS.jpg"
+		<img src="<?php echo Yii::app()->createUrl('img/_print/letterhead_Moorfields_NHS.jpg')?>"
 			alt="letterhead_Moorfields_NHS" />
 	</div>
 	<?php if($copy) { ?>
