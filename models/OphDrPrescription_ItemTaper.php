@@ -78,6 +78,8 @@ class OphDrPrescription_ItemTaper extends BaseActiveRecord {
 	 */
 	public function attributeLabels() {
 		return array(
+				'duration_id' => 'Duration',
+				'frequency_id' => 'Frequency',
 		);
 	}
 
