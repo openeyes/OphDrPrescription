@@ -144,7 +144,7 @@ class DefaultController extends BaseEventTypeController {
 		$patient = Patient::model()->findByPk($patient_id);
 		$drug_set_items = DrugSetItem::model()->findAllByAttributes(array('drug_set_id' => $set_id));
 		foreach($drug_set_items as $drug_set_item) {
-			$this->renderPrescriptionItem($key, $patient, $drug_set_item->drug_id);
+			$this->renderPrescriptionItem($key, $patient, $drug_set_item);
 			$key++;
 		}
 	}
@@ -175,9 +175,21 @@ class DefaultController extends BaseEventTypeController {
 			}
 		} else {
 
-			// Source is an integer, so we use it as a drug_id
-			$item->drug_id = $source;
-			$item->loadDefaults();
+			if(is_a($source,'DrugSetItem')) {
+			
+				// Source is an drug set item which contains default frequency and duration data
+				$item->drug_id = $source->drug_id;
+				$item->loadDefaults();
+				$item->frequency_id = $source->default_frequency_id;
+				$item->duration_id = $source->default_duration_id;
+				
+			} else {
+
+				// Source is an integer, so we use it as a drug_id
+				$item->drug_id = $source;
+				$item->loadDefaults();
+				
+			}
 
 			// Populate route option from episode for Eye
 			if($episode = $patient->getEpisodeForCurrentSubspecialty()) {
