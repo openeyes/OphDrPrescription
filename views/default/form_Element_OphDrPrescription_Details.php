@@ -1,5 +1,9 @@
 <?php echo $form->hiddenInput($element, 'draft', 1)?>
-<div class="<?php echo $element->elementType->class_name?>">
+<div class="element <?php echo $element->elementType->class_name?>"
+	data-element-type-id="<?php echo $element->elementType->id ?>"
+	data-element-type-class="<?php echo $element->elementType->class_name ?>"
+	data-element-type-name="<?php echo $element->elementType->name ?>"
+	data-element-display-order="<?php echo $element->elementType->display_order ?>">
 	<div id="div_Element_OphDrPrescription_Details_prescription_items">
 		<div class="eventDetail">
 			<div class="label">Add Item</div>
