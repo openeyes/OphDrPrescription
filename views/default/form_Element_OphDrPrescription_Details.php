@@ -1,5 +1,9 @@
 <?php echo $form->hiddenInput($element, 'draft', 1)?>
-<div class="<?php echo $element->elementType->class_name?>">
+<div class="element <?php echo $element->elementType->class_name?>"
+	data-element-type-id="<?php echo $element->elementType->id ?>"
+	data-element-type-class="<?php echo $element->elementType->class_name ?>"
+	data-element-type-name="<?php echo $element->elementType->name ?>"
+	data-element-display-order="<?php echo $element->elementType->display_order ?>">
 	<div id="div_Element_OphDrPrescription_Details_prescription_items">
 		<div class="eventDetail">
 			<div class="label">Add Item</div>
@@ -151,7 +155,7 @@
 		if(selected.val().length) {
 			var options_td = $(this).parent().next();
 			var key = $(this).closest('tr').attr('data-key');
-			$.get("/OphDrPrescription/Default/RouteOptions", { key: key, route_id: selected.val() }, function(data) {
+			$.get(baseUrl+"/OphDrPrescription/Default/RouteOptions", { key: key, route_id: selected.val() }, function(data) {
 				options_td.html(data);
 			});
 		}
@@ -217,7 +221,7 @@
 
 	// Add repeat to prescription
 	function addRepeat() {
-		$.get("/OphDrPrescription/Default/RepeatForm", { key: itemCount(), patient_id: patient_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/RepeatForm", { key: itemCount(), patient_id: patient_id }, function(data) {
 			$('#prescription_items').append(data);
 			markUsed();
 			applyFilter();
@@ -226,7 +230,7 @@
 	
 	// Add set to prescription
 	function addSet(set_id) {
-		$.get("/OphDrPrescription/Default/SetForm", { key: itemCount(), patient_id: patient_id, set_id: set_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/SetForm", { key: itemCount(), patient_id: patient_id, set_id: set_id }, function(data) {
 			$('#prescription_items').append(data);
 			markUsed();
 			applyFilter();
@@ -235,7 +239,7 @@
 	
 	// Add item to prescription
 	function addItem(label, item_id) {
-		$.get("/OphDrPrescription/Default/ItemForm", { key: itemCount(), patient_id: patient_id, drug_id: item_id }, function(data){
+		$.get(baseUrl+"/OphDrPrescription/Default/ItemForm", { key: itemCount(), patient_id: patient_id, drug_id: item_id }, function(data){
 			$('#prescription_items').append(data);
 		});
 		var option = $('#common_drug_id option[value="' + item_id + '"]');
