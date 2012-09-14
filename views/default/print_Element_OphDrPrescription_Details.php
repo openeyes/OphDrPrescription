@@ -88,7 +88,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 			<td class="prescriptionLabel">then</td>
 			<td><?php echo $taper->dose ?></td>
 			<td>-</td>
-			<td><?php if($copy == 'Copy for patient') { echo $item->frequency->long_name; } else { echo $item->frequency->name; } ?></td>
+			<td><?php if($copy == 'Copy for patient') { echo $taper->frequency->long_name; } else { echo $taper->frequency->name; } ?></td>
 			<td><?php echo $taper->duration->name ?></td>
 			<td>-</td>
 			<td>-</td>
