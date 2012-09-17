@@ -16,7 +16,7 @@ $(document).ready(function() {
 	$('#et_deleteevent').unbind('click').click(function() {
 		if (!$(this).hasClass('inactive')) {
 			disableButtons();
-			$('#et_deleteevent').click();
+			return true;
 		}
 		return false;
 	});
