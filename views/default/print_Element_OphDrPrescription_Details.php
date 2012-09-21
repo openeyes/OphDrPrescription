@@ -98,6 +98,13 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 	</tbody>
 </table>
 
+<table id="continued_by_gp_checkbox">
+	<tr>
+		<th>Continued by GP?</th>
+		<td>Yes &#10063; / No &#10063;</td>
+	</tr>
+</table>
+
 <p>Trust policy limits supply to a maximum of 4 weeks</p>
 
 <h2>Allergies</h2>
@@ -126,8 +133,6 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 	</tr>
 	<tr>
 		<th>Drug history</th>
-		<td>Yes &#10063; / No &#10063;</td>
-		<th>Continued by GP?</th>
 		<td>Yes &#10063; / No &#10063;</td>
 	</tr>
 </table>
