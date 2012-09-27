@@ -97,7 +97,7 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 	}
 
 	public function getDrug() {
-		return Drug::model()->disableDefaultScope()->findByPk($this->drug_id);
+		return Drug::model()->discontinued()->findByPk($this->drug_id);
 	}
 
 	/**
