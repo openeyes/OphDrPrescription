@@ -168,7 +168,7 @@
 		var drug_id = row.find('input[name$="[drug_id]"]').first().val();
 		var key = row.attr('data-key');
 		$('#prescription_items tr[data-key="'+key+'"]').remove();
-		keyRows();
+		decorateRows();
 		var option = $('#common_drug_id option[value="' + drug_id + '"]');
 		if (option) {
 			option.data('used', false);
@@ -221,8 +221,9 @@
 
 	// Add repeat to prescription
 	function addRepeat() {
-		$.get(baseUrl+"/OphDrPrescription/Default/RepeatForm", { key: itemCount(), patient_id: patient_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/RepeatForm", { key: getNextKey(), patient_id: patient_id }, function(data) {
 			$('#prescription_items').append(data);
+			decorateRows();
 			markUsed();
 			applyFilter();
 		});
@@ -230,8 +231,9 @@
 	
 	// Add set to prescription
 	function addSet(set_id) {
-		$.get(baseUrl+"/OphDrPrescription/Default/SetForm", { key: itemCount(), patient_id: patient_id, set_id: set_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/SetForm", { key: getNextKey(), patient_id: patient_id, set_id: set_id }, function(data) {
 			$('#prescription_items').append(data);
+			decorateRows();
 			markUsed();
 			applyFilter();
 		});
@@ -239,8 +241,9 @@
 	
 	// Add item to prescription
 	function addItem(label, item_id) {
-		$.get(baseUrl+"/OphDrPrescription/Default/ItemForm", { key: itemCount(), patient_id: patient_id, drug_id: item_id }, function(data){
+		$.get(baseUrl+"/OphDrPrescription/Default/ItemForm", { key: getNextKey(), patient_id: patient_id, drug_id: item_id }, function(data){
 			$('#prescription_items').append(data);
+			decorateRows();
 		});
 		var option = $('#common_drug_id option[value="' + item_id + '"]');
 		if (option) {
@@ -282,7 +285,8 @@
 		});
 	}
 
-	function keyRows() {
+	// Fix odd/even classes on all rows
+	function decorateRows() {
 		$('#prescription_items .prescriptionItem').each(function(i) {
 			if(i % 2) {
 				$(this).removeClass('even').addClass('odd');
@@ -296,14 +300,14 @@
 				} else {
 					$(this).removeClass('odd').addClass('even');
 				}
-				$(this).attr('data-key',i);
 			});
-			$(this).attr('data-key',i);
 		});
 	}
 
-	function itemCount() {
-		return $('#prescription_items .prescriptionItem').length;
+	// Get next key for adding rows
+	function getNextKey() {
+		var last_item = $('#prescription_items .prescriptionItem').last();
+		return (last_item.attr('data-key')) ? parseInt(last_item.attr('data-key')) + 1 : 0;
 	}
 
 </script>
