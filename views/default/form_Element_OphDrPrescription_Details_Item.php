@@ -1,6 +1,6 @@
 <tr data-key="<?php echo $key ?>" class="prescriptionItem<?php if($patient->hasAllergy($item->drug_id)) { ?> allergyWarning<?php } ?><?php if($item->getErrors()) { ?> errors<?php } ?> <?php echo ($key % 2) ? 'odd' : 'even'; ?>">
 	<td class="prescriptionLabel">
-		<?php echo $item->drug->label; ?>
+		<?php echo $item->drug->tallmanlabel; ?>
 		<?php if($item->id) { ?><input type="hidden" name="prescription_item[<?php echo $key ?>][id]" value="<?php echo $item->id?>" /><?php } ?>
 		<input type="hidden" name="prescription_item[<?php echo $key ?>][drug_id]" value="<?php echo $item->drug_id?>" />
 	</td>
