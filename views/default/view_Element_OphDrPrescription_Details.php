@@ -39,7 +39,7 @@
 </h4>
 <div class="eventHighlight comments">
 	<h4>
-		<?php echo $element->comments?>
+		<?php echo CHtml::encode($element->comments)?>
 	</h4>
 </div>
 <?php } ?>

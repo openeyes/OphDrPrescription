@@ -114,7 +114,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 
 <h2>Comments</h2>
 <p class="box">
-	<?php echo $element->comments?>
+	<?php echo CHtml::encode($element->comments)?>
 </p>
 
 <h2>Pharmacy Use Only</h2>
