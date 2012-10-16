@@ -193,7 +193,7 @@ class DefaultController extends BaseEventTypeController {
 
 			// Populate route option from episode for Eye
 			if($episode = $patient->getEpisodeForCurrentSubspecialty()) {
-				if($principal_eye = $episode->getPrincipalEye()) {
+				if($principal_eye = $episode->eye) {
 					$route_option_id = DrugRouteOption::model()->find('name = :eye_name', array(':eye_name' => $principal_eye->name));
 					$item->route_option_id = ($route_option_id) ? $route_option_id : null;
 				}
