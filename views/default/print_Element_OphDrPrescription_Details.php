@@ -47,7 +47,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 		<th>Date of Birth</th>
 		<td><?php echo $this->patient->NHSDate('dob') ?> (<?php echo $this->patient->age ?>)</td>
 		<th>NHS Number</th>
-		<td><?php echo $this->patient->nhs_num ?></td>
+		<td><?php echo $this->patient->getNhsnum() ?></td>
 	</tr>
 	<tr>
 		<th>Consultant</th>
