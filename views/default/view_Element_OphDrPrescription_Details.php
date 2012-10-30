@@ -13,7 +13,7 @@
 			<tbody>
 				<?php foreach($element->items as $key => $item) { ?>
 				<tr	class="prescriptionItem<?php if($this->patient->hasAllergy($item->drug_id)) { ?> allergyWarning<?php } ?> <?php echo (($key % 2) == 0) ? 'even' : 'odd'; ?>">
-					<td class="prescriptionLabel"><?php echo $item->drug->label; ?></td>
+					<td class="prescriptionLabel"><?php echo $item->drug->tallmanlabel; ?></td>
 					<td><?php echo $item->dose ?></td>
 					<td><?php echo $item->route->name ?><?php if($item->route_option) { echo ' ('.$item->route_option->name.')'; } ?></td>
 					<td><?php echo $item->frequency->name ?></td>

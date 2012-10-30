@@ -9,7 +9,7 @@
 			<div class="label">Add Item</div>
 			<div class="data split limitWidth">
 				<div class="left">
-					<?php echo CHtml::dropDownList('common_drug_id', null, CHtml::listData($element->commonDrugs(), 'id', 'label'), array('empty' => '-- Select common --')); ?>
+					<?php echo CHtml::dropDownList('common_drug_id', null, CHtml::listData($element->commonDrugs(), 'id', 'tallmanlabel'), array('empty' => '-- Select common --')); ?>
 					<?php
 					$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
 							'name' => 'drug_id',
