@@ -1,15 +1,9 @@
 <?php foreach(array('','Copy for notes','Copy for patient') as $copy) { ?>
 <?php if($copy) {?>
-<div class="pageBreak"></div>
+<tcpdf method="startPageGroup"/>
+<tcpdf method="AddPage"/>
 <?php } ?>
 <div class="banner">
-	<div class="seal">
-		<img src="<?php echo Yii::app()->createUrl('img/_print/letterhead_seal.jpg')?>" alt="letterhead_seal" />
-	</div>
-	<div class="logo">
-		<img src="<?php echo Yii::app()->createUrl('img/_print/letterhead_Moorfields_NHS.jpg')?>"
-			alt="letterhead_Moorfields_NHS" />
-	</div>
 	<?php if($copy) { ?>
 	<div class="watermark">
 		<?php echo $copy; ?>

@@ -64,7 +64,6 @@ class DefaultController extends BaseEventTypeController {
 		if(!$event->save()) {
 			throw new Exception('Unable to save event: '.print_r($event->getErrors(),true));
 		}
-
 		parent::actionPrint($id);
 	}
 

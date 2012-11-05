@@ -66,6 +66,6 @@ $(document).ready(function() {
 
 function do_print_prescription() {
 	var m = window.location.href.match(/\/view\/([0-9]+)/);
-	printUrl(baseUrl+'/OphDrPrescription/Default/print/' + m[1], null, module_css_path);
+	printPDF(baseUrl+'/OphDrPrescription/default/print/' + m[1],{});
 }
 
