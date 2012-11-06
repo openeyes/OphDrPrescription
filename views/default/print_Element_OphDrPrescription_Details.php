@@ -1,24 +1,53 @@
-<?php foreach(array('','Copy for notes','Copy for patient') as $copy) { ?>
-<?php if($copy) {?>
-<tcpdf method="startPageGroup"/>
-<tcpdf method="AddPage"/>
-<?php } ?>
-<div class="banner">
-	<?php if($copy) { ?>
-	<div class="watermark">
-		<?php echo $copy; ?>
-	</div>
-	<?php } ?>
-</div>
-<div class="fromAddress">
-	<?php echo $this->site->letterhtml ?>
-	<br />Tel:
-	<?php echo CHtml::encode($this->site->telephone) ?>
-	<?php if($this->site->fax) { ?>
-	<br />Fax:
-	<?php echo CHtml::encode($this->site->fax) ?>
-	<?php } ?>
-</div>
+<style>
+h2 {
+	font-size: 1.2em;
+	line-height: 1em;
+}
+
+.prescription_header th {
+	width: 20%;
+}
+
+.prescription_header td {
+	width: 30%;
+}
+.prescription_items td,
+.prescription_items th {
+	width: 12%;
+}
+
+.prescription_items .prescriptionLabel {
+	width: 28%;
+}
+
+.prescription_items .prescriptionTaper td.prescriptionLabel {
+	text-align: right;
+}
+.checkbox {
+	font-family: zapfdingbats;
+}
+.pharmacy_checkboxes th {
+	width: 30%;
+}
+
+.pharmacy_checkboxes td {
+	width: 20%;
+}
+.done_bys th {
+	width: 22%;
+}
+
+.done_bys td  {
+	width: 28%;
+}
+
+tr.handWritten td {
+	height: 30px;
+}
+</style>
+
+<?php $copy = $data['copy']; ?> 
+
 <h1>Prescription Form</h1>
 
 <?php
@@ -30,7 +59,7 @@ if($consultant = $firm->getConsultant()) {
 }
 $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 ?>
-<table id="prescription_header">
+<table class="borders prescription_header">
 	<tr>
 		<th>Patient Name</th>
 		<td><?php echo $this->patient->fullname ?> (<?php echo $this->patient->gender ?>)</td>
@@ -50,11 +79,12 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 		<td><?php echo $subspecialty->name ?></td>
 	</tr>
 </table>
+<div class="spacer"></div>
 
-<table id="prescription_items">
+<table class="borders prescription_items">
 	<thead>
 		<tr>
-			<th>Prescription details</th>
+			<th class="prescriptionLabel">Prescription details</th>
 			<th>Dose</th>
 			<th>Route</th>
 			<th>Frequency</th>
@@ -72,7 +102,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 			<td><?php echo $item->route->name ?> <?php if($item->route_option) { 
 				echo ' ('.$item->route_option->name.')';
 			} ?></td>
-			<td><?php if($copy == 'Copy for patient') { echo $item->frequency->long_name; } else { echo $item->frequency->name; } ?></td>
+			<td><?php if($data['copy'] == 'patient') { echo $item->frequency->long_name; } else { echo $item->frequency->name; } ?></td>
 			<td><?php echo $item->duration->name ?></td>
 			<td></td>
 			<td></td>
@@ -82,7 +112,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 			<td class="prescriptionLabel">then</td>
 			<td><?php echo $taper->dose ?></td>
 			<td>-</td>
-			<td><?php if($copy == 'Copy for patient') { echo $taper->frequency->long_name; } else { echo $taper->frequency->name; } ?></td>
+			<td><?php if($data['copy'] == 'patient') { echo $taper->frequency->long_name; } else { echo $taper->frequency->name; } ?></td>
 			<td><?php echo $taper->duration->name ?></td>
 			<td>-</td>
 			<td>-</td>
@@ -91,46 +121,54 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 } ?>
 	</tbody>
 </table>
+<div class="spacer"></div>
 
-<table id="continued_by_gp_checkbox">
+<table class="borders continued_by_gp_checkbox">
 	<tr>
 		<th>Continued by GP?</th>
-		<td>Yes &#10063; / No &#10063;</td>
+		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
 	</tr>
 </table>
+<div class="spacer"></div>
 
 <p>Trust policy limits supply to a maximum of 4 weeks</p>
 
 <h2>Allergies</h2>
-<p class="box">
-	<?php if($this->patient->allergies) { echo $this->patient->getAllergiesString(); } else { ?>None identified<?php } ?>
-</p>
+<table class="borders">
+<tr>
+<td><?php if($this->patient->allergies) { echo $this->patient->getAllergiesString(); } else { ?>None identified<?php } ?></td>
+</tr>
+</table>
 
 <h2>Comments</h2>
-<p class="box">
-	<?php echo CHtml::encode($element->comments)?>
-</p>
+<table class="borders">
+<tr>
+<td><?php echo CHtml::encode($element->comments)?></td>
+</tr>
+</table>
 
 <h2>Pharmacy Use Only</h2>
-<table id="pharmacy_checkboxes">
+<table class="borders pharmacy_checkboxes">
 	<tr>
 		<th>Used medication before?</th>
-		<td>Yes &#10063; / No &#10063;</td>
+		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
 		<th>Allergies / reactions</th>
-		<td>Yes &#10063; / No &#10063;</td>
+		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
 	</tr>
 	<tr>
 		<th>Heart problems</th>
-		<td>Yes &#10063; / No &#10063;</td>
+		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
 		<th>Respiratory problems</th>
-		<td>Yes &#10063; / No &#10063;</td>
+		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
 	</tr>
 	<tr>
 		<th>Drug history</th>
-		<td>Yes &#10063; / No &#10063;</td>
+		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
 	</tr>
 </table>
-<table id="done_bys">
+<div class="spacer"></div>
+
+<table class="borders done_bys">
 	<tr>
 		<th>Prescribed by</th>
 		<td><?php echo $element->user->fullname ?>
@@ -147,7 +185,6 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 	</tr>
 </table>
 
-<?php if(!$copy) { ?>
+<?php if(!$data['copy']) { ?>
 <p>Doctor's Signature:</p>
-<?php } ?>
 <?php } ?>
