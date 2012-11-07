@@ -66,10 +66,13 @@ class DefaultController extends BaseEventTypeController {
 		}
 	}
 
+	protected function printHTML($id, $elements) {
+		$this->printPDF($id, $elements);
+	}
+	
 	protected function printPDF($id, $elements) {
 		Yii::app()->getClientScript()->reset();
 		$this->layout = '//layouts/pdf';
-		//Yii::app()->getClientScript()->registerCssFile($this->assetPath.'/css/print.css');
 		$pdf_print = new OEPDFPrint('Openeyes', 'PDF', 'PDF');
 		$address = $this->site->getLetterAddress();
 		if($this->site->telephone) {
@@ -98,7 +101,6 @@ class DefaultController extends BaseEventTypeController {
 			}
 			$pdf_print->addLetter($oeletter);
 		}
-		//$this->render('print', array('elements' => $elements, 'eventId' => $id, 'copy' => $copy));
 		$pdf_print->output();
 	}
 	
