@@ -135,7 +135,7 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 	}
 
 	public function getDescription() {
-		$return = $this->drug->name;
+		$return = $this->drug->label;
 		$return .= ', ' . $this->dose;
 		$return .= ' ' . $this->frequency->name;
 		$return .= ' ' . $this->route->name;
