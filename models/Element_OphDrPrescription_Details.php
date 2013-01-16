@@ -295,4 +295,15 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 			return 'Printed';
 		}
 	}
+
+	public function wrap() {
+		return parent::wrap(array(
+			'OphDrPrescription_Item' => array(
+				'key' => 'prescription_id',
+				'_relations' => array(
+					'OphDrPrescription_ItemTaper' => 'item_id',
+				),
+			),
+		));
+	}
 }
