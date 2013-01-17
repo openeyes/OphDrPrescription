@@ -296,7 +296,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		}
 	}
 
-	public function wrap() {
+	public function wrap($relations=array()) {
 		return parent::wrap(array(
 			'OphDrPrescription_Item' => array(
 				'key' => 'prescription_id',
