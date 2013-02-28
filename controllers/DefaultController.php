@@ -70,7 +70,7 @@ class DefaultController extends BaseEventTypeController {
 		$this->printPDF($id, $elements);
 	}
 
-	protected function printPDF($id, $elements, $template='print') {
+	protected function printPDF($id, $elements, $template='print', $params=array()) {
 		Yii::app()->getClientScript()->reset();
 		$this->layout = '//layouts/pdf';
 		$pdf_print = new OEPDFPrint('Openeyes', 'PDF', 'PDF');
