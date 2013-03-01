@@ -87,7 +87,6 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 		return array(
 				'tapers' => array(self::HAS_MANY, 'OphDrPrescription_ItemTaper', 'item_id'),
 				'prescription' => array(self::BELONGS_TO, 'Element_OphDrPrescription_Details', 'prescription_id'),
-				'drug' => array(self::BELONGS_TO, 'Drug', 'drug_id'),
 				'duration' => array(self::BELONGS_TO, 'DrugDuration', 'duration_id'),
 				'frequency' => array(self::BELONGS_TO, 'DrugFrequency', 'frequency_id'),
 				'route' => array(self::BELONGS_TO, 'DrugRoute', 'route_id'),
@@ -95,6 +94,10 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 				'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
 				'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
 		);
+	}
+
+	public function getDrug() {
+		return Drug::model()->discontinued()->findByPk($this->drug_id);
 	}
 
 	/**
@@ -135,7 +138,7 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 	}
 
 	public function getDescription() {
-		$return = $this->drug->name;
+		$return = $this->drug->label;
 		$return .= ', ' . $this->dose;
 		$return .= ' ' . $this->frequency->name;
 		$return .= ' ' . $this->route->name;
@@ -156,7 +159,7 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 	}
 
 	public function availableDurations() {
-		return DrugDuration::model()->findAll(array('order' => 'name'));
+		return DrugDuration::model()->findAll(array('order' => 'display_order'));
 	}
 
 	public function availableFrequencies() {

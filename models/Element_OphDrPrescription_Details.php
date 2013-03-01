@@ -106,11 +106,14 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 	public function getLetterText() {
 		$return = '';
 		foreach($this->items as $item) {
+			if ($return) {
+				$return .= "\n";
+			}
 			$return .= $item->getDescription();
 
 			if ($item->tapers) {
 				foreach ($item->tapers as $taper) {
-					$return .= ", ".$taper->getDescription();
+					$return .= "\n   ".$taper->getDescription();
 				}
 			}
 		}

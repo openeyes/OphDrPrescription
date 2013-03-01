@@ -51,7 +51,8 @@ class DefaultController extends BaseEventTypeController {
 		parent::actionView($id);
 	}
 
-	public function actionPrint($id) {
+	public function printInit($id) {
+		parent::printInit($id);
 		if (!$prescription = Element_OphDrPrescription_Details::model()->find('event_id=?',array($id))) {
 			throw new Exception('Prescription not found: '.$id);
 		}
@@ -59,15 +60,50 @@ class DefaultController extends BaseEventTypeController {
 		if (!$prescription->save()) {
 			throw new Exception('Unable to save prescription: '.print_r($prescription->getErrors(),true));
 		}
-		$event = $prescription->event;
-		$event->info = $prescription->infotext;
-		if(!$event->save()) {
-			throw new Exception('Unable to save event: '.print_r($event->getErrors(),true));
+		$this->event->info = $prescription->infotext;
+		if(!$this->event->save()) {
+			throw new Exception('Unable to save event: '.print_r($this->event->getErrors(),true));
 		}
-
-		parent::actionPrint($id);
 	}
 
+	protected function printHTML($id, $elements) {
+		$this->printPDF($id, $elements);
+	}
+	
+	protected function printPDF($id, $elements) {
+		Yii::app()->getClientScript()->reset();
+		$this->layout = '//layouts/pdf';
+		$pdf_print = new OEPDFPrint('Openeyes', 'PDF', 'PDF');
+		$address = $this->site->getLetterAddress();
+		if($this->site->telephone) {
+			$address .= "\n".$this->site->telephone;
+		}
+		if($this->site->fax) {
+			$address .= "\n".$this->site->fax;
+		}
+		foreach(array(
+				false => false,
+				'notes' => 'Copy for notes',
+				'patient' => 'Copy for patient',
+			) as $copy => $copy_text) {
+			$oeletter = new OELetter(null,$address);
+			$oeletter->setBarcode('E:'.$id);
+			$oeletter->setHideDate(true);
+			$oeletter->setFont('helvetica','10');
+			$body = $this->render('print', array(
+					'elements' => $elements,
+					'eventId' => $id,
+					'copy' => $copy,
+			), true);
+			$oeletter->addBody($body);
+			if($copy_text) {
+				$oeletter->setWatermark($copy_text);
+			}
+			$pdf_print->addLetter($oeletter);
+		}
+		$pdf_print->output();
+	}
+	
 	protected function showAllergyWarning($patient) {
 		if($patient->allergies) {
 			$allergy_array = array();
@@ -103,8 +139,8 @@ class DefaultController extends BaseEventTypeController {
 			$return = array();
 			foreach($drugs as $drug) {
 				$return[] = array(
-						'label' => $drug->label,
-						'value' => $drug->name,
+						'label' => $drug->tallmanlabel,
+						'value' => $drug->tallman,
 						'id' => $drug->id,
 				);
 			}
@@ -193,8 +229,8 @@ class DefaultController extends BaseEventTypeController {
 
 			// Populate route option from episode for Eye
 			if($episode = $patient->getEpisodeForCurrentSubspecialty()) {
-				if($principle_eye = $episode->getPrincipleEye()) {
-					$route_option_id = DrugRouteOption::model()->find('name = :eye_name', array(':eye_name' => $principle_eye->name));
+				if($principal_eye = $episode->eye) {
+					$route_option_id = DrugRouteOption::model()->find('name = :eye_name', array(':eye_name' => $principal_eye->name));
 					$item->route_option_id = ($route_option_id) ? $route_option_id : null;
 				}
 			}

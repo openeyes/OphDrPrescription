@@ -1,2 +1,1 @@
-<?php $this->renderDefaultElements($this->action->id); ?>
-<?php $this->renderOptionalElements($this->action->id); ?>
+<?php $this->renderDefaultElements($this->action->id, null, array('copy' => $copy)); ?>

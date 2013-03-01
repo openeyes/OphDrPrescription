@@ -1,11 +1,15 @@
 <?php echo $form->hiddenInput($element, 'draft', 1)?>
-<div class="<?php echo $element->elementType->class_name?>">
+<div class="element <?php echo $element->elementType->class_name?>"
+	data-element-type-id="<?php echo $element->elementType->id ?>"
+	data-element-type-class="<?php echo $element->elementType->class_name ?>"
+	data-element-type-name="<?php echo $element->elementType->name ?>"
+	data-element-display-order="<?php echo $element->elementType->display_order ?>">
 	<div id="div_Element_OphDrPrescription_Details_prescription_items">
 		<div class="eventDetail">
 			<div class="label">Add Item</div>
 			<div class="data split limitWidth">
 				<div class="left">
-					<?php echo CHtml::dropDownList('common_drug_id', null, CHtml::listData($element->commonDrugs(), 'id', 'label'), array('empty' => '-- Select common --')); ?>
+					<?php echo CHtml::dropDownList('common_drug_id', null, CHtml::listData($element->commonDrugs(), 'id', 'tallmanlabel'), array('empty' => '-- Select common --')); ?>
 					<?php
 					$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
 							'name' => 'drug_id',
@@ -151,7 +155,7 @@
 		if(selected.val().length) {
 			var options_td = $(this).parent().next();
 			var key = $(this).closest('tr').attr('data-key');
-			$.get("/OphDrPrescription/Default/RouteOptions", { key: key, route_id: selected.val() }, function(data) {
+			$.get(baseUrl+"/OphDrPrescription/Default/RouteOptions", { key: key, route_id: selected.val() }, function(data) {
 				options_td.html(data);
 			});
 		}
@@ -164,7 +168,7 @@
 		var drug_id = row.find('input[name$="[drug_id]"]').first().val();
 		var key = row.attr('data-key');
 		$('#prescription_items tr[data-key="'+key+'"]').remove();
-		keyRows();
+		decorateRows();
 		var option = $('#common_drug_id option[value="' + drug_id + '"]');
 		if (option) {
 			option.data('used', false);
@@ -217,8 +221,9 @@
 
 	// Add repeat to prescription
 	function addRepeat() {
-		$.get("/OphDrPrescription/Default/RepeatForm", { key: itemCount(), patient_id: patient_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/RepeatForm", { key: getNextKey(), patient_id: patient_id }, function(data) {
 			$('#prescription_items').append(data);
+			decorateRows();
 			markUsed();
 			applyFilter();
 		});
@@ -226,8 +231,9 @@
 	
 	// Add set to prescription
 	function addSet(set_id) {
-		$.get("/OphDrPrescription/Default/SetForm", { key: itemCount(), patient_id: patient_id, set_id: set_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/SetForm", { key: getNextKey(), patient_id: patient_id, set_id: set_id }, function(data) {
 			$('#prescription_items').append(data);
+			decorateRows();
 			markUsed();
 			applyFilter();
 		});
@@ -235,8 +241,9 @@
 	
 	// Add item to prescription
 	function addItem(label, item_id) {
-		$.get("/OphDrPrescription/Default/ItemForm", { key: itemCount(), patient_id: patient_id, drug_id: item_id }, function(data){
+		$.get(baseUrl+"/OphDrPrescription/Default/ItemForm", { key: getNextKey(), patient_id: patient_id, drug_id: item_id }, function(data){
 			$('#prescription_items').append(data);
+			decorateRows();
 		});
 		var option = $('#common_drug_id option[value="' + item_id + '"]');
 		if (option) {
@@ -278,7 +285,8 @@
 		});
 	}
 
-	function keyRows() {
+	// Fix odd/even classes on all rows
+	function decorateRows() {
 		$('#prescription_items .prescriptionItem').each(function(i) {
 			if(i % 2) {
 				$(this).removeClass('even').addClass('odd');
@@ -292,14 +300,14 @@
 				} else {
 					$(this).removeClass('odd').addClass('even');
 				}
-				$(this).attr('data-key',i);
 			});
-			$(this).attr('data-key',i);
 		});
 	}
 
-	function itemCount() {
-		return $('#prescription_items .prescriptionItem').length;
+	// Get next key for adding rows
+	function getNextKey() {
+		var last_item = $('#prescription_items .prescriptionItem').last();
+		return (last_item.attr('data-key')) ? parseInt(last_item.attr('data-key')) + 1 : 0;
 	}
 
 </script>

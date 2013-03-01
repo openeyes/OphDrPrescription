@@ -16,7 +16,7 @@
 }
 
 #prescription_items tr.prescriptionTaper .prescriptionLabel span {
-	background: url(/img/_elements/icons/taper.png) -10px 100% no-repeat;
+	background: url(../../../img/_elements/icons/taper.png) -10px 100% no-repeat;
 	padding-left: 20px;
 }
 
