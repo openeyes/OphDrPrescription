@@ -23,7 +23,6 @@
 </div>
 
 <script type="text/javascript">
-	var module_css_path = "<?php echo $this->assetPath.'/css'?>";
 	<?php if(isset(Yii::app()->session['print_prescription'])) {
 		unset(Yii::app()->session['print_prescription']); ?>
 	$(document).ready(function() {

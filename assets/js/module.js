@@ -14,7 +14,7 @@ $(document).ready(function() {
 		if (m = window.location.href.match(/\/delete\/[0-9]+/)) {
 			window.location.href = window.location.href.replace('/delete/','/view/');
 		} else {
-			window.location.href = baseUrl+'/patient/episodes/'+et_patient_id;
+			window.location.href = baseUrl+'/patient/episodes/'+OE_patient_id;
 		}
 		e.preventDefault();
 	});
@@ -33,7 +33,7 @@ $(document).ready(function() {
 					if (m = window.location.href.match(/\/update\/[0-9]+/)) {
 						window.location.href = window.location.href.replace('/update/','/view/');
 					} else {
-						window.location.href = baseUrl+'/patient/episodes/'+et_patient_id;
+						window.location.href = baseUrl+'/patient/episodes/'+OE_patient_id;
 					}
 				},
 				"No, go back": function() {
@@ -47,6 +47,5 @@ $(document).ready(function() {
 });
 
 function do_print_prescription() {
-	var m = window.location.href.match(/\/view\/([0-9]+)/);
-	printPDF(baseUrl+'/OphDrPrescription/default/print/' + m[1],{});
+	printPDF(OE_print_url);
 }

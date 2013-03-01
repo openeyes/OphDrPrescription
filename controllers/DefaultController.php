@@ -3,6 +3,15 @@
 class DefaultController extends BaseEventTypeController {
 
 	public function actionCreate() {
+		$this->jsVars['common_drug_metadata'] = array();
+
+		foreach (Element_OphDrPrescription_Details::model()->commonDrugs() as $drug) {
+			$this->jsVars['common_drug_metadata'][$drug->id] = array(
+				'type_id' => $drug->type_id,
+				'preservative_free' => $drug->preservative_free,
+			);
+		}
+
 		if (!$patient = Patient::model()->findByPk($_REQUEST['patient_id'])) {
 			throw new CHttpException(403, 'Invalid patient_id.');
 		}
