@@ -163,7 +163,7 @@ class OphDrPrescription_Item extends BaseActiveRecord {
 	}
 
 	public function availableFrequencies() {
-		return DrugFrequency::model()->findAll(array('order' => 'name'));
+		return DrugFrequency::model()->findAll(array('order' => 'display_order'));
 	}
 
 	public function availableRoutes() {
