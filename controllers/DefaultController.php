@@ -47,7 +47,11 @@ class DefaultController extends BaseEventTypeController {
 				break;
 			}
 		}
-
+		// set required js variables
+		$cs = Yii::app()->getClientScript();
+		$cs->registerScript('scr_prescription_view',
+				"prescription_print_url = '" . Yii::app()->createUrl('/OphDrPrescription/default/print/'.$id) . "';\n", CClientScript::POS_READY);
+		
 		parent::actionView($id);
 	}
 

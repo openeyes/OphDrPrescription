@@ -1,3 +1,5 @@
+var prescription_print_url;
+
 $(document).ready(function() {
 	handleButton($('#et_save_print'),function() {
 		$('#Element_OphDrPrescription_Details_draft').val(0);
@@ -47,6 +49,5 @@ $(document).ready(function() {
 });
 
 function do_print_prescription() {
-	var m = window.location.href.match(/\/view\/([0-9]+)/);
-	printPDF(baseUrl+'/OphDrPrescription/default/print/' + m[1],{});
+	printIFrameUrl(prescription_print_url,null);
 }
