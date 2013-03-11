@@ -52,11 +52,7 @@ tr.handWritten td {
 
 <?php
 $firm = $element->event->episode->firm;
-if($consultant = $firm->getConsultant()) {
-	$consultantName = $consultant->contact->title . ' ' . $consultant->contact->first_name . ' ' . $consultant->contact->last_name;
-} else {
-	$consultantName = 'CONSULTANT';
-}
+$consultantName = $firm->getConsultantName();
 $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 ?>
 <table class="borders prescription_header">
