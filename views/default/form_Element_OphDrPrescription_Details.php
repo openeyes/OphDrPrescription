@@ -92,20 +92,6 @@
 </div>
 
 <script type="text/javascript">
-
-	// Initialise variables
-	var patient_id = <?php echo $this->patient->id ?>
-
-	// Initialise common drug metadata
-	var common_drug_metadata = {
-		<?php foreach($element->commonDrugs() as $drug) { ?>
-		<?php echo $drug->id?>: {
-			"type_id": <?php echo $drug->type_id ?>,
-			"preservative_free": <?php echo $drug->preservative_free ?>,
-		},
-		<?php } ?>
-	}
-
 	// Disable currently prescribed drugs in dropdown
 	$('#prescription_items input[name$="[drug_id]"]').each(function(index) {
 		var option = $('#common_drug_id option[value="' + $(this).val() + '"]');
@@ -221,7 +207,7 @@
 
 	// Add repeat to prescription
 	function addRepeat() {
-		$.get(baseUrl+"/OphDrPrescription/Default/RepeatForm", { key: getNextKey(), patient_id: patient_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/RepeatForm", { key: getNextKey(), patient_id: OE_patient_id }, function(data) {
 			$('#prescription_items').append(data);
 			decorateRows();
 			markUsed();
@@ -231,7 +217,7 @@
 	
 	// Add set to prescription
 	function addSet(set_id) {
-		$.get(baseUrl+"/OphDrPrescription/Default/SetForm", { key: getNextKey(), patient_id: patient_id, set_id: set_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/SetForm", { key: getNextKey(), patient_id: OE_patient_id, set_id: set_id }, function(data) {
 			$('#prescription_items').append(data);
 			decorateRows();
 			markUsed();
@@ -241,7 +227,7 @@
 	
 	// Add item to prescription
 	function addItem(label, item_id) {
-		$.get(baseUrl+"/OphDrPrescription/Default/ItemForm", { key: getNextKey(), patient_id: patient_id, drug_id: item_id }, function(data){
+		$.get(baseUrl+"/OphDrPrescription/Default/ItemForm", { key: getNextKey(), patient_id: OE_patient_id, drug_id: item_id }, function(data){
 			$('#prescription_items').append(data);
 			decorateRows();
 		});
