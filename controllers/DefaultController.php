@@ -2,6 +2,22 @@
 
 class DefaultController extends BaseEventTypeController {
 
+	public function accessRules() {
+		return array(
+			// Level 2 or 3 can't change anything
+			array('allow',
+				'actions' => array('view', 'print'),
+				'expression' => 'BaseController::checkUserLevel(2)',
+			),
+			// Level 4 can prescribe
+			array('allow',
+				'expression' => 'BaseController::checkUserLevel(4)',
+			),
+			// Deny anything else (default rule allows authenticated users)
+			array('deny'),
+		);
+	}
+	
 	public function actionCreate() {
 		if (!$patient = Patient::model()->findByPk($_REQUEST['patient_id'])) {
 			throw new CHttpException(403, 'Invalid patient_id.');

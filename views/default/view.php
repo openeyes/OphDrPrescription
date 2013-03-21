@@ -1,5 +1,6 @@
 <?php
 	$this->breadcrumbs=array($this->module->id);
+	$this->editable = BaseController::checkUserLevel(4);
 	$this->header();
 ?>
 
