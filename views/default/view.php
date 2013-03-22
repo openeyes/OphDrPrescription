@@ -1,9 +1,31 @@
-<?php
-	$this->breadcrumbs=array($this->module->id);
-	$this->header();
+<?php 
+/**
+ * OpenEyes
+ *
+ * (C) Moorfields Eye Hospital NHS Foundation Trust, 2008-2011
+ * (C) OpenEyes Foundation, 2011-2013
+ * This file is part of OpenEyes.
+ * OpenEyes is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * OpenEyes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with OpenEyes in a file titled COPYING. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package OpenEyes
+ * @link http://www.openeyes.org.uk
+ * @author OpenEyes <info@openeyes.org.uk>
+ * @copyright Copyright (c) 2008-2011, Moorfields Eye Hospital NHS Foundation Trust
+ * @copyright Copyright (c) 2011-2013, OpenEyes Foundation
+ * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
+ */
 ?>
+<?php $this->header() ?>
 
-<h3 class="withEventIcon" style="background:transparent url(<?php echo $this->assetPath?>/img/medium.png) center left no-repeat;"><?php echo $this->event_type->name ?></h3>
+<h3 class="withEventIcon"><?php echo $this->event_type->name ?></h3>
+
+<?php
+	// Event actions
+	$this->event_actions[] = EventAction::button('Print', 'print', null, array('id' => 'et_print'));
+	$this->renderPartial('//patient/event_actions');
+?>
 
 <?php $this->renderPartial('//base/_messages'); ?>
 
@@ -19,29 +41,13 @@
 	<div class="cleartall"></div>
 </div>
 
-<div class="metaData">
-	<span class="info"> Prescription created by <span class="user"><?php echo $this->event->user->fullname ?>
-	</span> on <?php echo $this->event->NHSDate('created_date') ?> at
-		<?php echo date('H:i', strtotime($this->event->created_date)) ?>
-	</span> <span class="info"> Prescription last modified by <span
-		class="user"><?php echo $this->event->usermodified->fullname ?>
-	</span> on <?php echo $this->event->NHSDate('last_modified_date') ?>
-		at <?php echo date('H:i', strtotime($this->event->last_modified_date)) ?>
-	</span>
-</div>
-
-	<div class="form_button">
-	<img class="loader" style="display: none;" src="<?php echo Yii::app()->createUrl('img/ajax-loader.gif')?>" alt="loading..." />
-	<button type="submit" class="classy blue venti" id="et_print" name="print"><span class="button-span button-span-blue">Print</span></button>
-	<script type="text/javascript">
-		var module_css_path = "<?php echo $this->assetPath.'/css'?>";
-		<?php if(isset(Yii::app()->session['print_prescription'])) {
-			unset(Yii::app()->session['print_prescription']); ?>
-		$(document).ready(function() {
-			do_print_prescription();
-		});
-		<?php } ?>
-	</script>
-</div>
+<script type="text/javascript">
+	<?php if(isset(Yii::app()->session['print_prescription'])) {
+		unset(Yii::app()->session['print_prescription']); ?>
+	$(document).ready(function() {
+		do_print_prescription();
+	});
+	<?php } ?>
+</script>
 
 <?php $this->footer() ?>

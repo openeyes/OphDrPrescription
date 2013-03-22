@@ -1,9 +1,26 @@
-<?php
-	$this->breadcrumbs=array($this->module->id);
-	$this->header();
+<?php 
+/**
+ * OpenEyes
+ *
+ * (C) Moorfields Eye Hospital NHS Foundation Trust, 2008-2011
+ * (C) OpenEyes Foundation, 2011-2013
+ * This file is part of OpenEyes.
+ * OpenEyes is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * OpenEyes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with OpenEyes in a file titled COPYING. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package OpenEyes
+ * @link http://www.openeyes.org.uk
+ * @author OpenEyes <info@openeyes.org.uk>
+ * @copyright Copyright (c) 2008-2011, Moorfields Eye Hospital NHS Foundation Trust
+ * @copyright Copyright (c) 2011-2013, OpenEyes Foundation
+ * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
+ */
 ?>
 
-<h3 class="withEventIcon" style="background:transparent url(<?php echo $this->assetPath?>/img/medium.png) center left no-repeat;"><?php echo $this->event_type->name ?></h3>
+<?php $this->header() ?>
+
+<h3 class="withEventIcon"><?php echo $this->event_type->name ?></h3>
 
 <?php $this->renderPartial('//base/_messages'); ?>
 
@@ -14,6 +31,11 @@
 			'enableAjaxValidation'=>false,
 			'htmlOptions' => array('class'=>'sliding'),
 		));
+
+		// Event actions
+		$this->event_actions[] = EventAction::button('Save draft', 'savedraft', array('colour' => 'green'), array('id' => 'et_save_draft'));
+		$this->event_actions[] = EventAction::button('Save and print', 'saveprint', array('colour' => 'green'), array('id' => 'et_save_print'));
+		$this->renderPartial('//patient/event_actions');
 	?>
 
 		<?php $this->displayErrors($errors)?>
@@ -26,18 +48,7 @@
 		<?php $this->displayErrors($errors)?>
 
 		<div class="cleartall"></div>
-		<div class="form_button">
-			<img class="loader" style="display: none;" src="<?php echo Yii::app()->createUrl('img/ajax-loader.gif')?>" alt="loading..." />&nbsp;
-			<?php if ($this->event->info == 'Draft') {?>
-				<button type="submit" class="classy green venti auto" id="et_save_draft" name="savedraft"><span class="button-span button-span-green">Save draft</span></button>
-			<?php }?>
-			<button type="submit" class="classy green venti" id="et_save_print" name="saveprint"><span class="button-span button-span-green">Save and print</span></button>
-			<button type="submit" class="classy red venti" id="et_cancel" name="cancel"><span class="button-span button-span-red">Cancel</span></button>
-		</div>
 	<?php $this->endWidget(); ?>
-</div>
-
-<div id="dialog-confirm-cancel" title="Cancel">  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>All changes will be lost. Are you sure?</p>
 </div>
 
 <?php $this->footer() ?>

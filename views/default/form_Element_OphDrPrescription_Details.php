@@ -1,3 +1,22 @@
+<?php 
+/**
+ * OpenEyes
+ *
+ * (C) Moorfields Eye Hospital NHS Foundation Trust, 2008-2011
+ * (C) OpenEyes Foundation, 2011-2013
+ * This file is part of OpenEyes.
+ * OpenEyes is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * OpenEyes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with OpenEyes in a file titled COPYING. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package OpenEyes
+ * @link http://www.openeyes.org.uk
+ * @author OpenEyes <info@openeyes.org.uk>
+ * @copyright Copyright (c) 2008-2011, Moorfields Eye Hospital NHS Foundation Trust
+ * @copyright Copyright (c) 2011-2013, OpenEyes Foundation
+ * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
+ */
+?>
 <?php echo $form->hiddenInput($element, 'draft', 1)?>
 <div class="element <?php echo $element->elementType->class_name?>"
 	data-element-type-id="<?php echo $element->elementType->id ?>"
@@ -92,20 +111,6 @@
 </div>
 
 <script type="text/javascript">
-
-	// Initialise variables
-	var patient_id = <?php echo $this->patient->id ?>
-
-	// Initialise common drug metadata
-	var common_drug_metadata = {
-		<?php foreach($element->commonDrugs() as $drug) { ?>
-		<?php echo $drug->id?>: {
-			"type_id": <?php echo $drug->type_id ?>,
-			"preservative_free": <?php echo $drug->preservative_free ?>,
-		},
-		<?php } ?>
-	}
-
 	// Disable currently prescribed drugs in dropdown
 	$('#prescription_items input[name$="[drug_id]"]').each(function(index) {
 		var option = $('#common_drug_id option[value="' + $(this).val() + '"]');
@@ -221,7 +226,7 @@
 
 	// Add repeat to prescription
 	function addRepeat() {
-		$.get(baseUrl+"/OphDrPrescription/Default/RepeatForm", { key: getNextKey(), patient_id: patient_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/RepeatForm", { key: getNextKey(), patient_id: OE_patient_id }, function(data) {
 			$('#prescription_items').append(data);
 			decorateRows();
 			markUsed();
@@ -231,7 +236,7 @@
 	
 	// Add set to prescription
 	function addSet(set_id) {
-		$.get(baseUrl+"/OphDrPrescription/Default/SetForm", { key: getNextKey(), patient_id: patient_id, set_id: set_id }, function(data) {
+		$.get(baseUrl+"/OphDrPrescription/Default/SetForm", { key: getNextKey(), patient_id: OE_patient_id, set_id: set_id }, function(data) {
 			$('#prescription_items').append(data);
 			decorateRows();
 			markUsed();
@@ -241,7 +246,7 @@
 	
 	// Add item to prescription
 	function addItem(label, item_id) {
-		$.get(baseUrl+"/OphDrPrescription/Default/ItemForm", { key: getNextKey(), patient_id: patient_id, drug_id: item_id }, function(data){
+		$.get(baseUrl+"/OphDrPrescription/Default/ItemForm", { key: getNextKey(), patient_id: OE_patient_id, drug_id: item_id }, function(data){
 			$('#prescription_items').append(data);
 			decorateRows();
 		});

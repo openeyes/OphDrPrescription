@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * OpenEyes
  *
@@ -16,6 +16,11 @@
  * @copyright Copyright (c) 2011-2013, OpenEyes Foundation
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
-?>
 
-<?php $this->renderDefaultElements($this->action->id, null, array('copy' => $copy)); ?>
+class OphDrPrescription_API extends BaseAPI {
+	public function getLetterPrescription($patient) {
+		if ($details = $this->getElementForLatestEventInEpisode($patient, 'Element_OphDrPrescription_Details')) {
+			return $details->getLetterText();
+		}
+	}
+}
