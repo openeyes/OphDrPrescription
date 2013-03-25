@@ -31,7 +31,8 @@
 	</span>
 </div>
 
-	<div class="form_button">
+<?php if($this->canPrint()) { ?>
+<div class="form_button">
 	<img class="loader" style="display: none;" src="<?php echo Yii::app()->createUrl('img/ajax-loader.gif')?>" alt="loading..." />
 	<button type="submit" class="classy blue venti" id="et_print" name="print"><span class="button-span button-span-blue">Print</span></button>
 	<script type="text/javascript">
@@ -44,5 +45,6 @@
 		<?php } ?>
 	</script>
 </div>
+<?php } ?>
 
 <?php $this->footer() ?>
