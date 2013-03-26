@@ -19,6 +19,22 @@
 
 class DefaultController extends BaseEventTypeController {
 
+	public function accessRules() {
+		return array(
+			// Level 2 or 3 can't change anything
+			array('allow',
+				'actions' => array('view', 'print'),
+				'expression' => 'BaseController::checkUserLevel(2)',
+			),
+			// Level 4 can prescribe
+			array('allow',
+				'expression' => 'BaseController::checkUserLevel(4)',
+			),
+			// Deny anything else (default rule allows authenticated users)
+			array('deny'),
+		);
+	}
+	
 	public function actionCreate() {
 		$this->jsVars['common_drug_metadata'] = array();
 
