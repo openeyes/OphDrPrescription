@@ -94,6 +94,11 @@ class DefaultController extends BaseEventTypeController {
 		$cs->registerScript('scr_prescription_view',
 				"prescription_print_url = '" . Yii::app()->createUrl('/OphDrPrescription/default/print/'.$id) . "';\n", CClientScript::POS_READY);
 		
+		// Prescriptions can only be edited by level 4
+		if(!self::checkUserLevel(4)) {
+			$this->editable = false;
+		}
+		
 		parent::actionView($id);
 	}
 
