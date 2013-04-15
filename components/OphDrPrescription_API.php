@@ -18,8 +18,16 @@
  */
 
 class OphDrPrescription_API extends BaseAPI {
-	public function getLetterPrescription($patient) {
-		if ($details = $this->getElementForLatestEventInEpisode($patient, 'Element_OphDrPrescription_Details')) {
+	
+	/**
+	 * get the prescription letter text for the latest prescription in the episode for the patient
+	 *
+	 * @param Patient $patient
+	 * @param Episode $episode
+	 * @return string
+	 */
+	public function getLetterPrescription($patient, $episode) {
+		if ($details = $this->getElementForLatestEventInEpisode($patient, $episode, 'Element_OphDrPrescription_Details')) {
 			return $details->getLetterText();
 		}
 	}
