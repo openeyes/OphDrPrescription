@@ -67,5 +67,5 @@ $(document).ready(function() {
 });
 
 function do_print_prescription() {
-	printPDF(OE_print_url,null);
+	printIFrameUrl(OE_print_url,null);
 }
