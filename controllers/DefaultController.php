@@ -347,4 +347,44 @@ class DefaultController extends BaseEventTypeController {
 		return $items;
 	}
 
+	public function actionDoPrint($id) {
+		if (!$prescription = Element_OphDrPrescription_Details::model()->find('event_id=?',array($id))) {
+			throw new Exception("Prescription not found for event id: $id");
+		}
+
+		$prescription->print = 1;
+		$prescription->draft = 0;
+
+		if (!$prescription->save()) {
+			throw new Exception("Unable to save prescription: ".print_r($prescription->getErrors(),true));
+		}
+
+		if (!$event = Event::model()->findByPk($id)) {
+			throw new Exception("Event not found: $id");
+		}
+
+		$event->info = 'Printed';
+
+		if (!$event->save()) {
+			throw new Exception("Unable to save event: ".print_r($event->getErrors(),true));
+		}
+
+		echo "1";
+	}
+
+	public function actionMarkPrinted() {
+		if (!$prescription = Element_OphDrPrescription_Details::model()->find('event_id=?',array(@$_GET['event_id']))) {
+			throw new Exception("Prescription not found for event id: $id");
+		}
+
+		if ($prescription->print == 1) {
+			$prescription->print = 0;
+
+			if (!$prescription->save()) {
+				throw new Exception("Unable to save prescription: ".print_r($prescription->getErrors(),true));
+			}
+		}
+
+		echo "1";
+	}
 }

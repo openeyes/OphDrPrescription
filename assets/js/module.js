@@ -24,8 +24,22 @@ $(document).ready(function() {
 	});
 
 	handleButton($('#et_print'),function(e) {
-		do_print_prescription();
-		e.preventDefault();
+		if ($('#et_ophdrprescription_draft').val() == 1) {
+			$.ajax({
+				'type': 'GET',
+				'url': baseUrl+'/OphDrPrescription/default/doPrint/'+OE_event_id,
+				'success': function(html) {
+					if (html == "1") {
+						window.location.reload();
+					} else {
+						alert("There was an unexpected error printing the prescription, please try again or contact support for assistance.");
+					}
+				}
+			});
+		} else {
+			do_print_prescription();
+			e.preventDefault();
+		}
 	});
 
 	handleButton($('#et_deleteevent'));
@@ -64,8 +78,22 @@ $(document).ready(function() {
 		e.preventDefault();
 	});
 
+	if ($('#et_ophdrprescription_print').val() == 1) {
+		setTimeout("do_print_prescription();",1000);
+	}
 });
 
 function do_print_prescription() {
-	printIFrameUrl(OE_print_url,null);
+	$.ajax({
+		'type': 'GET',
+		'url': baseUrl+'/OphDrPrescription/default/markPrinted?event_id='+OE_event_id,
+		'success': function(html) {
+			if (html == "1") {
+				printIFrameUrl(OE_print_url, null);
+			} else {
+				alert("There was an error printing the prescription, please try again or contact support for assistance.");
+			}
+			enableButtons();
+		}
+	});
 }
