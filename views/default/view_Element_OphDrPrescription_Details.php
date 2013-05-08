@@ -52,7 +52,8 @@
 		</table>
 	</div>
 </div>
-
+<input type="hidden" id="et_ophdrprescription_draft" value="<?php echo $element->draft?>" />
+<input type="hidden" id="et_ophdrprescription_print" value="<?php echo $element->print?>" />
 <?php if($element->comments) { ?>
 <h4>
 	<?php echo CHtml::encode($element->getAttributeLabel('comments'))?>
