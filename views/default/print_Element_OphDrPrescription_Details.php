@@ -71,7 +71,7 @@ tr.handWritten td {
 
 <?php
 $firm = $element->event->episode->firm;
-$consultantName = $firm->getConsultantName();
+$consultantName = $firm->consultant ? $firm->consultant->fullName : 'None';
 $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 ?>
 <table class="borders prescription_header">
