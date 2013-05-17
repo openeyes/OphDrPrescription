@@ -278,7 +278,7 @@
 				if(filter_type_id && common_drug_metadata[drug_id].type_id != filter_type_id) {
 					show = false;
 				}
-				if(filter_preservative_free && !common_drug_metadata[drug_id].preservative_free) {
+				if(filter_preservative_free && common_drug_metadata[drug_id].preservative_free == '0') {
 					show = false;
 				}
 				if(show) {

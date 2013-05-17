@@ -35,19 +35,24 @@ class DefaultController extends BaseEventTypeController {
 		);
 	}
 	
-	public function actionCreate() {
+	protected function setCommonDrugMetadata() {
 		$this->jsVars['common_drug_metadata'] = array();
-
 		foreach (Element_OphDrPrescription_Details::model()->commonDrugs() as $drug) {
 			$this->jsVars['common_drug_metadata'][$drug->id] = array(
-				'type_id' => $drug->type_id,
-				'preservative_free' => $drug->preservative_free,
+					'type_id' => $drug->type_id,
+					'preservative_free' => $drug->preservative_free,
 			);
 		}
+	}
+	
+	public function actionCreate() {
 
 		if (!$patient = Patient::model()->findByPk($_REQUEST['patient_id'])) {
 			throw new CHttpException(403, 'Invalid patient_id.');
 		}
+		
+		$this->setCommonDrugMetadata();
+		
 		$this->showAllergyWarning($patient);
 
 		// Save and print clicked, stash print flag
@@ -62,6 +67,9 @@ class DefaultController extends BaseEventTypeController {
 		if (!$event = Event::model()->findByPk($id)) {
 			throw new CHttpException(403, 'Invalid event id.');
 		}
+		
+		$this->setCommonDrugMetadata();
+		
 		$this->showAllergyWarning($event->episode->patient);
 
 		// Save and print clicked, stash print flag
