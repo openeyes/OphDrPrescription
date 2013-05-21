@@ -138,16 +138,20 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement {
 		$subspecialty_id = $firm->serviceSubspecialtyAssignment->subspecialty_id;
 		$params = array(':subspecialty_id' => $subspecialty_id);
 		return DrugSet::model()->findAll(array(
-				'condition' => 'subspecialty_id = :subspecialty_id',
-				'order' => 'name',
-				'params' => $params,
+			'condition' => 'subspecialty_id = :subspecialty_id',
+			'order' => 'name',
+			'params' => $params,
 		));
 	}
 
 	public function drugTypes() {
-		return DrugType::model()->findAll(array(
-				'order' => 'name',
-		));
+		$drugTypes = CHtml::listData(DrugType::model()->findAll(array(
+			'order' => 'name',
+		)),'id','name');
+
+		natcasesort($drugTypes);
+		
+		return $drugTypes;
 	}
 
 	public function isEditable() {

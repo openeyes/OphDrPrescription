@@ -56,7 +56,7 @@
 				<div class="right">
 					<h5 class="normal"><em>Filtered by:</em></h5>
 					<span class="group">Type
-					<?php echo CHtml::dropDownList('drug_type_id', null, CHtml::listData($element->drugTypes(), 'id', 'name'), array('class' => 'drugFilter', 'empty' => '-- Select --')); ?>
+					<?php echo CHtml::dropDownList('drug_type_id', null, $element->drugTypes(), array('class' => 'drugFilter', 'empty' => '-- Select --')); ?>
 					</span>
 					<span class="group">No Preservative
 					<?php echo CHtml::checkBox('preservative_free', null, array('class' => 'drugFilter'))?>
