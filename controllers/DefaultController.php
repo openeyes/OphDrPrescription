@@ -23,7 +23,7 @@ class DefaultController extends BaseEventTypeController {
 		return array(
 			// Level 2 or 3 can't change anything
 			array('allow',
-				'actions' => array('view', 'print'),
+				'actions' => array('view'),
 				'expression' => 'BaseController::checkUserLevel(2)',
 			),
 			// Level 4 can prescribe
@@ -43,6 +43,10 @@ class DefaultController extends BaseEventTypeController {
 					'preservative_free' => $drug->preservative_free,
 			);
 		}
+	}
+
+	public function canPrint() {
+		return BaseController::checkUserLevel(4);
 	}
 	
 	public function actionCreate() {
