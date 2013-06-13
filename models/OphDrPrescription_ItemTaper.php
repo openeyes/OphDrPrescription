@@ -19,7 +19,7 @@
 
 /**
  * The followings are the available columns in table 'ophdrprescription_item_taper':
- * @property string $id
+ * @property integer $id
  * @property string $dose
  * @property DrugDuration $duration
  * @property DrugFrequency $frequency
