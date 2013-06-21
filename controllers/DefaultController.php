@@ -23,7 +23,7 @@ class DefaultController extends BaseEventTypeController {
 		return array(
 			// Level 2 or 3 can't change anything
 			array('allow',
-				'actions' => array('view', 'print'),
+				'actions' => array('view'),
 				'expression' => 'BaseController::checkUserLevel(2)',
 			),
 			// Level 4 can prescribe
@@ -34,7 +34,7 @@ class DefaultController extends BaseEventTypeController {
 			array('deny'),
 		);
 	}
-	
+
 	protected function setCommonDrugMetadata() {
 		$this->jsVars['common_drug_metadata'] = array();
 		foreach (Element_OphDrPrescription_Details::model()->commonDrugs() as $drug) {
@@ -44,15 +44,19 @@ class DefaultController extends BaseEventTypeController {
 			);
 		}
 	}
-	
+
+	public function canPrint() {
+		return BaseController::checkUserLevel(4);
+	}
+
 	public function actionCreate() {
 
 		if (!$patient = Patient::model()->findByPk($_REQUEST['patient_id'])) {
 			throw new CHttpException(403, 'Invalid patient_id.');
 		}
-		
+
 		$this->setCommonDrugMetadata();
-		
+
 		$this->showAllergyWarning($patient);
 
 		// Save and print clicked, stash print flag
@@ -67,9 +71,9 @@ class DefaultController extends BaseEventTypeController {
 		if (!$event = Event::model()->findByPk($id)) {
 			throw new CHttpException(403, 'Invalid event id.');
 		}
-		
+
 		$this->setCommonDrugMetadata();
-		
+
 		$this->showAllergyWarning($event->episode->patient);
 
 		// Save and print clicked, stash print flag
@@ -101,12 +105,12 @@ class DefaultController extends BaseEventTypeController {
 		$cs = Yii::app()->getClientScript();
 		$cs->registerScript('scr_prescription_view',
 				"prescription_print_url = '" . Yii::app()->createUrl('/OphDrPrescription/default/print/'.$id) . "';\n", CClientScript::POS_READY);
-		
+
 		// Prescriptions can only be edited by level 4
 		if(!self::checkUserLevel(4)) {
 			$this->editable = false;
 		}
-		
+
 		parent::actionView($id);
 	}
 
@@ -162,7 +166,7 @@ class DefaultController extends BaseEventTypeController {
 		}
 		$pdf_print->output();
 	}
-	
+
 	protected function showAllergyWarning($patient) {
 		if($patient->allergies) {
 			$allergy_array = array();
@@ -271,19 +275,39 @@ class DefaultController extends BaseEventTypeController {
 		} else {
 
 			if(is_a($source,'DrugSetItem')) {
-			
-				// Source is an drug set item which contains default frequency and duration data
+
+				// Source is an drug set item which contains frequency and duration data
 				$item->drug_id = $source->drug_id;
 				$item->loadDefaults();
-				$item->frequency_id = $source->default_frequency_id;
-				$item->duration_id = $source->default_duration_id;
-				
-			} else {
+				foreach(array('duration_id','frequency_id','dose') as $field) {
+					if($source->$field) {
+						$item->$field = $source->$field;
+					}
+				}
+				if($source->tapers) {
+					$tapers = array();
+					foreach($source->tapers as $taper) {
+						$taper_model = new OphDrPrescription_ItemTaper();
+						foreach(array('duration_id','frequency_id','dose') as $field) {
+							if($taper->$field) {
+								$taper_model->$field = $taper->$field;
+							} else {
+								$taper_model->$field = $item->$field;
+							}
+						}
+						$tapers[] = $taper_model;
+					}
+					$item->tapers = $tapers;
+				}
+
+			} elseif(is_int($source) || (int) $source) {
 
 				// Source is an integer, so we use it as a drug_id
 				$item->drug_id = $source;
 				$item->loadDefaults();
-				
+
+			} else {
+				throw new CException('Invalid prescription item source: '.print_r($source));
 			}
 
 			// Populate route option from episode for Eye
