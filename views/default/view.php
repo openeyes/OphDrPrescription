@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * OpenEyes
  *
@@ -23,7 +23,7 @@
 
 <?php
 	// Event actions
-	if($this->canPrint()) {
+	if ($this->canPrint()) {
 		$this->event_actions[] = EventAction::button('Print', 'print', null, array('id' => 'et_print'));
 	}
 	$this->renderPartial('//patient/event_actions');
@@ -44,7 +44,7 @@
 </div>
 
 <script type="text/javascript">
-	<?php if(isset(Yii::app()->session['print_prescription'])) {
+	<?php if (isset(Yii::app()->session['print_prescription'])) {
 		unset(Yii::app()->session['print_prescription']); ?>
 	$(document).ready(function() {
 		do_print_prescription();

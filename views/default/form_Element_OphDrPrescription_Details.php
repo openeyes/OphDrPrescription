@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * OpenEyes
  *
@@ -73,7 +73,7 @@
 		<div class="eventDetail">
 			<div class="label">Other Actions</div>
 			<div>
-				<?php if($this->getPreviousPrescription($this->patient, $element->id)) { ?>
+				<?php if ($this->getPreviousPrescription($this->patient, $element->id)) { ?>
 				<button type="button" class="classy blue mini"
 					id="repeat_prescription" name="repeat_prescription">
 					<span class="button-span button-span-blue">Add Repeat Prescription</span>
@@ -100,7 +100,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach($this->getPrescriptionItems($element) as $key => $item) {
+					<?php foreach ($this->getPrescriptionItems($element) as $key => $item) {
 						$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $this->patient));
 						} ?>
 				</tbody>
@@ -114,16 +114,16 @@
 	// Disable currently prescribed drugs in dropdown
 	$('#prescription_items input[name$="[drug_id]"]').each(function(index) {
 		var option = $('#common_drug_id option[value="' + $(this).val() + '"]');
-		if(option) {
+		if (option) {
 			option.data('used', true);
 		}
 	});
 	applyFilter();
-	
+
 	// Add selected common drug to prescription
 	$('body').delegate('#common_drug_id', 'change', function() {
 		var selected = $(this).children('option:selected');
-		if(selected.val().length) {
+		if (selected.val().length) {
 			addItem(selected.text(), selected.val());
 			$(this).val('');
 		}
@@ -133,7 +133,7 @@
 	// Add selected drug set to prescription
 	$('body').delegate('#drug_set_id', 'change', function() {
 		var selected = $(this).children('option:selected');
-		if(selected.val().length) {
+		if (selected.val().length) {
 			addSet(selected.val());
 			$(this).val('');
 		}
@@ -157,7 +157,7 @@
 	// Update drug route options for selected route
 	$('body').delegate('select.drugRoute', 'change', function() {
 		var selected = $(this).children('option:selected');
-		if(selected.val().length) {
+		if (selected.val().length) {
 			var options_td = $(this).parent().next();
 			var key = $(this).closest('tr').attr('data-key');
 			$.get(baseUrl+"/OphDrPrescription/Default/RouteOptions", { key: key, route_id: selected.val() }, function(data) {
@@ -188,7 +188,7 @@
 		var key = row.attr('data-key');
 		var last_row = $('#prescription_items tr[data-key="'+key+'"]').last();
 		var taper_key = (last_row.attr('data-taper')) ? parseInt(last_row.attr('data-taper')) + 1 : 0;
-		
+
 		// Clone item fields to create taper row
 		var dose_input = row.find('td.prescriptionItemDose input').first().clone();
 		dose_input.attr('name', dose_input.attr('name').replace(/\[dose\]/, "[taper]["+taper_key+"][dose]"));
@@ -201,13 +201,13 @@
 		duration_input.attr('name', duration_input.attr('name').replace(/\[duration_id\]/, "[taper]["+taper_key+"][duration_id]"));
 		duration_input.attr('id', duration_input.attr('id').replace(/_duration_id$/, "_taper_"+taper_key+"_duration_id"));
 		duration_input.val(row.find('td.prescriptionItemDurationId select').val());
-		
+
 		// Insert taper row
 		var odd_even = (row.hasClass('odd')) ? 'odd' : 'even';
 		var new_row = $('<tr data-key="'+key+'" data-taper="'+taper_key+'" class="prescriptionTaper '+odd_even+'"></tr>');
 		new_row.append($('<td class="prescriptionLabel">then</td>'), $('<td></td>').append(dose_input), $('<td colspan="2"></td>'), $('<td></td>').append(frequency_input), $('<td></td>').append(duration_input), $('<td class="prescriptionItemActions"><a class="removeTaper"	href="#">Remove</a></td>'));
 		last_row.after(new_row);
-		
+
 		return false;
 	});
 
@@ -225,7 +225,8 @@
 	});
 
 	// Add repeat to prescription
-	function addRepeat() {
+	function addRepeat()
+	{
 		$.get(baseUrl+"/OphDrPrescription/Default/RepeatForm", { key: getNextKey(), patient_id: OE_patient_id }, function(data) {
 			$('#prescription_items').append(data);
 			decorateRows();
@@ -233,9 +234,10 @@
 			applyFilter();
 		});
 	}
-	
+
 	// Add set to prescription
-	function addSet(set_id) {
+	function addSet(set_id)
+	{
 		$.get(baseUrl+"/OphDrPrescription/Default/SetForm", { key: getNextKey(), patient_id: OE_patient_id, set_id: set_id }, function(data) {
 			$('#prescription_items').append(data);
 			decorateRows();
@@ -243,9 +245,10 @@
 			applyFilter();
 		});
 	}
-	
+
 	// Add item to prescription
-	function addItem(label, item_id) {
+	function addItem(label, item_id)
+	{
 		$.get(baseUrl+"/OphDrPrescription/Default/ItemForm", { key: getNextKey(), patient_id: OE_patient_id, drug_id: item_id }, function(data){
 			$('#prescription_items').append(data);
 			decorateRows();
@@ -258,7 +261,8 @@
 	}
 
 	// Mark used common drugs
-	function markUsed() {
+	function markUsed()
+	{
 		$('#prescription_items input[name$="\[drug_id\]"]').each(function(index) {
 			var option = $('#common_drug_id option[value="' + $(this).val() + '"]');
 			if (option) {
@@ -266,22 +270,23 @@
 			}
 		});
 	}
-	
+
 	// Filter drug choices
-	function applyFilter() {
+	function applyFilter()
+	{
 		var filter_type_id = $('#drug_type_id').val();
 		var filter_preservative_free = $('#preservative_free').is(':checked');
 		$('#common_drug_id option').each(function() {
 			var show = true;
 			var drug_id = $(this).val();
-			if(drug_id) {
-				if(filter_type_id && common_drug_metadata[drug_id].type_id != filter_type_id) {
+			if (drug_id) {
+				if (filter_type_id && common_drug_metadata[drug_id].type_id != filter_type_id) {
 					show = false;
 				}
-				if(filter_preservative_free && common_drug_metadata[drug_id].preservative_free == '0') {
+				if (filter_preservative_free && common_drug_metadata[drug_id].preservative_free == '0') {
 					show = false;
 				}
-				if(show) {
+				if (show) {
 					$(this).removeAttr("disabled");
 				} else {
 					$(this).attr("disabled", "disabled");
@@ -291,16 +296,17 @@
 	}
 
 	// Fix odd/even classes on all rows
-	function decorateRows() {
+	function decorateRows()
+	{
 		$('#prescription_items .prescriptionItem').each(function(i) {
-			if(i % 2) {
+			if (i % 2) {
 				$(this).removeClass('even').addClass('odd');
 			} else {
 				$(this).removeClass('odd').addClass('even');
 			}
 			var key = $(this).attr('data-key');
 			$('#prescription_items .prescriptionTaper[data-key="'+key+'"]').each(function() {
-				if(i % 2) {
+				if (i % 2) {
 					$(this).removeClass('even').addClass('odd');
 				} else {
 					$(this).removeClass('odd').addClass('even');
@@ -310,7 +316,8 @@
 	}
 
 	// Get next key for adding rows
-	function getNextKey() {
+	function getNextKey()
+	{
 		var last_item = $('#prescription_items .prescriptionItem').last();
 		return (last_item.attr('data-key')) ? parseInt(last_item.attr('data-key')) + 1 : 0;
 	}

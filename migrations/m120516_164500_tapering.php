@@ -1,9 +1,9 @@
 <?php
 
-class m120516_164500_tapering extends CDbMigration {
-
-	public function up() {
-
+class m120516_164500_tapering extends CDbMigration
+{
+	public function up()
+	{
 		// Create tapering table
 		$this->createTable('ophdrprescription_item_taper', array(
 				'id' => 'int(10) unsigned NOT NULL AUTO_INCREMENT',
@@ -25,7 +25,8 @@ class m120516_164500_tapering extends CDbMigration {
 
 	}
 
-	public function down() {
+	public function down()
+	{
 		$this->dropTable('ophdrprescription_item_taper');
 	}
 

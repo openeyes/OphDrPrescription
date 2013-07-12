@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * OpenEyes
  *
@@ -17,10 +17,10 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
-<tr data-key="<?php echo $key ?>" class="prescriptionItem<?php if($patient->hasAllergy($item->drug_id)) { ?> allergyWarning<?php } ?><?php if($item->getErrors()) { ?> errors<?php } ?> <?php echo ($key % 2) ? 'odd' : 'even'; ?>">
+<tr data-key="<?php echo $key ?>" class="prescriptionItem<?php if ($patient->hasAllergy($item->drug_id)) { ?> allergyWarning<?php } ?><?php if($item->getErrors()) { ?> errors<?php } ?> <?php echo ($key % 2) ? 'odd' : 'even'; ?>">
 	<td class="prescriptionLabel">
 		<?php echo $item->drug->tallmanlabel; ?>
-		<?php if($item->id) { ?><input type="hidden" name="prescription_item[<?php echo $key ?>][id]" value="<?php echo $item->id?>" /><?php } ?>
+		<?php if ($item->id) { ?><input type="hidden" name="prescription_item[<?php echo $key ?>][id]" value="<?php echo $item->id?>" /><?php } ?>
 		<input type="hidden" name="prescription_item[<?php echo $key ?>][drug_id]" value="<?php echo $item->drug_id?>" />
 	</td>
 	<td class="prescriptionItemDose">
@@ -30,7 +30,7 @@
 		<?php echo CHtml::dropDownList('prescription_item['.$key.'][route_id]', $item->route_id, CHtml::listData($item->availableRoutes(), 'id', 'name'), array('empty' => '-- Select --', 'class' => 'drugRoute')); ?>
 	</td>
 	<td>
-		<?php if($item->route && $options = $item->route->options) {
+		<?php if ($item->route && $options = $item->route->options) {
 			echo CHtml::dropDownList('prescription_item['.$key.'][route_option_id]', $item->route_option_id, CHtml::listData($options, 'id', 'name'), array('empty' => '-- Select --'));
 		} else {
 			echo '-';
@@ -49,12 +49,12 @@
 </tr>
 <?php
 	$count = 0;
-	foreach($item->tapers as $taper) {
+	foreach ($item->tapers as $taper) {
 ?>
 <tr data-key="<?php echo $key ?>" data-taper="<?php echo $count ?>" class="prescriptionTaper <?php echo ($key % 2) ? 'odd' : 'even'; ?>">
 	<td class="prescriptionLabel">
 		<span>then</span>
-		<?php if($taper->id) { ?><input type="hidden" name="prescription_item[<?php echo $key ?>][taper][<?php echo $count ?>][id]" value="<?php echo $taper->id?>" /><?php } ?>
+		<?php if ($taper->id) { ?><input type="hidden" name="prescription_item[<?php echo $key ?>][taper][<?php echo $count ?>][id]" value="<?php echo $taper->id?>" /><?php } ?>
 	</td>
 	<td>
 		<?php echo CHtml::textField('prescription_item['.$key.'][taper]['.$count.'][dose]', $taper->dose) ?>

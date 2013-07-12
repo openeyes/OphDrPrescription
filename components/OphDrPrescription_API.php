@@ -17,8 +17,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 
-class OphDrPrescription_API extends BaseAPI {
-	
+class OphDrPrescription_API extends BaseAPI
+{
 	/**
 	 * get the prescription letter text for the latest prescription in the episode for the patient
 	 *
@@ -26,7 +26,8 @@ class OphDrPrescription_API extends BaseAPI {
 	 * @param Episode $episode
 	 * @return string
 	 */
-	public function getLetterPrescription($patient) {
+	public function getLetterPrescription($patient)
+	{
 		if ($episode = $patient->getEpisodeForCurrentSubspecialty()) {
 			if ($details = $this->getElementForLatestEventInEpisode($patient, $episode, 'Element_OphDrPrescription_Details')) {
 				return $details->getLetterText();

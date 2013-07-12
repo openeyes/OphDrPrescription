@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * OpenEyes
  *
@@ -31,15 +31,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach($element->items as $key => $item) { ?>
-				<tr	class="prescriptionItem<?php if($this->patient->hasAllergy($item->drug_id)) { ?> allergyWarning<?php } ?> <?php echo (($key % 2) == 0) ? 'even' : 'odd'; ?>">
+				<?php foreach ($element->items as $key => $item) { ?>
+				<tr	class="prescriptionItem<?php if ($this->patient->hasAllergy($item->drug_id)) { ?> allergyWarning<?php } ?> <?php echo (($key % 2) == 0) ? 'even' : 'odd'; ?>">
 					<td class="prescriptionLabel"><?php echo $item->drug->tallmanlabel; ?></td>
 					<td><?php echo $item->dose ?></td>
-					<td><?php echo $item->route->name ?><?php if($item->route_option) { echo ' ('.$item->route_option->name.')'; } ?></td>
+					<td><?php echo $item->route->name ?><?php if ($item->route_option) { echo ' ('.$item->route_option->name.')'; } ?></td>
 					<td><?php echo $item->frequency->name ?></td>
 					<td><?php echo $item->duration->name ?></td>
 				</tr>
-				<?php foreach($item->tapers as $taper) { ?>
+				<?php foreach ($item->tapers as $taper) { ?>
 				<tr class="prescriptionTaper <?php echo (($key % 2) == 0) ? 'even' : 'odd'; ?>">
 					<td class="prescriptionLabel"><span>then</span></td>
 					<td><?php echo $taper->dose ?></td>
@@ -54,7 +54,7 @@
 </div>
 <input type="hidden" id="et_ophdrprescription_draft" value="<?php echo $element->draft?>" />
 <input type="hidden" id="et_ophdrprescription_print" value="<?php echo $element->print?>" />
-<?php if($element->comments) { ?>
+<?php if ($element->comments) { ?>
 <h4>
 	<?php echo CHtml::encode($element->getAttributeLabel('comments'))?>
 </h4>

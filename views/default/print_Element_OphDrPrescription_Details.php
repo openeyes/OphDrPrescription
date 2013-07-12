@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * OpenEyes
  *
@@ -65,7 +65,7 @@ tr.handWritten td {
 }
 </style>
 
-<?php $copy = $data['copy']; ?> 
+<?php $copy = $data['copy']; ?>
 
 <h1>Prescription Form</h1>
 
@@ -109,30 +109,30 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach($element->items as $key => $item) { ?>
+		<?php foreach ($element->items as $key => $item) { ?>
 		<tr
-			class="prescriptionItem<?php if($this->patient->hasAllergy($item->drug_id)) { ?> allergyWarning<?php } ?>">
+			class="prescriptionItem<?php if ($this->patient->hasAllergy($item->drug_id)) { ?> allergyWarning<?php } ?>">
 			<td class="prescriptionLabel"><?php echo $item->drug->label; ?></td>
 			<td><?php echo $item->dose ?></td>
-			<td><?php echo $item->route->name ?> <?php if($item->route_option) { 
+			<td><?php echo $item->route->name ?> <?php if ($item->route_option) {
 				echo ' ('.$item->route_option->name.')';
 			} ?></td>
-			<td><?php if($data['copy'] == 'patient') { echo $item->frequency->long_name; } else { echo $item->frequency->name; } ?></td>
+			<td><?php if ($data['copy'] == 'patient') { echo $item->frequency->long_name; } else { echo $item->frequency->name; } ?></td>
 			<td><?php echo $item->duration->name ?></td>
 			<td></td>
 			<td></td>
 		</tr>
-		<?php foreach($item->tapers as $taper) { ?>
+		<?php foreach ($item->tapers as $taper) { ?>
 		<tr class="prescriptionTaper">
 			<td class="prescriptionLabel">then</td>
 			<td><?php echo $taper->dose ?></td>
 			<td>-</td>
-			<td><?php if($data['copy'] == 'patient') { echo $taper->frequency->long_name; } else { echo $taper->frequency->name; } ?></td>
+			<td><?php if ($data['copy'] == 'patient') { echo $taper->frequency->long_name; } else { echo $taper->frequency->name; } ?></td>
 			<td><?php echo $taper->duration->name ?></td>
 			<td>-</td>
 			<td>-</td>
 		</tr>
-		<?php	} 
+		<?php	}
 } ?>
 	</tbody>
 </table>
@@ -151,7 +151,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 <h2>Allergies</h2>
 <table class="borders">
 <tr>
-<td><?php if($this->patient->allergies) { echo $this->patient->getAllergiesString(); } else { ?>None identified<?php } ?></td>
+<td><?php if ($this->patient->allergies) { echo $this->patient->getAllergiesString(); } else { ?>None identified<?php } ?></td>
 </tr>
 </table>
 
@@ -200,6 +200,6 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 	</tr>
 </table>
 
-<?php if(!$data['copy']) { ?>
+<?php if (!$data['copy']) { ?>
 <p>Doctor's Signature:</p>
 <?php } ?>

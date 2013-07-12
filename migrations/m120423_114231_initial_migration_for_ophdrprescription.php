@@ -1,9 +1,9 @@
 <?php
 
-class m120423_114231_initial_migration_for_ophdrprescription extends CDbMigration {
-
-	public function up() {
-
+class m120423_114231_initial_migration_for_ophdrprescription extends CDbMigration
+{
+	public function up()
+	{
 		/* Currently done in core migration
 		// Get the event group for ‘Drug events’
 		$group = $this->dbConnection->createCommand()
@@ -76,12 +76,12 @@ class m120423_114231_initial_migration_for_ophdrprescription extends CDbMigratio
 
 	}
 
-	public function down() {
-		
+	public function down()
+	{
 		// Drop the tables created
 		$this->dropTable('ophdrprescription_item');
 		$this->dropTable('et_ophdrprescription_details');
-		
+
 		// Find the event type
 		$event_type = $this->dbConnection->createCommand()
 		->select('id')
