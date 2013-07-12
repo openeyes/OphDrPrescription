@@ -369,7 +369,7 @@ class DefaultController extends BaseEventTypeController
 				$items[] = $item_model;
 			}
 
-		} else if (!$items) {
+		} elseif (!$items) {
 
 			// Prepopulate prescription with set by episode status
 			// FIXME: It's brittle relying on the set name matching the status
