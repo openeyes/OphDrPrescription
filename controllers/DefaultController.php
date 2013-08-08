@@ -426,7 +426,7 @@ class DefaultController extends BaseEventTypeController
 	public function actionMarkPrinted()
 	{
 		if (!$prescription = Element_OphDrPrescription_Details::model()->find('event_id=?',array(@$_GET['event_id']))) {
-			throw new Exception("Prescription not found for event id: $id");
+			throw new Exception("Prescription not found for event id: ".@$_GET['event_id']);
 		}
 
 		if ($prescription->print == 1) {
