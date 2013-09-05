@@ -60,7 +60,7 @@
 </h4>
 <div class="eventHighlight comments">
 	<h4>
-		<?php echo CHtml::encode($element->comments)?>
+		<?php echo $element->textWithLineBreaks('comments')?>
 	</h4>
 </div>
 <?php } ?>

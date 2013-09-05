@@ -19,6 +19,9 @@
 var prescription_print_url;
 
 $(document).ready(function() {
+
+	$('#Element_OphDrPrescription_Details_comments').autosize();
+
 	handleButton($('#et_save_print'),function() {
 		$('#Element_OphDrPrescription_Details_draft').val(0);
 	});
