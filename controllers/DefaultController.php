@@ -145,13 +145,12 @@ class DefaultController extends BaseEventTypeController
 		Yii::app()->getClientScript()->reset();
 		$this->layout = '//layouts/pdf';
 		$pdf_print = new OEPDFPrint('Openeyes', 'PDF', 'PDF');
-		$address = $this->site->getLetterAddress();
-		if ($this->site->telephone) {
-			$address .= "\n".$this->site->telephone;
-		}
-		if ($this->site->fax) {
-			$address .= "\n".$this->site->fax;
-		}
+		$address = $this->site->getLetterAddress(array(
+				'delimiter' => "\n",
+				'include_telephone' => true,
+				'include_fax' => true,
+			));
+		
 		foreach(array(
 				false => false,
 				'notes' => 'Copy for notes',
