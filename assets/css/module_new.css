@@ -22,9 +22,42 @@
 }
 /* line 4, ../sass/components/_event.scss */
 .event.phasing .event-content {
-  background-image: url('../img/new/watermark.png?1379328509');
+  background-image: url('../img/new/watermark.png?1379336226');
 }
 /* line 7, ../sass/components/_event.scss */
 .event.phasing .event-title {
   background-image: url('../img/new/medium.png?1379328509');
+}
+
+/* line 2, ../sass/components/_prescriptions_table.scss */
+table.prescriptions {
+  margin: 10px 0;
+}
+/* line 6, ../sass/components/_prescriptions_table.scss */
+table.prescriptions tr td.prescription-actions {
+  font-size: 0.75em;
+}
+/* line 10, ../sass/components/_prescriptions_table.scss */
+table.prescriptions tr.prescription-item {
+  border-top: #ccc 1px dotted;
+}
+/* line 13, ../sass/components/_prescriptions_table.scss */
+table.prescriptions tr.prescription-item td.prescription-label {
+  font-weight: bold;
+}
+/* line 19, ../sass/components/_prescriptions_table.scss */
+table.prescriptions tr.prescription-tapier .prescription-label {
+  text-align: right;
+  color: #666;
+  font-style: italic;
+}
+/* line 23, ../sass/components/_prescriptions_table.scss */
+table.prescriptions tr.prescription-tapier .prescription-label span {
+  background: url('../img/new/icons/taper.png?1375104847') -10px 100% no-repeat;
+  padding-left: 20px;
+}
+
+/* line 35, ../sass/components/_prescriptions_table.scss */
+.view table.prescriptions {
+  margin-top: 0;
 }
