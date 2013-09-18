@@ -331,6 +331,10 @@ class DefaultController extends BaseEventTypeController
 					$route_option_id = DrugRouteOption::model()->find('name = :eye_name', array(':eye_name' => $principal_eye->name));
 					$item->route_option_id = ($route_option_id) ? $route_option_id : null;
 				}
+				//check operation note eye and use instead of original diagnosis
+				if ($api = Yii::app()->moduleAPI->get('OphTrOperationnote')) {
+					if ($apieye=$api->GetLastEye($patient)) $item->route_option_id=$apieye;
+				}
 			}
 		}
 		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $patient));
