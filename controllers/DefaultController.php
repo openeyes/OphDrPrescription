@@ -150,7 +150,7 @@ class DefaultController extends BaseEventTypeController
 				'include_telephone' => true,
 				'include_fax' => true,
 			));
-		
+
 		foreach(array(
 				false => false,
 				'notes' => 'Copy for notes',
@@ -174,14 +174,18 @@ class DefaultController extends BaseEventTypeController
 		$pdf_print->output();
 	}
 
+	/**
+	 * set flash message for ptient allergies
+	 *
+	 * @param Patient $patient
+	 */
 	protected function showAllergyWarning($patient)
 	{
-		if ($patient->allergies) {
-			$allergy_array = array();
-			foreach ($patient->allergies as $allergy) {
-				$allergy_array[] = $allergy->name;
-			}
-			Yii::app()->user->setFlash('warning.prescription_allergy', 'Warning: Patient is allergic to '.implode(', ',$allergy_array));
+		if ($patient->no_allergies_date) {
+			Yii::app()->user->setFlash('info.prescription_allergy', $patient->getAllergiesString());
+		}
+		else {
+			Yii::app()->user->setFlash('warning.prescription_allergy', $patient->getAllergiesString());
 		}
 	}
 
