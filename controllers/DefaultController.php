@@ -101,7 +101,7 @@ class DefaultController extends BaseEventTypeController
 		$element = Element_OphDrPrescription_Details::model()->findByAttributes(array('event_id' => $event->id));
 		$patient = $event->episode->patient;
 		foreach ($element->items as $item) {
-			if ($patient->hasAllergy($item->drug_id)) {
+			if ($patient->hasDrugAllergy($item->drug_id)) {
 				$this->showAllergyWarning($event->episode->patient);
 				break;
 			}
