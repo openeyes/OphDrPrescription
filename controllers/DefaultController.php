@@ -101,7 +101,7 @@ class DefaultController extends BaseEventTypeController
 		$element = Element_OphDrPrescription_Details::model()->findByAttributes(array('event_id' => $event->id));
 		$patient = $event->episode->patient;
 		foreach ($element->items as $item) {
-			if ($patient->hasAllergy($item->drug_id)) {
+			if ($patient->hasDrugAllergy($item->drug_id)) {
 				$this->showAllergyWarning($event->episode->patient);
 				break;
 			}
@@ -150,7 +150,7 @@ class DefaultController extends BaseEventTypeController
 				'include_telephone' => true,
 				'include_fax' => true,
 			));
-		
+
 		foreach(array(
 				false => false,
 				'notes' => 'Copy for notes',
@@ -174,14 +174,18 @@ class DefaultController extends BaseEventTypeController
 		$pdf_print->output();
 	}
 
+	/**
+	 * set flash message for ptient allergies
+	 *
+	 * @param Patient $patient
+	 */
 	protected function showAllergyWarning($patient)
 	{
-		if ($patient->allergies) {
-			$allergy_array = array();
-			foreach ($patient->allergies as $allergy) {
-				$allergy_array[] = $allergy->name;
-			}
-			Yii::app()->user->setFlash('warning.prescription_allergy', 'Warning: Patient is allergic to '.implode(', ',$allergy_array));
+		if ($patient->no_allergies_date) {
+			Yii::app()->user->setFlash('info.prescription_allergy', $patient->getAllergiesString());
+		}
+		else {
+			Yii::app()->user->setFlash('warning.prescription_allergy', $patient->getAllergiesString());
 		}
 	}
 
@@ -330,6 +334,10 @@ class DefaultController extends BaseEventTypeController
 				if ($principal_eye = $episode->eye) {
 					$route_option_id = DrugRouteOption::model()->find('name = :eye_name', array(':eye_name' => $principal_eye->name));
 					$item->route_option_id = ($route_option_id) ? $route_option_id : null;
+				}
+				//check operation note eye and use instead of original diagnosis
+				if ($api = Yii::app()->moduleAPI->get('OphTrOperationnote')) {
+					if ($apieye=$api->GetLastEye($patient)) $item->route_option_id=$apieye;
 				}
 			}
 		}
