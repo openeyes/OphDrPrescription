@@ -17,16 +17,16 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 /* line 2, ../sass/components/_event.scss */
-.event.phasing {
+.event.ophdrprescription {
   border-color: #fdcc56;
 }
 /* line 4, ../sass/components/_event.scss */
-.event.phasing .event-content {
-  background-image: url('../img/new/watermark.png?1379336226');
+.event.ophdrprescription .event-content {
+  background-image: url('../img/new/watermark.png?1382610855');
 }
 /* line 7, ../sass/components/_event.scss */
-.event.phasing .event-title {
-  background-image: url('../img/new/medium.png?1379328509');
+.event.ophdrprescription .event-title {
+  background-image: url('../img/new/medium.png?1382610855');
 }
 
 /* line 2, ../sass/components/_prescriptions_table.scss */
@@ -53,7 +53,7 @@ table.prescriptions tr.prescription-tapier .prescription-label {
 }
 /* line 23, ../sass/components/_prescriptions_table.scss */
 table.prescriptions tr.prescription-tapier .prescription-label span {
-  background: url('../img/new/icons/taper.png?1375104847') -10px 100% no-repeat;
+  background: url('../img/new/icons/taper.png?1382610855') -10px 100% no-repeat;
   padding-left: 20px;
 }
 
