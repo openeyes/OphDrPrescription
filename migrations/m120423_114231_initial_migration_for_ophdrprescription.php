@@ -5,7 +5,7 @@ class m120423_114231_initial_migration_for_ophdrprescription extends CDbMigratio
 	public function up()
 	{
 		/* Currently done in core migration
-		// Get the event group for ‘Drug events’
+		// Get the event group for ‘Drug events’*/
 		$group = $this->dbConnection->createCommand()
 		->select('id')
 		->from('event_group')
@@ -18,7 +18,7 @@ class m120423_114231_initial_migration_for_ophdrprescription extends CDbMigratio
 				'event_group_id' => $group['id'],
 				'class_name' => 'OphDrPrescription'
 		));
-		 */
+
 
 		// Get the newly created event type
 		$event_type = $this->dbConnection->createCommand()
