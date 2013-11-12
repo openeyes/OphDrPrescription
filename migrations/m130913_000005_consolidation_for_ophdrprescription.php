@@ -29,6 +29,41 @@ class m130913_000005_consolidation_for_ophdrprescription extends OEMigration
 
 	public function up()
 	{
+		if (!$this->consolidate(
+			array(
+				"m120423_114231_initial_migration_for_ophdrprescription",
+				"m120510_152211_add_metadata_to_prescription_items",
+				"m120515_174700_prescription_item_route_options",
+				"m120516_164500_tapering",
+				"m120529_142100_add_draft_and_locking",
+				"m120712_074517_added_draft_field",
+				"m130423_141157_print_flag",
+				"m130604_131358_patient_shortcodes",
+			)
+		)
+		) {
+			$this->createTables();
+		}
+	}
+
+	public function down()
+	{
+		echo "You cannot migrate down past a consolidation migration\n";
+		return false;
+	}
+
+	public function safeUp()
+	{
+		$this->up();
+	}
+
+	public function safeDown()
+	{
+		$this->down();
+	}
+
+	protected function createTables()
+	{
 		$this->setData();
 		//disable foreign keys check
 		Yii::app()->cache->flush();
@@ -124,8 +159,4 @@ class m130913_000005_consolidation_for_ophdrprescription extends OEMigration
 
 	}
 
-	public function down()
-	{
-		echo "Down method not supported on consolidation";
-	}
 }
