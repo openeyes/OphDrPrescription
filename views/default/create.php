@@ -17,41 +17,32 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
-<?php $this->header() ?>
+<?php $this->beginContent('//patient/event_container'); ?>
 
-<h3 class="withEventIcon" ><?php echo $this->event_type->name ?></h3>
+	<h2 class="event-title"><?php echo $this->event_type->name ?></h2>
 
-<?php $this->renderPartial('//base/_messages'); ?>
+	<?php $this->renderPartial('//base/_messages'); ?>
 
-<div id="event_<?php echo $this->module->name?>">
 	<?php
 		$form = $this->beginWidget('BaseEventTypeCActiveForm', array(
-			'id'=>'clinical-create',
+			'id'=>'prescription-create',
 			'enableAjaxValidation'=>false,
-			'htmlOptions' => array('class'=>'sliding'),
 		));
 
 		// Event actions
-		$this->event_actions[] = EventAction::button('Save draft', 'savedraft', array('colour' => 'green'), array('id' => 'et_save_draft'));
-		$this->event_actions[] = EventAction::button('Save and print', 'saveprint', array('colour' => 'green'), array('id' => 'et_save_print'));
-		$this->renderPartial('//patient/event_actions');
-	?>
+		$this->event_actions[] = EventAction::button('Save draft', 'savedraft', array('level'=>'secondary'), array('id' => 'et_save_draft', 'class'=>'button small', 'form' => 'prescription-create' ));
+		$this->event_actions[] = EventAction::button('Save and print', 'saveprint', array('level'=>'secondary'), array('id' => 'et_save_print', 'class'=>'button small', 'form' => 'prescription-create' ));
 
-		<?php $this->displayErrors($errors)?>
+		$this->displayErrors($errors)?>
 
-		<div class="elements">
-			<?php $this->renderDefaultElements($this->action->id, $form); ?>
-			<?php $this->renderOptionalElements($this->action->id, $form); ?>
-		</div>
+		<?php $this->renderDefaultElements($this->action->id, $form); ?>
+		<?php $this->renderOptionalElements($this->action->id, $form); ?>
 
-		<?php $this->displayErrors($errors)?>
-
-		<div class="cleartall"></div>
+		<?php $this->displayErrors($errors, true)?>
 	<?php $this->endWidget(); ?>
-</div>
 
-<div id="dialog-confirm-cancel" title="Cancel">
-	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>All text entered will be lost. Are you sure?</p>
-</div>
+	<div id="dialog-confirm-cancel" title="Cancel" class="hide">
+		<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>All text entered will be lost. Are you sure?</p>
+	</div>
 
-<?php $this->footer() ?>
+<?php $this->endContent() ;?>

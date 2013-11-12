@@ -1,0 +1,39 @@
+table {
+	&.prescriptions {
+		margin: 10px 0;
+		tr {
+			td {
+				&.prescription-actions {
+					font-size: emCalc(12px);
+				}
+			}
+			&.prescription-item {
+				border-top: #ccc 1px dotted;
+				td {
+					&.prescription-label {
+						font-weight: bold;
+					}
+				}
+			}
+			&.prescription-tapier {
+				.prescription-label {
+					text-align: right;
+					color: #666;
+					font-style: italic;
+					span {
+						background: image-url("icons/taper.png") -10px 100% no-repeat;
+						padding-left: 20px;
+					}
+				}
+			}
+		}
+	}
+}
+
+.view {
+	table {
+		&.prescriptions {
+			margin-top: 0;
+		}
+	}
+}
