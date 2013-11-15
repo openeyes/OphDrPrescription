@@ -393,7 +393,7 @@ class DefaultController extends BaseEventTypeController
 				if(!$set) {
 					//global drug set defaults for all subspecialties
 					$set = DrugSet::model()->find(array(
-							'condition' => 'subspecialty_id is NULL AND name is NULL'
+							'condition' => 'subspecialty_id is NULL'
 						));
 				}
 				if ($set) {
