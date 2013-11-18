@@ -19,27 +19,15 @@
 
 class DefaultController extends BaseEventTypeController
 {
-	/**
-	 * Different rules for prescribing
-	 *
-	 * @return array
-	 */
-	public function accessRules()
-	{
-		return array(
-			// Level 2 or 3 can't change anything
-			array('allow',
-				'actions' => array('view'),
-				'expression' => 'BaseController::checkUserLevel(2)',
-			),
-			// Level 4 can prescribe
-			array('allow',
-				'expression' => 'BaseController::checkUserLevel(4)',
-			),
-			// Deny anything else (default rule allows authenticated users)
-			array('deny'),
-		);
-	}
+	static protected $action_types = array(
+		'drugList' => self::ACTION_TYPE_FORM,
+		'repeatForm' => self::ACTION_TYPE_FORM,
+		'setForm' => self::ACTION_TYPE_FORM,
+		'itemForm' => self::ACTION_TYPE_FORM,
+		'routeOptions' => self::ACTION_TYPE_FORM,
+		'doPrint' => self::ACTION_TYPE_PRINT,
+		'markPrinted' => self::ACTION_TYPE_PRINT,
+	);
 
 	/**
 	 * Prescription has its own rules for printing
@@ -136,11 +124,6 @@ class DefaultController extends BaseEventTypeController
 				$this->showAllergyWarning();
 				break;
 			}
-		}
-
-		// Prescriptions can only be edited by level 4
-		if (!self::checkUserLevel(4)) {
-			$this->editable = false;
 		}
 	}
 
@@ -571,5 +554,20 @@ class DefaultController extends BaseEventTypeController
 		}
 
 		echo "1";
+	}
+
+	public function checkCreateAccess()
+	{
+		return $this->checkAccess('OprnCreatePrescription', $this->firm, $this->event_type);
+	}
+
+	public function checkPrintAccess()
+	{
+		return $this->checkAccess('OprnPrintPrescrption');
+	}
+
+	public function checkEditAccess()
+	{
+		return $this->checkAccess('OprnEditPrescription', $this->firm, $this->event);
 	}
 }
