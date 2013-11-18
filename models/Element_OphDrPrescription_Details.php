@@ -55,7 +55,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		// will receive user inputs.
 		return array(
 				array('event_id, comments, draft, print', 'safe'),
-				//array('', 'required'),
+				array('items', 'required'),
 				// The following rule is used by search().
 				// Please remove those attributes that should not be searched.
 				array('id, event_id, comments', 'safe', 'on' => 'search'),
@@ -107,6 +107,11 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		));
 	}
 
+	/**
+	 * Generates string for inclusion in letters that describes the prescription
+	 *
+	 * @return string
+	 */
 	public function getLetterText()
 	{
 		$return = '';
@@ -125,6 +130,12 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		return $return;
 	}
 
+	/**
+	 * Get the common drugs for session firm
+	 *
+	 * @TODO: move this out of the model - it's not the right place for it as it's relying on session information
+	 * @return Drug[]
+	 */
 	public function commonDrugs()
 	{
 		$firm = Firm::model()->findByPk(Yii::app()->session['selected_firm_id']);
@@ -139,6 +150,12 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		));
 	}
 
+	/**
+	 * Get the drug sets for the current firm
+	 *
+	 * @TODO: move this out of the model - it's not the right place for it as it's relying on session information
+	 * @return DrugSet[]
+	 */
 	public function drugSets()
 	{
 		$firm = Firm::model()->findByPk(Yii::app()->session['selected_firm_id']);
@@ -151,6 +168,12 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		));
 	}
 
+	/**
+	 * Gets listdata for the drugtypes
+	 *
+	 * @TODO: Should this be a static method on the DrugType model, rather than here?
+	 * @return CHtml::listData
+	 */
 	public function drugTypes()
 	{
 		$drugTypes = CHtml::listData(DrugType::model()->findAll(array(
@@ -162,6 +185,11 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		return $drugTypes;
 	}
 
+	/**
+	 * Prescription is always editable
+	 *
+	 * @return bool
+	 */
 	public function isEditable()
 	{
 		return true;
@@ -169,140 +197,103 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 
 	/**
 	 * Validate prescription items
-	 * @todo This probably doesn't belong here, but there doesn't seem to be an easy way
-	 * of doing it through the controller at the moment
 	 */
-	protected function beforeValidate()
+	protected function afterValidate()
 	{
-		if (isset($_POST['prescription_items_valid']) && $_POST['prescription_items_valid']) {
-
-			// Empty prescription not allowed
-			if (!isset($_POST['prescription_item']) || !$_POST['prescription_item']) {
-				$this->addError('prescription_item', 'Prescription cannot be empty');
-				return parent::beforeValidate();
-			}
-
-			// Check that fields on prescription items are set
-			foreach ($_POST['prescription_item'] as $key => $item) {
-				$item_model = new OphDrPrescription_Item();
-				$item_model->drug_id = $item['drug_id'];
-				$item_model->dose = $item['dose'];
-				$item_model->route_id = $item['route_id'];
-				$item_model->frequency_id = $item['frequency_id'];
-				$item_model->duration_id = $item['duration_id'];
-				if (isset($item['route_option_id'])) {
-					$item_model->route_option_id = $item['route_option_id'];
-				}
-
-				// id and prescription_id are not yet available, so exclude from validation
-				$validate_attributes = array_keys($item_model->getAttributes(false));
-				if (!$item_model->validate($validate_attributes)) {
-					$this->addErrors($item_model->getErrors());
-				}
-
-				if (isset($item['taper'])) {
-
-					// Check that the taper fields are valid
-					foreach ($item['taper'] as $taper) {
-						$taper_model = new OphDrPrescription_ItemTaper();
-						$taper_model->dose = $taper['dose'];
-						$taper_model->frequency_id = $taper['frequency_id'];
-						$taper_model->duration_id = $taper['duration_id'];
-
-						// id and item_id are not yet available, so exclude from validation
-						$validate_attributes = array_keys($taper_model->getAttributes(false));
-						if (!$taper_model->validate($validate_attributes)) {
-							$this->addErrors($taper_model->getErrors());
-						}
-					}
+		// Check that fields on prescription items are set
+		foreach ($this->items as $i => $item) {
+			if (!$item->validate()) {
+				foreach ($item->getErrors() as $fld => $err) {
+					$this->addError('items', 'Item (' .($i+1) . '): ' . implode(', ', $err) );
 				}
 			}
-
 		}
-		return parent::beforeValidate();
+		return parent::afterValidate();
 	}
 
 	/**
-	 * Save prescription items
-	 * @todo This probably doesn't belong here, but there doesn't seem to be an easy way
-	 * of doing it through the controller at the moment
+	 * Create and save appropriate Element_OphDrPrescription_Item and Element_OphDrPrescription_Item_Taper
+	 * models for this prescription based on the $items structure passed in.
+	 *
+	 * This instance must have been saved already.
+	 *
+	 * @param array() $items
+	 * @throws Exception
 	 */
-	protected function afterSave()
+	public function updateItems($items)
 	{
-		if (isset($_POST['prescription_items_valid']) && $_POST['prescription_items_valid']) {
+		if (!$this->id) {
+			throw new Exception("Cannot call updateItems on unsaved instance.");
+		}
+		error_log(print_r($items, true));
+		// Get a list of ids so we can keep track of what's been removed
+		$existing_item_ids = array();
+		$existing_taper_ids = array();
+		// can't rely on relation, as this will have been set already
+		foreach (OphDrPrescription_Item::model()->findAll('prescription_id = :pid', array(':pid' => $this->id)) as $item) {
+			$existing_item_ids[$item->id] = $item->id;
+			foreach ($item->tapers as $taper) {
+				$existing_taper_ids[$taper->id] = $taper->id;
+			}
+		}
+		error_log(print_r($existing_item_ids, true));
 
-			// Get a list of ids so we can keep track of what's been removed
-			$existing_item_ids = array();
-			$existing_taper_ids = array();
-			foreach ($this->items as $item) {
-				$existing_item_ids[$item->id] = $item->id;
-				foreach ($item->tapers as $taper) {
-					$existing_taper_ids[$taper->id] = $taper->id;
-				}
+		// Process (any) posted prescription items
+		foreach ($items as $item) {
+			if (isset($item['id']) && isset($existing_item_ids[$item['id']])) {
+				// Item is being updated
+				$item_model = OphDrPrescription_Item::model()->findByPk($item['id']);
+				unset($existing_item_ids[$item['id']]);
+			} else {
+				// Item is new
+				$item_model = new OphDrPrescription_Item();
+				$item_model->prescription_id = $this->id;
+				$item_model->drug_id = $item['drug_id'];
 			}
 
-			// Process (any) posted prescription items
-			$new_items = (isset($_POST['prescription_item'])) ? $_POST['prescription_item'] : array();
-			foreach ($new_items as $item) {
-				if (isset($item['id']) && isset($existing_item_ids[$item['id']])) {
-
-					// Item is being updated
-					$item_model = OphDrPrescription_Item::model()->findByPk($item['id']);
-					unset($existing_item_ids[$item['id']]);
-
-				} else {
-
-					// Item is new
-					$item_model = new OphDrPrescription_Item();
-					$item_model->prescription_id = $this->id;
-					$item_model->drug_id = $item['drug_id'];
-
-				}
-
-				// Save main item attributes
-				$item_model->dose = $item['dose'];
-				$item_model->route_id = $item['route_id'];
-				if (isset($item['route_option_id'])) {
-					$item_model->route_option_id = $item['route_option_id'];
-				} else {
-					$item_model->route_option_id = null;
-				}
-				$item_model->frequency_id = $item['frequency_id'];
-				$item_model->duration_id = $item['duration_id'];
-				$item_model->save();
-
-				// Tapering
-				$new_tapers = (isset($item['taper'])) ? $item['taper'] : array();
-				foreach ($new_tapers as $taper) {
-					if (isset($taper['id']) && isset($existing_taper_ids[$taper['id']])) {
-
-						// Taper is being updated
-						$taper_model = OphDrPrescription_ItemTaper::model()->findByPk($taper['id']);
-						unset($existing_taper_ids[$taper['id']]);
-
-					} else {
-
-						// Taper is new
-						$taper_model = new OphDrPrescription_ItemTaper();
-						$taper_model->item_id = $item_model->id;
-
-					}
-					$taper_model->dose = $taper['dose'];
-					$taper_model->frequency_id = $taper['frequency_id'];
-					$taper_model->duration_id = $taper['duration_id'];
-					$taper_model->save();
-				}
+			// Save main item attributes
+			$item_model->dose = $item['dose'];
+			$item_model->route_id = $item['route_id'];
+			if (isset($item['route_option_id'])) {
+				$item_model->route_option_id = $item['route_option_id'];
+			} else {
+				$item_model->route_option_id = null;
 			}
+			$item_model->frequency_id = $item['frequency_id'];
+			$item_model->duration_id = $item['duration_id'];
+			$item_model->save();
 
-			// Delete remaining (removed) ids
-			OphDrPrescription_ItemTaper::model()->deleteByPk(array_values($existing_taper_ids));
-			OphDrPrescription_Item::model()->deleteByPk(array_values($existing_item_ids));
-
+			// Tapering
+			$new_tapers = (isset($item['taper'])) ? $item['taper'] : array();
+			foreach ($new_tapers as $taper) {
+				if (isset($taper['id']) && isset($existing_taper_ids[$taper['id']])) {
+					// Taper is being updated
+					$taper_model = OphDrPrescription_ItemTaper::model()->findByPk($taper['id']);
+					unset($existing_taper_ids[$taper['id']]);
+				} else {
+					// Taper is new
+					$taper_model = new OphDrPrescription_ItemTaper();
+					$taper_model->item_id = $item_model->id;
+				}
+				$taper_model->dose = $taper['dose'];
+				$taper_model->frequency_id = $taper['frequency_id'];
+				$taper_model->duration_id = $taper['duration_id'];
+				$taper_model->save();
+			}
 		}
 
-		return parent::afterSave();
+		error_log(print_r($existing_item_ids, true));
+
+		// Delete remaining (removed) ids
+		OphDrPrescription_ItemTaper::model()->deleteByPk(array_values($existing_taper_ids));
+		OphDrPrescription_Item::model()->deleteByPk(array_values($existing_item_ids));
 	}
 
+	/**
+	 * Returns string status to indicate if the prescription is draft or not
+	 *
+	 * @return string
+	 */
 	public function getInfotext()
 	{
 		if (!$this->printed) {
