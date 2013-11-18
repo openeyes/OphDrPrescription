@@ -87,7 +87,7 @@
 				<div class="field-label">Other Actions</div>
 			</div>
 			<div class="large-10 column">
-				<?php if ($this->getPreviousPrescription($this->patient, $element->id)) { ?>
+				<?php if ($this->getPreviousPrescription($element->id)) { ?>
 					<button type="button" class="classy blue mini button small"
 							id="repeat_prescription" name="repeat_prescription">
 						<span class="button-span button-span-blue">Add Repeat Prescription</span>
@@ -115,7 +115,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	<?php foreach ($this->getPrescriptionItems($element) as $key => $item) {
+	<?php foreach ($element->items as $key => $item) {
 		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $this->patient));
 	} ?>
 	</tbody>

@@ -18,4 +18,4 @@
  */
 ?>
 
-<?php $this->renderDefaultElements($this->action->id, null, array('copy' => $copy)); ?>
+<?php $this->renderOpenElements($this->action->id, null, array('copy' => $copy)); ?>

@@ -36,7 +36,7 @@
 		</div>
 	<?php }?>
 
-	<?php $this->renderDefaultElements($this->action->id); ?>
+	<?php $this->renderOpenElements($this->action->id); ?>
 	<?php $this->renderOptionalElements($this->action->id); ?>
 
 	<script type="text/javascript">

@@ -22,7 +22,7 @@
 	<h2 class="event-title"><?php echo $this->event_type->name ?></h2>
 
 	<div id="delete_event">
-		<h3>Delete event</h3>
+		<h3><?= $this->title ?></h3>
 		<div class="alert-box alert with-icon">
 			<strong>WARNING: This will permanently delete the event and remove it from view.<br><br>THIS ACTION CANNOT BE UNDONE.</strong>
 		</div>
