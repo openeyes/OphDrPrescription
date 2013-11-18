@@ -20,7 +20,7 @@
 <?php $this->beginContent('//patient/event_container'); ?>
 
 	<div id="delete_event">
-		<h3>Delete event</h3>
+		<h3><?= $this->title ?></h3>
 		<div class="alert-box alert with-icon">
 			<strong>WARNING: This will permanently delete the event and remove it from view.<br><br>THIS ACTION CANNOT BE UNDONE.</strong>
 		</div>
