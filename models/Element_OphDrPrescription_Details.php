@@ -225,7 +225,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		if (!$this->id) {
 			throw new Exception("Cannot call updateItems on unsaved instance.");
 		}
-		error_log(print_r($items, true));
+
 		// Get a list of ids so we can keep track of what's been removed
 		$existing_item_ids = array();
 		$existing_taper_ids = array();
@@ -236,7 +236,6 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 				$existing_taper_ids[$taper->id] = $taper->id;
 			}
 		}
-		error_log(print_r($existing_item_ids, true));
 
 		// Process (any) posted prescription items
 		foreach ($items as $item) {
@@ -281,8 +280,6 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 				$taper_model->save();
 			}
 		}
-
-		error_log(print_r($existing_item_ids, true));
 
 		// Delete remaining (removed) ids
 		OphDrPrescription_ItemTaper::model()->deleteByPk(array_values($existing_taper_ids));
