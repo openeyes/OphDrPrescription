@@ -158,7 +158,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 <h2>Comments</h2>
 <table class="borders">
 <tr>
-<td><?php echo CHtml::encode($element->comments)?></td>
+<td><?php echo $element->textWithLineBreaks('comments')?></td>
 </tr>
 </table>
 

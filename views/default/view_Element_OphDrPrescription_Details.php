@@ -58,8 +58,10 @@
 		<?php echo CHtml::encode($element->getAttributeLabel('comments'))?>
 	</h3>
 	<div class="element-data">
-		<div class="data-value">
-			<?php echo $element->textWithLineBreaks('comments')?>
+		<div class="data-row">
+			<div class="data-value">
+				<?php echo $element->textWithLineBreaks('comments')?>
+			</div>
 		</div>
 	</div>
 <?php } ?>
