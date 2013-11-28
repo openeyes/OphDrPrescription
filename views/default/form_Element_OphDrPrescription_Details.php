@@ -66,7 +66,7 @@
 				<fieldset>
 					<legend><em>Filtered by:</em></legend>
 					<label class="inline" for="drug_type_id">Type:</label>
-					<?php echo CHtml::dropDownList('drug_type_id', null, $element->drugTypes(), array('class' => 'drugFilter', 'empty' => '-- Select --')); ?>
+					<?php echo CHtml::dropDownList('drug_type_id', null, $element->drugTypes(), array('class' => 'inline drugFilter', 'empty' => '-- Select --')); ?>
 					<label class="inline highlight">
 						No preservative
 						<?php echo CHtml::checkBox('preservative_free', null, array('class' => 'drugFilter'))?>
@@ -78,7 +78,7 @@
 			<div class="large-2 column">
 				<label for="drug_set_id">Add Standard Set:</label>
 			</div>
-			<div class="large-10 column">
+			<div class="large-3 column end">
 				<?php echo CHtml::dropDownList('drug_set_id', null, CHtml::listData($element->drugSets(), 'id', 'name'), array('empty' => '-- Select --')); ?>
 			</div>
 		</div>

@@ -43,8 +43,7 @@
 		<?php echo CHtml::dropDownList('prescription_item['.$key.'][duration_id]', $item->duration_id, CHtml::listData($item->availableDurations(), 'id', 'name'), array('empty' => '-- Select --')); ?>
 	</td>
 	<td class="prescriptionItemActions">
-		<a class="removeItem"	href="#">Remove</a>
-		| <a class="taperItem"	href="#">+Taper</a>
+		<a class="removeItem"	href="#">Remove</a>&nbsp;|&nbsp;<a class="taperItem"	href="#">+Taper</a>
 	</td>
 </tr>
 <?php
