@@ -35,7 +35,7 @@ $(document).ready(function() {
 					if (html == "1") {
 						window.location.reload();
 					} else {
-						new OpenEyes.Dialog.Alert({
+						new OpenEyes.UI.Dialog.Alert({
 						  content: "There was an unexpected error printing the prescription, please try again or contact support for assistance."
 						}).open();
 					}
@@ -96,7 +96,7 @@ function do_print_prescription() {
 			if (html == "1") {
 				printIFrameUrl(OE_print_url, null);
 			} else {
-				new OpenEyes.Dialog.Alert({
+				new OpenEyes.UI.Dialog.Alert({
 				  content: "There was an error printing the prescription, please try again or contact support for assistance."
 				}).open();
 			}
