@@ -88,9 +88,9 @@
 			</div>
 			<div class="large-10 column">
 				<?php if ($this->getPreviousPrescription($this->patient, $element->id)) { ?>
-					<button type="button" class="classy blue mini button small"
+					<button type="button" class="button small"
 							id="repeat_prescription" name="repeat_prescription">
-						<span class="button-span button-span-blue">Add Repeat Prescription</span>
+						Add Repeat Prescription
 					</button>
 				<?php } ?>
 				<button type="button" class="small"
