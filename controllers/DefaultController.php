@@ -246,6 +246,7 @@ class DefaultController extends BaseEventTypeController
 				$condition .= ' AND t.id != :current_id';
 				$params[':current_id'] = $current_id;
 			}
+			$condition .= ' AND event.deleted = 0';
 			return Element_OphDrPrescription_Details::model()->find(array(
 					'condition' => $condition,
 					'join' => 'JOIN event ON event.id = t.event_id',
