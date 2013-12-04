@@ -22,7 +22,7 @@
 }
 /* line 19, ../sass/components/_event.scss */
 .event .event-content {
-  background-image: url('../img/watermark.png?1384433912');
+  background-image: url('../img/watermark.png?1385733427');
 }
 /* line 22, ../sass/components/_event.scss */
 .event .event-title {
@@ -53,7 +53,7 @@ table.prescriptions tr.prescription-tapier .prescription-label {
 }
 /* line 39, ../sass/components/_prescriptions_table.scss */
 table.prescriptions tr.prescription-tapier .prescription-label span {
-  background: url('../img/icons/taper.png?1384433912') -10px 100% no-repeat;
+  background: url('../img/icons/taper.png?1385733427') -10px 100% no-repeat;
   padding-left: 20px;
 }
 
