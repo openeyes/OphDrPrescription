@@ -8,7 +8,7 @@ class m131204_162227_table_versioning extends CDbMigration
 CREATE TABLE `et_ophdrprescription_details_version` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `event_id` int(10) unsigned NOT NULL,
-  `comments` text COLLATE utf8_bin,
+  `comments` text COLLATE utf8_bin DEFAULT NULL,
   `last_modified_user_id` int(10) unsigned NOT NULL DEFAULT '1',
   `last_modified_date` datetime NOT NULL DEFAULT '1901-01-01 00:00:00',
   `created_user_id` int(10) unsigned NOT NULL DEFAULT '1',
