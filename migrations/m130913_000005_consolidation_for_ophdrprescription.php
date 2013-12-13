@@ -43,6 +43,19 @@ class m130913_000005_consolidation_for_ophdrprescription extends OEMigration
 		)
 		) {
 			$this->createTables();
+		} else {
+			// Check to see if the out of order migration has ever been run, and if not run it
+			$ooo_migration = $this->getDbConnection()->createCommand()
+				->select('version')
+				->from('tbl_migration')
+				->where('version = :version', array(':version' => 'm130904_134009_alter_comments_to_text'))
+				->queryColumn();
+			if($ooo_migration) {
+				$this->getDbConnection()->createCommand()
+					->delete('tbl_migration', array('version = :version', array(':version' => 'm130904_134009_alter_comments_to_text')));
+			} else {
+				$this->m130904_134009_alter_comments_to_text();
+			}
 		}
 	}
 
@@ -75,7 +88,7 @@ class m130913_000005_consolidation_for_ophdrprescription extends OEMigration
 		$this->execute("CREATE TABLE `et_ophdrprescription_details` (
 			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  `event_id` int(10) unsigned NOT NULL,
-			  `comments` text COLLATE utf8_bin,
+			  `comments` text,
 			  `last_modified_user_id` int(10) unsigned NOT NULL DEFAULT '1',
 			  `last_modified_date` datetime NOT NULL DEFAULT '1901-01-01 00:00:00',
 			  `created_user_id` int(10) unsigned NOT NULL DEFAULT '1',
@@ -102,7 +115,7 @@ class m130913_000005_consolidation_for_ophdrprescription extends OEMigration
 			  `last_modified_date` datetime NOT NULL DEFAULT '1901-01-01 00:00:00',
 			  `created_user_id` int(10) unsigned NOT NULL DEFAULT '1',
 			  `created_date` datetime NOT NULL DEFAULT '1901-01-01 00:00:00',
-			  `dose` varchar(40) COLLATE utf8_bin DEFAULT NULL,
+			  `dose` varchar(40) DEFAULT NULL,
 			  `route_id` int(10) unsigned NOT NULL,
 			  `frequency_id` int(10) unsigned NOT NULL,
 			  `duration_id` int(10) unsigned NOT NULL,
@@ -130,7 +143,7 @@ class m130913_000005_consolidation_for_ophdrprescription extends OEMigration
 		$this->execute("CREATE TABLE `ophdrprescription_item_taper` (
 			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  `item_id` int(10) unsigned NOT NULL,
-			  `dose` varchar(40) COLLATE utf8_bin DEFAULT NULL,
+			  `dose` varchar(40) DEFAULT NULL,
 			  `frequency_id` int(10) unsigned NOT NULL,
 			  `duration_id` int(10) unsigned NOT NULL,
 			  `last_modified_user_id` int(10) unsigned NOT NULL DEFAULT '1',
@@ -157,6 +170,14 @@ class m130913_000005_consolidation_for_ophdrprescription extends OEMigration
 		//enable foreign keys check
 		$this->execute("SET foreign_key_checks = 1");
 
+	}
+
+	/**
+	 * Out of order migration missing from previous release
+	 */
+	protected function m130904_134009_alter_comments_to_text()
+	{
+		$this->alterColumn('et_ophdrprescription_details','comments','TEXT');
 	}
 
 }
