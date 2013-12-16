@@ -25,7 +25,7 @@
  * @property DrugFrequency $frequency
  * @property OphDrPrescription_Item $item
  */
-class OphDrPrescription_ItemTaper extends BaseActiveRecord
+class OphDrPrescription_ItemTaper extends BaseActiveRecordVersioned
 {
 	/**
 	 * Returns the static model of the specified AR class.

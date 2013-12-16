@@ -29,7 +29,7 @@
  * @property Prescription $prescription
  * @property OphDrPrescription_ItemTaper[] $tapers
  */
-class OphDrPrescription_Item extends BaseActiveRecord
+class OphDrPrescription_Item extends BaseActiveRecordVersioned
 {
 	/**
 	 * Returns the static model of the specified AR class.
