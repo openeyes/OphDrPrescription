@@ -123,12 +123,9 @@ CREATE TABLE `ophdrprescription_item_taper_version` (
 		$this->alterColumn('ophdrprescription_item_taper_version','version_id','int(10) unsigned NOT NULL AUTO_INCREMENT');
 
 		$this->addColumn('et_ophdrprescription_details','deleted','tinyint(1) unsigned not null');
-		$this->addColumn('et_ophdrprescription_details_version','deleted','tinyint(1) unsigned not null');
 
 		$this->addColumn('ophdrprescription_item','deleted','tinyint(1) unsigned not null');
-		$this->addColumn('ophdrprescription_item_version','deleted','tinyint(1) unsigned not null');
 		$this->addColumn('ophdrprescription_item_taper','deleted','tinyint(1) unsigned not null');
-		$this->addColumn('ophdrprescription_item_taper_version','deleted','tinyint(1) unsigned not null');
 	}
 
 	public function down()
