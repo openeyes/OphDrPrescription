@@ -123,20 +123,20 @@ CREATE TABLE `ophdrprescription_item_taper_version` (
 		$this->alterColumn('ophdrprescription_item_taper_version','version_id','int(10) unsigned NOT NULL AUTO_INCREMENT');
 
 		$this->addColumn('et_ophdrprescription_details','deleted','tinyint(1) unsigned not null');
+		$this->addColumn('et_ophdrprescription_details_version','deleted','tinyint(1) unsigned not null');
 
 		$this->addColumn('ophdrprescription_item','deleted','tinyint(1) unsigned not null');
+		$this->addColumn('ophdrprescription_item_version','deleted','tinyint(1) unsigned not null');
 		$this->addColumn('ophdrprescription_item_taper','deleted','tinyint(1) unsigned not null');
+		$this->addColumn('ophdrprescription_item_taper_version','deleted','tinyint(1) unsigned not null');
 	}
 
 	public function down()
 	{
 		$this->dropColumn('ophdrprescription_item','deleted');
-		$this->dropColumn('ophdrprescription_item_version','deleted');
 		$this->dropColumn('ophdrprescription_item_taper','deleted');
-		$this->dropColumn('ophdrprescription_item_taper_version','deleted');
 
 		$this->dropColumn('et_ophdrprescription_details','deleted');
-		$this->dropColumn('et_ophdrprescription_details_version','deleted');
 
 		$this->dropTable('et_ophdrprescription_details_version');
 		$this->dropTable('ophdrprescription_item_version');
