@@ -49,7 +49,7 @@ class DefaultController extends BaseEventTypeController
 
 	public function canPrint()
 	{
-		return BaseController::checkUserLevel(4);
+		return BaseController::checkUserLevel(3);
 	}
 
 	public function actionCreate()
