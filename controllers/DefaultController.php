@@ -27,9 +27,9 @@ class DefaultController extends BaseEventTypeController
 				'actions' => array('view'),
 				'expression' => 'BaseController::checkUserLevel(2)',
 			),
-			// Level 4 can prescribe
+			// Level 5 can prescribe
 			array('allow',
-				'expression' => 'BaseController::checkUserLevel(4)',
+				'expression' => 'BaseController::checkUserLevel(5)',
 			),
 			// Deny anything else (default rule allows authenticated users)
 			array('deny'),
@@ -112,7 +112,7 @@ class DefaultController extends BaseEventTypeController
 				"prescription_print_url = '" . Yii::app()->createUrl('/OphDrPrescription/default/print/'.$id) . "';\n", CClientScript::POS_READY);
 
 		// Prescriptions can only be edited by level 4
-		if (!self::checkUserLevel(4)) {
+		if (!self::checkUserLevel(5)) {
 			$this->editable = false;
 		}
 
