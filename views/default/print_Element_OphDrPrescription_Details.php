@@ -151,7 +151,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 <h2>Allergies</h2>
 <table class="borders">
 <tr>
-<td><?php if ($this->patient->allergies) { echo $this->patient->getAllergiesString(); } else { ?>None identified<?php } ?></td>
+<td><?php echo $this->patient->getAllergiesString(); ?></td>
 </tr>
 </table>
 
