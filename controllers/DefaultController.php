@@ -30,16 +30,6 @@ class DefaultController extends BaseEventTypeController
 	);
 
 	/**
-	 * Prescription has its own rules for printing
-	 *
-	 * @return bool
-	 */
-	public function canPrint()
-	{
-		return BaseController::checkUserLevel(4);
-	}
-
-	/**
 	 * Defines JS data structure for common drug lookup in prescription
 	 *
 	 */
