@@ -553,7 +553,7 @@ class DefaultController extends BaseEventTypeController
 
 	public function checkPrintAccess()
 	{
-		return $this->checkAccess('OprnPrintPrescrption');
+		return $this->checkAccess('OprnPrintPrescription');
 	}
 
 	public function checkEditAccess()
