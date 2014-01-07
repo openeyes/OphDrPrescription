@@ -21,7 +21,7 @@
 
 	<?php
 		// Event actions
-		if ($this->canPrint()) {
+		if ($this->checkPrintAccess()) {
 			$this->event_actions[] = EventAction::button('Print', 'print', null, array('id' => 'et_print', 'class'=>'button small'));
 		}
 	?>
@@ -34,7 +34,7 @@
 		</div>
 	<?php }?>
 
-	<?php $this->renderDefaultElements($this->action->id); ?>
+	<?php $this->renderOpenElements($this->action->id); ?>
 	<?php $this->renderOptionalElements($this->action->id); ?>
 
 	<script type="text/javascript">
