@@ -548,7 +548,7 @@ class DefaultController extends BaseEventTypeController
 
 	public function checkCreateAccess()
 	{
-		return $this->checkAccess('OprnCreatePrescription', $this->firm, $this->event_type);
+		return $this->checkAccess('OprnCreatePrescription', $this->firm, $this->episode, $this->event_type);
 	}
 
 	public function checkPrintAccess()
