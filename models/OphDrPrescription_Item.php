@@ -56,7 +56,7 @@ class OphDrPrescription_Item extends BaseActiveRecordVersioned
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-				array('prescription_id, drug_id, dose, route_id, frequency_id, duration_id', 'required'),
+				array('drug_id, dose, route_id, frequency_id, duration_id', 'required'),
 				array('route_option_id', 'validateRouteOption'),
 				array('route_option_id', 'safe'),
 				//array('', 'required'),
@@ -98,12 +98,8 @@ class OphDrPrescription_Item extends BaseActiveRecordVersioned
 				'route_option' => array(self::BELONGS_TO, 'DrugRouteOption', 'route_option_id'),
 				'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
 				'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
+				'drug' => array(self::BELONGS_TO, 'Drug', 'drug_id', 'scopes' => array('discontinued')),
 		);
-	}
-
-	public function getDrug()
-	{
-		return Drug::model()->discontinued()->findByPk($this->drug_id);
 	}
 
 	/**
@@ -183,4 +179,14 @@ class OphDrPrescription_Item extends BaseActiveRecordVersioned
 		return DrugRoute::model()->findAll(array('order' => 'name'));
 	}
 
+	public function afterValidate()
+	{
+		foreach ($this->tapers as $i => $taper) {
+			if (!$taper->validate()) {
+				foreach ($taper->getErrors() as $fld => $err) {
+					$this->addError('tapers', 'Taper (' .($i+1) . '): ' . implode(', ', $err) );
+				}
+			}
+		}
+	}
 }

@@ -19,23 +19,20 @@
 
 class DefaultController extends BaseEventTypeController
 {
-	public function accessRules()
-	{
-		return array(
-			// Level 2 or 3 can't change anything
-			array('allow',
-				'actions' => array('view'),
-				'expression' => 'BaseController::checkUserLevel(2)',
-			),
-			// Level 4 can prescribe
-			array('allow',
-				'expression' => 'BaseController::checkUserLevel(4)',
-			),
-			// Deny anything else (default rule allows authenticated users)
-			array('deny'),
-		);
-	}
+	static protected $action_types = array(
+		'drugList' => self::ACTION_TYPE_FORM,
+		'repeatForm' => self::ACTION_TYPE_FORM,
+		'setForm' => self::ACTION_TYPE_FORM,
+		'itemForm' => self::ACTION_TYPE_FORM,
+		'routeOptions' => self::ACTION_TYPE_FORM,
+		'doPrint' => self::ACTION_TYPE_PRINT,
+		'markPrinted' => self::ACTION_TYPE_PRINT,
+	);
 
+	/**
+	 * Defines JS data structure for common drug lookup in prescription
+	 *
+	 */
 	protected function setCommonDrugMetadata()
 	{
 		$this->jsVars['common_drug_metadata'] = array();
@@ -47,78 +44,86 @@ class DefaultController extends BaseEventTypeController
 		}
 	}
 
-	public function canPrint()
+	protected function initEdit()
 	{
-		return BaseController::checkUserLevel(4);
+		$this->setCommonDrugMetadata();
+		$this->showAllergyWarning();
+		// Save and print clicked, stash print flag
+		if (isset($_POST['saveprint'])) {
+			Yii::app()->session['print_prescription'] = true;
+		}
 	}
 
-	public function actionCreate()
+	/**
+	 * Initialisation function for specific patient id
+	 * Used for ajax actions
+	 *
+	 * @param $patient_id
+	 * @throws CHttpException
+	 */
+	protected function initForPatient($patient_id)
 	{
-		if (!$patient = Patient::model()->findByPk($_REQUEST['patient_id'])) {
+		if (!$this->patient = Patient::model()->findByPk($patient_id)) {
 			throw new CHttpException(403, 'Invalid patient_id.');
 		}
 
-		$this->setCommonDrugMetadata();
-
-		$this->showAllergyWarning($patient);
-
-		// Save and print clicked, stash print flag
-		if (isset($_POST['saveprint'])) {
-			Yii::app()->session['print_prescription'] = true;
+		if (!$this->episode = $this->getEpisode($this->firm, $patient_id)) {
+			throw new CHttpException(403, 'Invalid request for this patient.');
 		}
-
-		parent::actionCreate();
 	}
 
-	public function actionUpdate($id)
+	/**
+	 * Some additional initialisation for create
+	 */
+	protected function initActionCreate()
 	{
-		if (!$event = Event::model()->findByPk($id)) {
-			throw new CHttpException(403, 'Invalid event id.');
-		}
+		parent::initActionCreate();
 
-		$this->setCommonDrugMetadata();
-
-		$this->showAllergyWarning($event->episode->patient);
-
-		// Save and print clicked, stash print flag
-		if (isset($_POST['saveprint'])) {
-			Yii::app()->session['print_prescription'] = true;
-		}
-
-		parent::actionUpdate($id);
+		$this->initEdit();
 	}
 
-	public function actionView($id)
+	/**
+	 * Some additional initialisation for create
+	 */
+	protected function initActionUpdate()
 	{
-		if (!$event = Event::model()->findByPk($id)) {
-			throw new CHttpException(403, 'Invalid event id.');
-		}
+		parent::initActionUpdate();
+		$this->initEdit();
+	}
+
+	/**
+	 * Some additional initialisation for view
+	 */
+	protected function initActionView()
+	{
+		parent::initActionView();
 
 		// Clear any stale warning
 		Yii::app()->user->getFlash('warning.prescription_allergy');
 
-		// Get prescription details element
-		$element = Element_OphDrPrescription_Details::model()->findByAttributes(array('event_id' => $event->id));
-		$patient = $event->episode->patient;
-		foreach ($element->items as $item) {
-			if ($patient->hasDrugAllergy($item->drug_id)) {
-				$this->showAllergyWarning($event->episode->patient);
-				break;
-			}
-		}
 		// set required js variables
 		$cs = Yii::app()->getClientScript();
 		$cs->registerScript('scr_prescription_view',
-				"prescription_print_url = '" . Yii::app()->createUrl('/OphDrPrescription/default/print/'.$id) . "';\n", CClientScript::POS_READY);
+			"prescription_print_url = '" . Yii::app()->createUrl('/OphDrPrescription/default/print/'.$this->event->id) . "';\n", CClientScript::POS_READY);
 
-		// Prescriptions can only be edited by level 4
-		if (!self::checkUserLevel(4)) {
-			$this->editable = false;
+		// Get prescription details element
+		$element = Element_OphDrPrescription_Details::model()->findByAttributes(array('event_id' => $this->event->id));
+
+		foreach ($element->items as $item) {
+			if ($this->patient->hasDrugAllergy($item->drug_id)) {
+				$this->showAllergyWarning();
+				break;
+			}
 		}
-
-		parent::actionView($id);
 	}
 
+	/**
+	 * marks the prescription as printed. So this is the 3rd place this can happen, but not sure
+	 * if this is every called.
+	 *
+	 * @param int $id
+	 * @throws Exception
+	 */
 	public function printInit($id)
 	{
 		parent::printInit($id);
@@ -135,6 +140,48 @@ class DefaultController extends BaseEventTypeController
 		}
 	}
 
+	/**
+	 * Set prescription item defaults when creating
+	 *
+	 * @param BaseEventTypeElement $element
+	 * @param string $action
+	 */
+	protected function setElementDefaultOptions($element, $action)
+	{
+		parent::setElementDefaultOptions($element, $action);
+
+		if ($action == 'create' && get_class($element) == 'Element_OphDrPrescription_Details') {
+			// Prepopulate prescription with set by episode status
+			// FIXME: It's brittle relying on the set name matching the status
+			$items = array();
+			$status_name = $this->episode->status->name;
+			$subspecialty_id = $this->firm->getSubspecialtyID();
+			$params = array(':subspecialty_id' => $subspecialty_id, ':status_name' => $status_name);
+			$set = DrugSet::model()->find(array(
+					'condition' => 'subspecialty_id = :subspecialty_id AND name = :status_name',
+					'params' => $params,
+				));
+			if ($set) {
+				foreach ($set->items as $item) {
+					$item_model = new OphDrPrescription_Item();
+					$item_model->drug_id = $item->drug_id;
+					$item_model->loadDefaults();
+					$items[] = $item_model;
+				}
+			}
+
+			$element->items = $items;
+		}
+	}
+
+	/**
+	 * Always print with the PDF function
+	 *
+	 * @TODO: Should/is this method ever be called for prescription?
+	 * @param int $id
+	 * @param BaseEventTypeElement[] $elements
+	 * @param string $template
+	 */
 	protected function printHTML($id, $elements, $template='print')
 	{
 		$this->printPDF($id, $elements);
@@ -175,26 +222,21 @@ class DefaultController extends BaseEventTypeController
 	}
 
 	/**
-	 * set flash message for ptient allergies
-	 *
-	 * @param Patient $patient
+	 * Set flash message for patient allergies
 	 */
-	protected function showAllergyWarning($patient)
+	protected function showAllergyWarning()
 	{
-		if ($patient->no_allergies_date) {
-			Yii::app()->user->setFlash('info.prescription_allergy', $patient->getAllergiesString());
+		if ($this->patient->no_allergies_date) {
+			Yii::app()->user->setFlash('info.prescription_allergy', $this->patient->getAllergiesString());
 		}
 		else {
-			Yii::app()->user->setFlash('warning.prescription_allergy', $patient->getAllergiesString());
+			Yii::app()->user->setFlash('warning.prescription_allergy', $this->patient->getAllergiesString());
 		}
 	}
 
-	public function updateElements($elements, $data, $event)
-	{
-		// TODO: Move model aftersave stuff in here
-		return parent::updateElements($elements, $data, $event);
-	}
-
+	/**
+	 * Ajax action to search for drugs
+	 */
 	public function actionDrugList()
 	{
 		if (Yii::app()->request->isAjaxRequest) {
@@ -225,23 +267,39 @@ class DefaultController extends BaseEventTypeController
 		}
 	}
 
+	/**
+	 * Get a repeat prescription form for the patient (will ignore prescriptions from the
+	 * event defined by $current_id if given
+	 *
+	 * @param $key
+	 * @param $patient_id
+	 * @param null $current_id
+	 */
 	public function actionRepeatForm($key, $patient_id, $current_id = null)
 	{
-		$patient = Patient::model()->findByPk($patient_id);
-		if ($prescription = $this->getPreviousPrescription($patient, $current_id)) {
+		$this->initForPatient($patient_id);
+
+		if ($prescription = $this->getPreviousPrescription($current_id)) {
 			foreach ($prescription->items as $item) {
-				$this->renderPrescriptionItem($key, $patient, $item);
+				$this->renderPrescriptionItem($key, $item);
 				$key++;
 			}
 		}
 	}
 
-	public function getPreviousPrescription($patient, $current_id = null)
+	/**
+	 * Get the most recent prescription for the current patient, not including
+	 * those from the given event id $current_id
+	 *
+	 * @param integer $current_id - event id to ignore
+	 * @return Element_OphDrPrescription_Details
+	 */
+	public function getPreviousPrescription($current_id = null)
 	{
-		$episode = $patient->getEpisodeForCurrentSubspecialty();
-		if ($episode) {
+
+		if ($this->episode) {
 			$condition = 'episode_id = :episode_id';
-			$params = array(':episode_id' => $episode->id);
+			$params = array(':episode_id' => $this->episode->id);
 			if ($current_id) {
 				$condition .= ' AND t.id != :current_id';
 				$params[':current_id'] = $current_id;
@@ -249,30 +307,52 @@ class DefaultController extends BaseEventTypeController
 			$condition .= ' AND event.deleted = 0';
 			return Element_OphDrPrescription_Details::model()->find(array(
 					'condition' => $condition,
-					'join' => 'JOIN event ON event.id = t.event_id',
+					'join' => 'JOIN event ON event.id = t.event_id AND event.deleted = false',
 					'order' => 'created_date DESC',
 					'params' => $params,
 			));
 		}
 	}
 
+	/**
+	 * Ajax action to get prescription forms for a drug set
+	 *
+	 * @param $key
+	 * @param $patient_id
+	 * @param $set_id
+	 */
 	public function actionSetForm($key, $patient_id, $set_id)
 	{
-		$patient = Patient::model()->findByPk($patient_id);
+		$this->initForPatient($patient_id);
+
 		$drug_set_items = DrugSetItem::model()->findAllByAttributes(array('drug_set_id' => $set_id));
 		foreach ($drug_set_items as $drug_set_item) {
-			$this->renderPrescriptionItem($key, $patient, $drug_set_item);
+			$this->renderPrescriptionItem($key, $drug_set_item);
 			$key++;
 		}
 	}
 
+	/**
+	 * Ajax action to get the form for single drug
+	 *
+	 * @param $key
+	 * @param $patient_id
+	 * @param $drug_id
+	 */
 	public function actionItemForm($key, $patient_id, $drug_id)
 	{
-		$patient = Patient::model()->findByPk($patient_id);
-		$this->renderPrescriptionItem($key, $patient, $drug_id);
+		$this->initForPatient($patient_id);
+		$this->renderPrescriptionItem($key, $drug_id);
 	}
 
-	protected function renderPrescriptionItem($key, $patient, $source)
+	/**
+	 * Render the form for a OphDrPrescription_Item, DrugSetItem or Drug (by id)
+	 *
+	 * @param $key
+	 * @param OphDrPrescription_Item|DrugSetItem|integer $source
+	 * @throws CException
+	 */
+	protected function renderPrescriptionItem($key, $source)
 	{
 		$item = new OphDrPrescription_Item();
 		if (is_a($source,'OphDrPrescription_Item')) {
@@ -331,16 +411,28 @@ class DefaultController extends BaseEventTypeController
 			}
 
 			// Populate route option from episode for Eye
-			if ($episode = $patient->getEpisodeForCurrentSubspecialty()) {
+			if ($episode = $this->episode) {
 				if ($principal_eye = $episode->eye) {
 					$route_option_id = DrugRouteOption::model()->find('name = :eye_name', array(':eye_name' => $principal_eye->name));
 					$item->route_option_id = ($route_option_id) ? $route_option_id : null;
 				}
+				//check operation note eye and use instead of original diagnosis
+				if ($api = Yii::app()->moduleAPI->get('OphTrOperationnote')) {
+					if ($apieye = $api->GetLastEye($this->patient)) {
+						$item->route_option_id = $apieye;
+					}
+				}
 			}
 		}
-		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $patient));
+		$this->renderPartial('form_Element_OphDrPrescription_Details_Item', array('key' => $key, 'item' => $item, 'patient' => $this->patient));
 	}
 
+	/**
+	 * Ajax method to get html dropdown of the options for the given route
+	 *
+	 * @param $key
+	 * @param $route_id
+	 */
 	public function actionRouteOptions($key, $route_id)
 	{
 		$options = DrugRouteOption::model()->findAllByAttributes(array('drug_route_id' => $route_id));
@@ -351,14 +443,20 @@ class DefaultController extends BaseEventTypeController
 		}
 	}
 
-	public function getPrescriptionItems($element)
+	/**
+	 * Set the prescription items
+	 *
+	 * @param BaseEventTypeElement $element
+	 * @param array $data
+	 * @param integer $index
+	 */
+	protected function setElementComplexAttributesFromData($element, $data, $index = null)
 	{
-		$items = $element->items;
-		if (isset($_POST['prescription_item'])) {
+		if (get_class($element) == 'Element_OphDrPrescription_Details' && @$data['prescription_item']) {
 
 			// Form has been posted, so we should return the submitted values instead
 			$items = array();
-			foreach ($_POST['prescription_item'] as $item) {
+			foreach ($data['prescription_item'] as $item) {
 				$item_model = new OphDrPrescription_Item();
 				$item_model->attributes = $item;
 				if (isset($item['taper'])) {
@@ -373,34 +471,30 @@ class DefaultController extends BaseEventTypeController
 				$items[] = $item_model;
 			}
 
-		} elseif (!$items) {
-
-			// Prepopulate prescription with set by episode status
-			// FIXME: It's brittle relying on the set name matching the status
-			if ($episode = $this->patient->getEpisodeForCurrentSubspecialty()) {
-				$items = array();
-				$status_name = $episode->status->name;
-				$firm = Firm::model()->findByPk(Yii::app()->session['selected_firm_id']);
-				$subspecialty_id = $firm->serviceSubspecialtyAssignment->subspecialty_id;
-				$params = array(':subspecialty_id' => $subspecialty_id, ':status_name' => $status_name);
-				$set = DrugSet::model()->find(array(
-						'condition' => 'subspecialty_id = :subspecialty_id AND name = :status_name',
-						'params' => $params,
-				));
-				if ($set) {
-					foreach ($set->items as $item) {
-						$item_model = new OphDrPrescription_Item();
-						$item_model->drug_id = $item->drug_id;
-						$item_model->loadDefaults();
-						$items[] = $item_model;
-					}
-				}
-			}
-
+			$element->items = $items;
 		}
-		return $items;
 	}
 
+	/**
+	 * Actually save the prescription items against the details object
+	 *
+	 * @param $data
+	 */
+	protected function saveEventComplexAttributesFromData($data)
+	{
+		foreach ($this->open_elements as $element) {
+			if (get_class($element) == 'Element_OphDrPrescription_Details') {
+				$element->updateItems(isset($data['prescription_item']) ? $data['prescription_item'] : array());
+			}
+		}
+	}
+
+	/**
+	 * Print action for a prescription event, called when a prescription has not ben printed
+	 *
+	 * @param $id
+	 * @throws Exception
+	 */
 	public function actionDoPrint($id)
 	{
 		if (!$prescription = Element_OphDrPrescription_Details::model()->find('event_id=?',array($id))) {
@@ -418,6 +512,7 @@ class DefaultController extends BaseEventTypeController
 			throw new Exception("Event not found: $id");
 		}
 
+		// FIXME: this should be using the info method
 		$event->info = 'Printed';
 
 		if (!$event->save()) {
@@ -427,6 +522,13 @@ class DefaultController extends BaseEventTypeController
 		echo "1";
 	}
 
+	/**
+	 * Mark a prescription element as printed - called when printing a prescription that has already
+	 * been printed.
+	 *
+	 * @TODO: is this necessary if the print action is already marking the prescription printed?
+	 * @throws Exception
+	 */
 	public function actionMarkPrinted()
 	{
 		if (!$prescription = Element_OphDrPrescription_Details::model()->find('event_id=?',array(@$_GET['event_id']))) {
@@ -442,5 +544,20 @@ class DefaultController extends BaseEventTypeController
 		}
 
 		echo "1";
+	}
+
+	public function checkCreateAccess()
+	{
+		return $this->checkAccess('OprnCreatePrescription', $this->firm, $this->episode, $this->event_type);
+	}
+
+	public function checkPrintAccess()
+	{
+		return $this->checkAccess('OprnPrintPrescription');
+	}
+
+	public function checkEditAccess()
+	{
+		return $this->checkAccess('OprnEditPrescription', $this->firm, $this->event);
 	}
 }

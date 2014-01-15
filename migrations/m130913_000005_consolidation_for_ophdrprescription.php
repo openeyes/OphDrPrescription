@@ -104,7 +104,7 @@ class m130913_000005_consolidation_for_ophdrprescription extends OEMigration
 			  CONSTRAINT `et_ophdrprescription_details_created_user_id_fk` FOREIGN KEY (`created_user_id`) REFERENCES `user` (`id`),
 			  CONSTRAINT `et_ophdrprescription_details_event_id_fk` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`),
 			  CONSTRAINT `et_ophdrprescription_details_last_modified_user_id_fk` FOREIGN KEY (`last_modified_user_id`) REFERENCES `user` (`id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 		");
 
 		$this->execute("CREATE TABLE `ophdrprescription_item` (
@@ -137,7 +137,7 @@ class m130913_000005_consolidation_for_ophdrprescription extends OEMigration
 			  CONSTRAINT `ophdrprescription_item_frequency_id_fk` FOREIGN KEY (`frequency_id`) REFERENCES `drug_frequency` (`id`),
 			  CONSTRAINT `ophdrprescription_item_route_id_fk` FOREIGN KEY (`route_id`) REFERENCES `drug_route` (`id`),
 			  CONSTRAINT `ophdrprescription_item_route_option_id_fk` FOREIGN KEY (`route_option_id`) REFERENCES `drug_route_option` (`id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 		");
 
 		$this->execute("CREATE TABLE `ophdrprescription_item_taper` (
@@ -161,7 +161,7 @@ class m130913_000005_consolidation_for_ophdrprescription extends OEMigration
 			  CONSTRAINT `ophdrprescription_item_taper_duration_id_fk` FOREIGN KEY (`duration_id`) REFERENCES `drug_duration` (`id`),
 			  CONSTRAINT `ophdrprescription_item_taper_created_user_id_fk` FOREIGN KEY (`created_user_id`) REFERENCES `user` (`id`),
 			  CONSTRAINT `ophdrprescription_item_taper_last_modified_user_id_fk` FOREIGN KEY (`last_modified_user_id`) REFERENCES `user` (`id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 		");
 
 		$migrations_path = dirname(__FILE__);

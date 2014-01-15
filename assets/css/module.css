@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /** Phasing */
 /**
  * OpenEyes
@@ -22,11 +23,11 @@
 }
 /* line 19, ../sass/components/_event.scss */
 .event .event-content {
-  background-image: url('../img/watermark.png?1385733427');
+  background-image: url('../img/watermark.png?1387552891');
 }
 /* line 22, ../sass/components/_event.scss */
 .event .event-title {
-  background-image: url('../img/medium.png?1383822517');
+  background-image: url('../img/medium.png?1384769346');
 }
 
 /* line 18, ../sass/components/_prescriptions_table.scss */
@@ -34,30 +35,34 @@ table.prescriptions {
   margin: 10px 0;
 }
 /* line 22, ../sass/components/_prescriptions_table.scss */
+table.prescriptions tr.allergyWarning td {
+  background-color: #f66;
+}
+/* line 27, ../sass/components/_prescriptions_table.scss */
 table.prescriptions tr td.prescription-actions {
   font-size: 0.75em;
 }
-/* line 26, ../sass/components/_prescriptions_table.scss */
+/* line 31, ../sass/components/_prescriptions_table.scss */
 table.prescriptions tr.prescription-item {
   border-top: #ccc 1px dotted;
 }
-/* line 29, ../sass/components/_prescriptions_table.scss */
+/* line 34, ../sass/components/_prescriptions_table.scss */
 table.prescriptions tr.prescription-item td.prescription-label {
   font-weight: bold;
 }
-/* line 35, ../sass/components/_prescriptions_table.scss */
+/* line 40, ../sass/components/_prescriptions_table.scss */
 table.prescriptions tr.prescription-tapier .prescription-label {
   text-align: right;
   color: #666;
   font-style: italic;
 }
-/* line 39, ../sass/components/_prescriptions_table.scss */
+/* line 44, ../sass/components/_prescriptions_table.scss */
 table.prescriptions tr.prescription-tapier .prescription-label span {
-  background: url('../img/icons/taper.png?1385733427') -10px 100% no-repeat;
+  background: url('../img/icons/taper.png?1387552891') -10px 100% no-repeat;
   padding-left: 20px;
 }
 
-/* line 51, ../sass/components/_prescriptions_table.scss */
+/* line 56, ../sass/components/_prescriptions_table.scss */
 .view table.prescriptions {
   margin-top: 0;
 }
