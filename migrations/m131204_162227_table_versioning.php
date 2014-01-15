@@ -8,7 +8,7 @@ class m131204_162227_table_versioning extends CDbMigration
 CREATE TABLE `et_ophdrprescription_details_version` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 	`event_id` int(10) unsigned NOT NULL,
-	`comments` text COLLATE utf8_bin DEFAULT NULL,
+	`comments` text DEFAULT NULL,
 	`last_modified_user_id` int(10) unsigned NOT NULL DEFAULT '1',
 	`last_modified_date` datetime NOT NULL DEFAULT '1901-01-01 00:00:00',
 	`created_user_id` int(10) unsigned NOT NULL DEFAULT '1',
@@ -24,7 +24,7 @@ CREATE TABLE `et_ophdrprescription_details_version` (
 	CONSTRAINT `acv_et_ophdrprescription_details_created_user_id_fk` FOREIGN KEY (`created_user_id`) REFERENCES `user` (`id`),
 	CONSTRAINT `acv_et_ophdrprescription_details_event_id_fk` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`),
 	CONSTRAINT `acv_et_ophdrprescription_details_last_modified_user_id_fk` FOREIGN KEY (`last_modified_user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 		");
 
 		$this->alterColumn('et_ophdrprescription_details_version','id','int(10) unsigned NOT NULL');
@@ -48,7 +48,7 @@ CREATE TABLE `ophdrprescription_item_version` (
 	`last_modified_date` datetime NOT NULL DEFAULT '1901-01-01 00:00:00',
 	`created_user_id` int(10) unsigned NOT NULL DEFAULT '1',
 	`created_date` datetime NOT NULL DEFAULT '1901-01-01 00:00:00',
-	`dose` varchar(40) COLLATE utf8_bin DEFAULT NULL,
+	`dose` varchar(40) DEFAULT NULL,
 	`route_id` int(10) unsigned NOT NULL,
 	`frequency_id` int(10) unsigned NOT NULL,
 	`duration_id` int(10) unsigned NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE `ophdrprescription_item_version` (
 	CONSTRAINT `acv_ophdrprescription_item_frequency_id_fk` FOREIGN KEY (`frequency_id`) REFERENCES `drug_frequency` (`id`),
 	CONSTRAINT `acv_ophdrprescription_item_route_id_fk` FOREIGN KEY (`route_id`) REFERENCES `drug_route` (`id`),
 	CONSTRAINT `acv_ophdrprescription_item_route_option_id_fk` FOREIGN KEY (`route_option_id`) REFERENCES `drug_route_option` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 		");
 
 		$this->alterColumn('ophdrprescription_item_version','id','int(10) unsigned NOT NULL');
@@ -89,7 +89,7 @@ CREATE TABLE `ophdrprescription_item_version` (
 CREATE TABLE `ophdrprescription_item_taper_version` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 	`item_id` int(10) unsigned NOT NULL,
-	`dose` varchar(40) COLLATE utf8_bin DEFAULT NULL,
+	`dose` varchar(40) DEFAULT NULL,
 	`frequency_id` int(10) unsigned NOT NULL,
 	`duration_id` int(10) unsigned NOT NULL,
 	`last_modified_user_id` int(10) unsigned NOT NULL DEFAULT '1',
@@ -107,7 +107,7 @@ CREATE TABLE `ophdrprescription_item_taper_version` (
 	CONSTRAINT `acv_ophdrprescription_item_taper_duration_id_fk` FOREIGN KEY (`duration_id`) REFERENCES `drug_duration` (`id`),
 	CONSTRAINT `acv_ophdrprescription_item_taper_created_user_id_fk` FOREIGN KEY (`created_user_id`) REFERENCES `user` (`id`),
 	CONSTRAINT `acv_ophdrprescription_item_taper_last_modified_user_id_fk` FOREIGN KEY (`last_modified_user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 		");
 
 		$this->alterColumn('ophdrprescription_item_taper_version','id','int(10) unsigned NOT NULL');
