@@ -164,7 +164,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 
 	public function isEditable()
 	{
-		return true;
+		return $this->draft;
 	}
 
 	/**
