@@ -150,7 +150,12 @@ class OphDrPrescription_Item extends BaseActiveRecord
 		if ($this->route_option) {
 			$return .= ' (' . $this->route_option->name . ')';
 		}
-		$return .= ' for ' . $this->duration->name;
+		if (preg_match('/^[0-9]+/',$this->duration->name)) {
+			$return .= ' for ' . $this->duration->name;
+		} else {
+			$return .= ' ' . $this->duration->name;
+		}
+
 		return $return;
 	}
 
