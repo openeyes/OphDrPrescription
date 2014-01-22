@@ -54,6 +54,10 @@ class DefaultController extends BaseEventTypeController
 
 	public function canPrint()
 	{
+		if (!parent::canPrint()) {
+			return false;
+		}
+
 		return BaseController::checkUserLevel(3);
 	}
 
