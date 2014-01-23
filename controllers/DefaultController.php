@@ -63,7 +63,7 @@ class DefaultController extends BaseEventTypeController
 
 	public function printActions()
 	{
-		return array('print', 'markPrinted');
+		return array('print', 'markPrinted', 'doPrint');
 	}
 
 	public function actionCreate()
