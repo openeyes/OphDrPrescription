@@ -46,12 +46,21 @@ class DefaultController extends BaseEventTypeController
 
 	protected function initEdit()
 	{
+		if (!parent::canPrint()) {
+			return false;
+		}
+
 		$this->setCommonDrugMetadata();
 		$this->showAllergyWarning();
 		// Save and print clicked, stash print flag
 		if (isset($_POST['saveprint'])) {
 			Yii::app()->session['print_prescription'] = true;
 		}
+	}
+
+	public function printActions()
+	{
+		return array('print', 'markPrinted', 'doPrint');
 	}
 
 	/**
