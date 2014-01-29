@@ -34,4 +34,11 @@ class OphDrPrescription_API extends BaseAPI
 			}
 		}
 	}
+
+	public function canUpdate($event_id)
+	{
+		$details = Element_OphDrPrescription_Details::model()->find('event_id=?',array($event_id));
+
+		return $details->isEditable();
+	}
 }
