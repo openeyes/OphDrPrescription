@@ -31,7 +31,6 @@ CREATE TABLE `et_ophdrprescription_details_version` (
 		$this->dropPrimaryKey('id','et_ophdrprescription_details_version');
 
 		$this->createIndex('et_ophdrprescription_details_aid_fk','et_ophdrprescription_details_version','id');
-		$this->addForeignKey('et_ophdrprescription_details_aid_fk','et_ophdrprescription_details_version','id','et_ophdrprescription_details','id');
 
 		$this->addColumn('et_ophdrprescription_details_version','version_date',"datetime not null default '1900-01-01 00:00:00'");
 
@@ -77,7 +76,6 @@ CREATE TABLE `ophdrprescription_item_version` (
 		$this->dropPrimaryKey('id','ophdrprescription_item_version');
 
 		$this->createIndex('ophdrprescription_item_aid_fk','ophdrprescription_item_version','id');
-		$this->addForeignKey('ophdrprescription_item_aid_fk','ophdrprescription_item_version','id','ophdrprescription_item','id');
 
 		$this->addColumn('ophdrprescription_item_version','version_date',"datetime not null default '1900-01-01 00:00:00'");
 
@@ -114,7 +112,6 @@ CREATE TABLE `ophdrprescription_item_taper_version` (
 		$this->dropPrimaryKey('id','ophdrprescription_item_taper_version');
 
 		$this->createIndex('ophdrprescription_item_taper_aid_fk','ophdrprescription_item_taper_version','id');
-		$this->addForeignKey('ophdrprescription_item_taper_aid_fk','ophdrprescription_item_taper_version','id','ophdrprescription_item_taper','id');
 
 		$this->addColumn('ophdrprescription_item_taper_version','version_date',"datetime not null default '1900-01-01 00:00:00'");
 
@@ -133,11 +130,6 @@ CREATE TABLE `ophdrprescription_item_taper_version` (
 
 	public function down()
 	{
-		$this->dropColumn('ophdrprescription_item','deleted');
-		$this->dropColumn('ophdrprescription_item_taper','deleted');
-
-		$this->dropColumn('et_ophdrprescription_details','deleted');
-
 		$this->dropTable('et_ophdrprescription_details_version');
 		$this->dropTable('ophdrprescription_item_version');
 		$this->dropTable('ophdrprescription_item_taper_version');
