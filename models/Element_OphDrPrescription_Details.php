@@ -142,7 +142,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		$subspecialty_id = $firm->serviceSubspecialtyAssignment->subspecialty_id;
 		$site_id = Yii::app()->session['selected_site_id'];
 		$params = array(':subSpecialtyId' => $subspecialty_id, ':siteId' => $site_id);
-		return Drug::model()->findAll(array(
+		return Drug::model()->active()->findAll(array(
 				'condition' => 'ssd.subspecialty_id = :subSpecialtyId AND ssd.site_id = :siteId',
 				'join' => 'JOIN site_subspecialty_drug ssd ON ssd.drug_id = t.id',
 				'order' => 'name',
