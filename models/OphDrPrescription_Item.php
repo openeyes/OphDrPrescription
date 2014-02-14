@@ -169,16 +169,6 @@ class OphDrPrescription_Item extends BaseActiveRecordVersioned
 		}
 	}
 
-	public function availableFrequencies()
-	{
-		return DrugFrequency::model()->findAll(array('order' => 'display_order'));
-	}
-
-	public function availableRoutes()
-	{
-		return DrugRoute::model()->findAll(array('order' => 'name'));
-	}
-
 	public function afterValidate()
 	{
 		foreach ($this->tapers as $i => $taper) {
