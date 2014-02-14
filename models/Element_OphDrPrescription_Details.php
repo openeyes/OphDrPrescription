@@ -176,7 +176,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 	 */
 	public function drugTypes()
 	{
-		$drugTypes = CHtml::listData(DrugType::model()->findAll(array(
+		$drugTypes = CHtml::listData(DrugType::model()->active()->findAll(array(
 			'order' => 'name',
 		)),'id','name');
 
