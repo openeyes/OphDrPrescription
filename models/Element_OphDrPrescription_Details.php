@@ -280,7 +280,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 				$taper_model->save();
 			}
 		}
-		
+
 		// Delete remaining (removed) ids
 		OphDrPrescription_ItemTaper::model()->deleteByPk(array_values($existing_taper_ids));
 		OphDrPrescription_Item::model()->deleteByPk(array_values($existing_item_ids));
@@ -298,5 +298,10 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		} else {
 			return 'Printed';
 		}
+	}
+
+	public function getContainer_form_view()
+	{
+		return false;
 	}
 }

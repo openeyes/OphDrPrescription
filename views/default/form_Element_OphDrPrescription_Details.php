@@ -18,7 +18,6 @@
  */
 ?>
 <?php echo $form->hiddenInput($element, 'draft', 1)?>
-
 <section class="element <?php echo $element->elementType->class_name?>"
 		 data-element-type-id="<?php echo $element->elementType->id ?>"
 		 data-element-type-class="<?php echo $element->elementType->class_name ?>"
