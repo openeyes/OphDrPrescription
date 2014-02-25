@@ -18,14 +18,14 @@ table {
 	&.prescriptions {
 		margin: 10px 0;
 		tr {
-            &.allergyWarning {
-              td {
-                background-color: #f66;
-              }
-            }
+			&.allergyWarning {
+				td {
+					background-color: #f66;
+				}
+			}
 			td {
 				&.prescription-actions {
-					font-size: emCalc(12px);
+					font-size: rem-calc(12px);
 				}
 			}
 			&.prescription-item {
