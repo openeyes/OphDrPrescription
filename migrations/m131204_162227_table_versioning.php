@@ -65,7 +65,6 @@ CREATE TABLE `ophdrprescription_item_version` (
 	CONSTRAINT `acv_ophdrprescription_details_created_user_id_fk` FOREIGN KEY (`created_user_id`) REFERENCES `user` (`id`),
 	CONSTRAINT `acv_ophdrprescription_details_drug_id_fk` FOREIGN KEY (`drug_id`) REFERENCES `drug` (`id`),
 	CONSTRAINT `acv_ophdrprescription_details_last_modified_user_id_fk` FOREIGN KEY (`last_modified_user_id`) REFERENCES `user` (`id`),
-	CONSTRAINT `acv_ophdrprescription_details_prescription_id_fk` FOREIGN KEY (`prescription_id`) REFERENCES `et_ophdrprescription_details` (`id`),
 	CONSTRAINT `acv_ophdrprescription_item_frequency_id_fk` FOREIGN KEY (`frequency_id`) REFERENCES `drug_frequency` (`id`),
 	CONSTRAINT `acv_ophdrprescription_item_route_id_fk` FOREIGN KEY (`route_id`) REFERENCES `drug_route` (`id`),
 	CONSTRAINT `acv_ophdrprescription_item_route_option_id_fk` FOREIGN KEY (`route_option_id`) REFERENCES `drug_route_option` (`id`)
@@ -100,7 +99,6 @@ CREATE TABLE `ophdrprescription_item_taper_version` (
 	KEY `acv_ophdrprescription_item_taper_duration_id_fk` (`duration_id`),
 	KEY `acv_ophdrprescription_item_taper_created_user_id_fk` (`created_user_id`),
 	KEY `acv_ophdrprescription_item_taper_last_modified_user_id_fk` (`last_modified_user_id`),
-	CONSTRAINT `acv_ophdrprescription_item_taper_item_id_fk` FOREIGN KEY (`item_id`) REFERENCES `ophdrprescription_item` (`id`),
 	CONSTRAINT `acv_ophdrprescription_item_taper_frequency_id_fk` FOREIGN KEY (`frequency_id`) REFERENCES `drug_frequency` (`id`),
 	CONSTRAINT `acv_ophdrprescription_item_taper_duration_id_fk` FOREIGN KEY (`duration_id`) REFERENCES `drug_duration` (`id`),
 	CONSTRAINT `acv_ophdrprescription_item_taper_created_user_id_fk` FOREIGN KEY (`created_user_id`) REFERENCES `user` (`id`),
