@@ -136,17 +136,29 @@ class DefaultController extends BaseEventTypeController
 	public function printInit($id)
 	{
 		parent::printInit($id);
+
+		$transaction = Yii::app()->db->beginTransaction('Mark printed','Prescription');
+
 		if (!$prescription = Element_OphDrPrescription_Details::model()->find('event_id=?',array($id))) {
+			$transaction->rollback();
+
 			throw new Exception('Prescription not found: '.$id);
 		}
 		$prescription->printed = 1;
 		if (!$prescription->save()) {
+			$transaction->rollback();
+
 			throw new Exception('Unable to save prescription: '.print_r($prescription->getErrors(),true));
 		}
 		$this->event->info = $prescription->infotext;
+
 		if (!$this->event->save()) {
+			$transaction->rollback();
+
 			throw new Exception('Unable to save event: '.print_r($this->event->getErrors(),true));
 		}
+
+		$transaction->commit();
 	}
 
 	/**
@@ -510,14 +522,20 @@ class DefaultController extends BaseEventTypeController
 			throw new Exception("Prescription not found for event id: $id");
 		}
 
+		$transaction = Yii::app()->db->beginTransaction('Print','Prescription');
+
 		$prescription->print = 1;
 		$prescription->draft = 0;
 
 		if (!$prescription->save()) {
+			$transaction->rollback();
+
 			throw new Exception("Unable to save prescription: ".print_r($prescription->getErrors(),true));
 		}
 
 		if (!$event = Event::model()->findByPk($id)) {
+			$transaction->rollback();
+
 			throw new Exception("Event not found: $id");
 		}
 
@@ -525,8 +543,12 @@ class DefaultController extends BaseEventTypeController
 		$event->info = 'Printed';
 
 		if (!$event->save()) {
+			$transaction->rollback();
+
 			throw new Exception("Unable to save event: ".print_r($event->getErrors(),true));
 		}
+
+		$transaction->commit();
 
 		echo "1";
 	}
@@ -545,10 +567,16 @@ class DefaultController extends BaseEventTypeController
 		}
 
 		if ($prescription->print == 1) {
+			$transaction = Yii::app()->db->beginTransaction('Mark printed','Prescription');
+
 			$prescription->print = 0;
 
 			if (!$prescription->save()) {
+				$transaction->rollback();
+
 				throw new Exception("Unable to save prescription: ".print_r($prescription->getErrors(),true));
+			} else {
+				$transaction->commit();
 			}
 		}
 
