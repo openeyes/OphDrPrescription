@@ -444,7 +444,7 @@ class DefaultController extends BaseEventTypeController
 	 */
 	public function actionRouteOptions($key, $route_id)
 	{
-		$options = DrugRouteOption::model()->notDeleted()->findAllByAttributes(array('drug_route_id' => $route_id));
+		$options = DrugRouteOption::model()->findAllByAttributes(array('drug_route_id' => $route_id));
 		if ($options) {
 			echo CHtml::dropDownList('prescription_item['.$key.'][route_option_id]', null, CHtml::listData($options, 'id', 'name'), array('empty' => '-- Select --'));
 		} else {
