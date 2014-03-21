@@ -98,7 +98,7 @@ class OphDrPrescription_Item extends BaseActiveRecordVersioned
 				'route_option' => array(self::BELONGS_TO, 'DrugRouteOption', 'route_option_id'),
 				'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
 				'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
-				'drug' => array(self::BELONGS_TO, 'Drug', 'drug_id', 'scopes' => array('discontinued')),
+				'drug' => array(self::BELONGS_TO, 'Drug', 'drug_id'),
 		);
 	}
 
