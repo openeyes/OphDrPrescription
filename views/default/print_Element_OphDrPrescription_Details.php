@@ -77,7 +77,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 <table class="borders prescription_header">
 	<tr>
 		<th>Patient Name</th>
-		<td><?php echo $this->patient->fullname ?> (<?php echo $this->patient->gender ?>)</td>
+		<td><?php echo $this->patient->fullname ?> (<?php echo $this->patient->gender ? $this->patient->gender->name : 'Gender unknown'?>)</td>
 		<th>Hospital Number</th>
 		<td><?php echo $this->patient->hos_num ?></td>
 	</tr>
