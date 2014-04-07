@@ -427,7 +427,7 @@ class DefaultController extends BaseEventTypeController
 				}
 				//check operation note eye and use instead of original diagnosis
 				if ($api = Yii::app()->moduleAPI->get('OphTrOperationnote')) {
-					if ($apieye = $api->GetLastEye($this->patient)) {
+					if ($apieye = $api->getLastEye($this->patient)) {
 						$item->route_option_id = $apieye;
 					}
 				}
