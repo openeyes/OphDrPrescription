@@ -46,7 +46,7 @@ class DefaultController extends BaseEventTypeController
 
 	protected function initEdit()
 	{
-		if (!parent::canPrint()) {
+		if (!$this->checkPrintAccess()) {
 			return false;
 		}
 
