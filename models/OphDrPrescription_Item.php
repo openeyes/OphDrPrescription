@@ -29,7 +29,7 @@
  * @property Prescription $prescription
  * @property OphDrPrescription_ItemTaper[] $tapers
  */
-class OphDrPrescription_Item extends BaseActiveRecord
+class OphDrPrescription_Item extends BaseActiveRecordVersioned
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -98,7 +98,7 @@ class OphDrPrescription_Item extends BaseActiveRecord
 				'route_option' => array(self::BELONGS_TO, 'DrugRouteOption', 'route_option_id'),
 				'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
 				'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
-				'drug' => array(self::BELONGS_TO, 'Drug', 'drug_id', 'scopes' => array('discontinued')),
+				'drug' => array(self::BELONGS_TO, 'Drug', 'drug_id'),
 		);
 	}
 
@@ -167,21 +167,6 @@ class OphDrPrescription_Item extends BaseActiveRecord
 			$this->route_id = $this->drug->default_route_id;
 			$this->dose = trim($this->drug->default_dose . ' ' . $this->drug->dose_unit);
 		}
-	}
-
-	public function availableDurations()
-	{
-		return DrugDuration::model()->findAll(array('order' => 'display_order'));
-	}
-
-	public function availableFrequencies()
-	{
-		return DrugFrequency::model()->findAll(array('order' => 'display_order'));
-	}
-
-	public function availableRoutes()
-	{
-		return DrugRoute::model()->findAll(array('order' => 'name'));
 	}
 
 	public function afterValidate()

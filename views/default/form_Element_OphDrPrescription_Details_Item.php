@@ -27,7 +27,7 @@
 		<?php echo CHtml::textField('prescription_item['.$key.'][dose]', $item->dose) ?>
 	</td>
 	<td>
-		<?php echo CHtml::dropDownList('prescription_item['.$key.'][route_id]', $item->route_id, CHtml::listData($item->availableRoutes(), 'id', 'name'), array('empty' => '-- Select --', 'class' => 'drugRoute')); ?>
+		<?php echo CHtml::dropDownList('prescription_item['.$key.'][route_id]', $item->route_id, CHtml::listData(DrugRoute::model()->activeOrPk($item->route_id)->findAll(array('order'=>'display_order asc')), 'id', 'name'), array('empty' => '-- Select --', 'class' => 'drugRoute')); ?>
 	</td>
 	<td>
 		<?php if ($item->route && $options = $item->route->options) {
@@ -37,10 +37,10 @@
 		}?>
 	</td>
 	<td class="prescriptionItemFrequencyId">
-		<?php echo CHtml::dropDownList('prescription_item['.$key.'][frequency_id]', $item->frequency_id, CHtml::listData($item->availableFrequencies(), 'id', 'name'), array('empty' => '-- Select --')); ?>
+		<?php echo CHtml::dropDownList('prescription_item['.$key.'][frequency_id]', $item->frequency_id, CHtml::listData(DrugFrequency::model()->activeOrPk($item->frequency_id)->findAll(array('order'=>'display_order asc')), 'id', 'name'), array('empty' => '-- Select --')); ?>
 	</td>
 	<td class="prescriptionItemDurationId">
-		<?php echo CHtml::dropDownList('prescription_item['.$key.'][duration_id]', $item->duration_id, CHtml::listData($item->availableDurations(), 'id', 'name'), array('empty' => '-- Select --')); ?>
+		<?php echo CHtml::dropDownList('prescription_item['.$key.'][duration_id]', $item->duration_id, CHtml::listData(DrugDuration::model()->activeOrPk($item->duration_id)->findAll(array('order'=>'display_order')), 'id', 'name'), array('empty' => '-- Select --'))?>
 	</td>
 	<td class="prescriptionItemActions">
 		<a class="removeItem"	href="#">Remove</a>&nbsp;|&nbsp;<a class="taperItem"	href="#">+Taper</a>
@@ -61,10 +61,10 @@
 	<td></td>
 	<td></td>
 	<td>
-		<?php echo CHtml::dropDownList('prescription_item['.$key.'][taper]['.$count.'][frequency_id]', $taper->frequency_id, CHtml::listData($item->availableFrequencies(), 'id', 'name'), array('empty' => '-- Select --')); ?>
+		<?php echo CHtml::dropDownList('prescription_item['.$key.'][taper]['.$count.'][frequency_id]', $taper->frequency_id, CHtml::listData(DrugFrequency::model()->activeOrPk($taper->frequency_id)->findAll(array('order'=>'display_order asc')), 'id', 'name'), array('empty' => '-- Select --')); ?>
 	</td>
 	<td>
-		<?php echo CHtml::dropDownList('prescription_item['.$key.'][taper]['.$count.'][duration_id]', $taper->duration_id, CHtml::listData($item->availableDurations(), 'id', 'name'), array('empty' => '-- Select --')); ?>
+		<?php echo CHtml::dropDownList('prescription_item['.$key.'][taper]['.$count.'][duration_id]', $taper->duration_id, CHtml::listData(DrugDuration::model()->activeOrPk($taper->duration_id)->findAll(array('order'=>'display_order asc')), 'id', 'name'), array('empty' => '-- Select --')); ?>
 	</td>
 	<td class="prescription-actions">
 		<a class="removeTaper"	href="#">Remove</a>

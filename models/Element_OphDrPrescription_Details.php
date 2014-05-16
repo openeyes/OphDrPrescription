@@ -142,7 +142,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		$subspecialty_id = $firm->serviceSubspecialtyAssignment->subspecialty_id;
 		$site_id = Yii::app()->session['selected_site_id'];
 		$params = array(':subSpecialtyId' => $subspecialty_id, ':siteId' => $site_id);
-		return Drug::model()->findAll(array(
+		return Drug::model()->active()->findAll(array(
 				'condition' => 'ssd.subspecialty_id = :subSpecialtyId AND ssd.site_id = :siteId',
 				'join' => 'JOIN site_subspecialty_drug ssd ON ssd.drug_id = t.id',
 				'order' => 'name',
@@ -176,7 +176,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 	 */
 	public function drugTypes()
 	{
-		$drugTypes = CHtml::listData(DrugType::model()->findAll(array(
+		$drugTypes = CHtml::listData(DrugType::model()->active()->findAll(array(
 			'order' => 'name',
 		)),'id','name');
 
@@ -280,7 +280,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 				$taper_model->save();
 			}
 		}
-		
+
 		// Delete remaining (removed) ids
 		OphDrPrescription_ItemTaper::model()->deleteByPk(array_values($existing_taper_ids));
 		OphDrPrescription_Item::model()->deleteByPk(array_values($existing_item_ids));
@@ -298,5 +298,10 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		} else {
 			return 'Printed';
 		}
+	}
+
+	public function getContainer_form_view()
+	{
+		return false;
 	}
 }

@@ -46,7 +46,7 @@ class DefaultController extends BaseEventTypeController
 
 	protected function initEdit()
 	{
-		if (!parent::canPrint()) {
+		if (!$this->checkPrintAccess()) {
 			return false;
 		}
 
@@ -263,7 +263,7 @@ class DefaultController extends BaseEventTypeController
 			}
 			$criteria->order = 'name';
 			$criteria->params = $params;
-			$drugs = Drug::model()->findAll($criteria);
+			$drugs = Drug::model()->active()->findAll($criteria);
 			$return = array();
 			foreach ($drugs as $drug) {
 				$return[] = array(
@@ -427,7 +427,7 @@ class DefaultController extends BaseEventTypeController
 				}
 				//check operation note eye and use instead of original diagnosis
 				if ($api = Yii::app()->moduleAPI->get('OphTrOperationnote')) {
-					if ($apieye = $api->GetLastEye($this->patient)) {
+					if ($apieye = $api->getLastEye($this->patient)) {
 						$item->route_option_id = $apieye;
 					}
 				}
