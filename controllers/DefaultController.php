@@ -334,6 +334,8 @@ class DefaultController extends BaseEventTypeController
 	{
 		$this->initForPatient($patient_id);
 
+		$key = (integer)$key;
+
 		$drug_set_items = DrugSetItem::model()->findAllByAttributes(array('drug_set_id' => $set_id));
 		foreach ($drug_set_items as $drug_set_item) {
 			$this->renderPrescriptionItem($key, $drug_set_item);
