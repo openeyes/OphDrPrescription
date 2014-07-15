@@ -305,7 +305,13 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		return false;
 	}
 
+	public function getContainer_print_view()
+	{
+		return false;
+	}
+
 	public function getPrint_view() {
 		return 'print_'.$this->getDefaultView();
 	}
+
 }
