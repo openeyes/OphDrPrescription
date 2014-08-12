@@ -24,7 +24,7 @@
 		<input type="hidden" name="prescription_item[<?php echo $key ?>][drug_id]" value="<?php echo $item->drug_id?>" />
 	</td>
 	<td class="prescriptionItemDose">
-		<?php echo CHtml::textField('prescription_item['.$key.'][dose]', $item->dose) ?>
+		<?php echo CHtml::textField('prescription_item['.$key.'][dose]', $item->dose, array('autocomplete' => Yii::app()->params['html_autocomplete'])) ?>
 	</td>
 	<td>
 		<?php echo CHtml::dropDownList('prescription_item['.$key.'][route_id]', $item->route_id, CHtml::listData(DrugRoute::model()->activeOrPk($item->route_id)->findAll(array('order'=>'display_order asc')), 'id', 'name'), array('empty' => '-- Select --', 'class' => 'drugRoute')); ?>
@@ -56,7 +56,7 @@
 		<?php if ($taper->id) { ?><input type="hidden" name="prescription_item[<?php echo $key ?>][taper][<?php echo $count ?>][id]" value="<?php echo $taper->id?>" /><?php } ?>
 	</td>
 	<td>
-		<?php echo CHtml::textField('prescription_item['.$key.'][taper]['.$count.'][dose]', $taper->dose) ?>
+		<?php echo CHtml::textField('prescription_item['.$key.'][taper]['.$count.'][dose]', $taper->dose, array('autocomplete' => Yii::app()->params['html_autocomplete'])) ?>
 	</td>
 	<td></td>
 	<td></td>
