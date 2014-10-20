@@ -190,7 +190,6 @@ class DefaultController extends BaseEventTypeController
 	 * @param int $id
 	 * @param BaseEventTypeElement[] $elements
 	 * @param string $template
-	 */
 	protected function printHTML($id, $elements, $template='print')
 	{
 		$this->printPDF($id, $elements);
@@ -229,6 +228,7 @@ class DefaultController extends BaseEventTypeController
 		}
 		$pdf_print->output();
 	}
+	*/
 
 	/**
 	 * Set flash message for patient allergies

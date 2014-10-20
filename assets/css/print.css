@@ -28,6 +28,7 @@ h2 {
 
 table {
 	margin: 10px 0;
+	width: 100%;
 }
 
 .banner {
@@ -53,49 +54,85 @@ table {
 	padding: 0;
 }
 
-.fromAddress {
-	padding-top: 0;
+tr.handWritten td {
+	height: 30px;
 }
 
-#prescription_header th,
-#done_bys th {
+.banner {
+	height: 100px;
+}
+
+.banner .seal {
+	float: left;
+}
+
+.banner .seal img {
+	width: 80px;
+}
+
+.impaired .seal img {
+	width: 160px;
+}
+
+.banner .logo {
+	float: right;
+}
+
+.banner .logo img {
+	width: 350px;
+}
+
+.print-form-div {
+	padding: 30px;
+}
+
+h2 {
+	font-size: 1.2em;
+	line-height: 1em;
+}
+
+td, th {
+	border: 2px #ccc solid;
+	padding: 5px !important;
+}
+
+.prescription_header th {
 	width: 20%;
 }
 
-#prescription_header td,
-#done_bys td {
+.prescription_header td {
 	width: 30%;
 }
-
-#prescription_items td,
-#prescription_items th {
-	width: 15%;
+.prescription_items td,
+.prescription_items th {
+	width: 12%;
 }
 
-#prescription_items td.prescriptionLabel {
-	width: 40%;
+.prescription_items .prescriptionLabel {
+	width: 28%;
 }
 
-#prescription_items .prescriptionTaper td.prescriptionLabel {
+.prescription_items .prescriptionTaper td.prescriptionLabel {
 	text-align: right;
 }
-
-.box {
-	border: 1px solid #999;
-	padding: 5px;
-	margin: 5px 0;
-	min-height: 10px;
+.checkbox {
+	font-family: zapfdingbats;
 }
-
-#pharmacy_checkboxes th {
+.pharmacy_checkboxes th {
 	width: 30%;
 }
 
-#pharmacy_checkboxes td {
+.pharmacy_checkboxes td {
 	width: 20%;
+}
+.done_bys th {
+	width: 22%;
+}
+
+.done_bys td	{
+	width: 28%;
 }
 
 tr.handWritten td {
 	height: 30px;
 }
-

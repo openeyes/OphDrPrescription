@@ -16,8 +16,6 @@
 * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
 */
 
-var prescription_print_url;
-
 $(document).ready(function() {
 
 	$('#Element_OphDrPrescription_Details_comments').autosize();
@@ -86,7 +84,7 @@ function do_print_prescription() {
 		'url': baseUrl+'/OphDrPrescription/default/markPrinted?event_id='+OE_event_id,
 		'success': function(html) {
 			if (html == "1") {
-				printIFrameUrl(OE_print_url.replace('PDFprint','print'), null);
+				printIFrameUrl(OE_print_url, null);
 			} else {
 				new OpenEyes.UI.Dialog.Alert({
 				  content: "There was an error printing the prescription, please try again or contact support for assistance."
