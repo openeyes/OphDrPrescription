@@ -184,53 +184,6 @@ class DefaultController extends BaseEventTypeController
 	}
 
 	/**
-	 * Always print with the PDF function
-	 *
-	 * @TODO: Should/is this method ever be called for prescription?
-	 * @param int $id
-	 * @param BaseEventTypeElement[] $elements
-	 * @param string $template
-	protected function printHTML($id, $elements, $template='print')
-	{
-		$this->printPDF($id, $elements);
-	}
-
-	protected function printPDF($id, $elements, $template='print', $params=array())
-	{
-		Yii::app()->assetManager->reset();
-		$this->layout = '//layouts/pdf';
-		$pdf_print = new OEPDFPrint('Openeyes', 'PDF', 'PDF');
-		$address = $this->site->getLetterAddress(array(
-				'delimiter' => "\n",
-				'include_telephone' => true,
-				'include_fax' => true,
-			));
-
-		foreach(array(
-				false => false,
-				'notes' => 'Copy for notes',
-				'patient' => 'Copy for patient',
-			) as $copy => $copy_text) {
-			$oeletter = new OELetter(null,$address);
-			$oeletter->setBarcode('E:'.$id);
-			$oeletter->setHideDate(true);
-			$oeletter->setFont('helvetica','10');
-			$body = $this->render('print', array(
-					'elements' => $elements,
-					'eventId' => $id,
-					'copy' => $copy,
-			), true);
-			$oeletter->addBody($body);
-			if ($copy_text) {
-				$oeletter->setWatermark($copy_text);
-			}
-			$pdf_print->addLetter($oeletter);
-		}
-		$pdf_print->output();
-	}
-	*/
-
-	/**
 	 * Set flash message for patient allergies
 	 */
 	protected function showAllergyWarning()
