@@ -258,7 +258,6 @@ class DefaultController extends BaseEventTypeController
 	 */
 	public function getPreviousPrescription($current_id = null)
 	{
-
 		if ($this->episode) {
 			$condition = 'episode_id = :episode_id';
 			$params = array(':episode_id' => $this->episode->id);
@@ -451,6 +450,24 @@ class DefaultController extends BaseEventTypeController
 				$element->updateItems(isset($data['prescription_item']) ? $data['prescription_item'] : array());
 			}
 		}
+	}
+
+	public function actionPrint($id)
+	{
+		$this->printInit($id);
+		$this->layout = '//layouts/print';
+
+		$this->render('print');
+		$this->render('print',array('copy' => 'notes'));
+		$this->render('print',array('copy' => 'patient'));
+	}
+
+	public function actionPDFPrint($id)
+	{
+		$this->pdf_print_suffix = Site::model()->findByPk(Yii::app()->session['selected_site_id'])->id;
+		$this->pdf_print_documents = 3;
+
+		return parent::actionPDFPrint($id);
 	}
 
 	/**

@@ -93,7 +93,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 <table class="borders continued_by_gp_checkbox">
 	<tr>
 		<th>Continued by GP?</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 	</tr>
 </table>
 <div class="spacer"></div>
@@ -102,35 +102,35 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 
 <h2>Allergies</h2>
 <table class="borders">
-<tr>
-<td><?php echo $this->patient->getAllergiesString(); ?></td>
-</tr>
+	<tr>
+		<td><?php echo $this->patient->getAllergiesString(); ?></td>
+	</tr>
 </table>
 
 <h2>Comments</h2>
 <table class="borders">
-<tr>
-<td><?php echo $element->textWithLineBreaks('comments')?></td>
-</tr>
+	<tr>
+		<td><?php echo $element->comments ? $element->textWithLineBreaks('comments') : '&nbsp;'?></td>
+	</tr>
 </table>
 
 <h2>Pharmacy Use Only</h2>
 <table class="borders pharmacy_checkboxes">
 	<tr>
 		<th>Used medication before?</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 		<th>Allergies / reactions</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 	</tr>
 	<tr>
 		<th>Heart problems</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 		<th>Respiratory problems</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 	</tr>
 	<tr>
 		<th>Drug history</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 	</tr>
 </table>
 <div class="spacer"></div>
@@ -153,5 +153,5 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 </table>
 
 <?php if (!$data['copy']) {?>
-<p>Doctor's Signature:</p>
+	<p>Doctor's Signature:</p>
 <?php }?>

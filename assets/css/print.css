@@ -19,6 +19,9 @@
 h1 {
 	font-size: 1.5em;
 	margin: 10px 0;
+	vertical-align: bottom;
+	margin-top: 3em;
+	float: left;
 }
 
 h2 {
@@ -84,6 +87,7 @@ tr.handWritten td {
 
 .print-form-div {
 	padding: 30px;
+	page-break-after: always;
 }
 
 h2 {
@@ -115,9 +119,6 @@ td, th {
 .prescription_items .prescriptionTaper td.prescriptionLabel {
 	text-align: right;
 }
-.checkbox {
-	font-family: zapfdingbats;
-}
 .pharmacy_checkboxes th {
 	width: 30%;
 }
@@ -135,4 +136,22 @@ td, th {
 
 tr.handWritten td {
 	height: 30px;
+}
+
+.from-address {
+	float: right;
+	width: 300px;
+	text-align: right;
+}
+
+.watermark {
+	-ms-transform: rotate(-60deg);
+	-webkit-transform: rotate(-60deg);
+	transform: rotate(-60deg);
+	font-size: 90pt !important;
+	position: relative !important;
+	color: #f4f4f4;
+	float: left !important;
+	top: 5.2em !important;
+	margin-left: -0.4em !important;
 }

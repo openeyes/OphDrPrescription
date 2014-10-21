@@ -17,18 +17,14 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
-<div class="print-form-div">
-	<?php if (@$copy) {?>
-		<div class="watermark">copy for <?php echo $copy?></div>
-	<?php }?>
-	<div class="banner clearfix">
-		<div class="seal">
-			<img src="<?php echo Yii::app()->assetManager->createUrl('img/_print/letterhead_seal.jpg')?>" alt="letterhead_seal" />
-		</div>
-		<div class="logo">
-			<img src="<?php echo Yii::app()->assetManager->createUrl('img/_print/letterhead_Moorfields_NHS.jpg')?>" alt="letterhead_Moorfields_NHS" />
-		</div>
+<?php if ($site) {?>
+	<div class="from-address">
+		<?php
+		echo $site->getLetterAddress(array(
+			'include_name' => true,
+			'delimiter' => '<br />',
+			'include_telephone' => true,
+			'include_fax' => true,
+		))?>
 	</div>
-	<?php $this->renderPartial('_address',array('site' => $this->site))?>
-	<?php $this->renderOpenElements($this->action->id, null, array('copy' => @$copy)); ?>
-</div>
+<?php }?>
