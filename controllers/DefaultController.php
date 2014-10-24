@@ -467,6 +467,11 @@ class DefaultController extends BaseEventTypeController
 		$this->pdf_print_suffix = Site::model()->findByPk(Yii::app()->session['selected_site_id'])->id;
 		$this->pdf_print_documents = 3;
 
+		Yii::app()->params['wkhtmltopdf_top_margin'] = '';
+		Yii::app()->params['wkhtmltopdf_bottom_margin'] = '';
+		Yii::app()->params['wkhtmltopdf_left_margin'] = '';
+		Yii::app()->params['wkhtmltopdf_right_margin'] = '';
+
 		return parent::actionPDFPrint($id);
 	}
 
