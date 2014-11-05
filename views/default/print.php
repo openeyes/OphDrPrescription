@@ -22,11 +22,11 @@
 		<div class="watermark">copy for <?php echo $copy?></div>
 	<?php }?>
 	<div class="banner clearfix">
-		<div class="seal">
-			<img src="<?php echo Yii::app()->assetManager->createUrl('img/_print/letterhead_seal.jpg')?>" alt="letterhead_seal" />
+		<div class="letter-seal">
+			<img src="<?php echo Yii::app()->assetManager->createUrl('img/_print/letterhead_seal.jpg')?>" alt="letterhead_seal" width="80" />
 		</div>
-		<div class="logo">
-			<img src="<?php echo Yii::app()->assetManager->createUrl('img/_print/letterhead_Moorfields_NHS.jpg')?>" alt="letterhead_Moorfields_NHS" />
+		<div class="ophdrprescription-letter-logo">
+			<img src="<?php echo Yii::app()->assetManager->createUrl('img/_print/letterhead_Moorfields_NHS.jpg')?>" alt="letterhead_Moorfields_NHS" width="350" />
 		</div>
 	</div>
 	<?php $this->renderPartial('_address',array('site' => $this->site))?>
