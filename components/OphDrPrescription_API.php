@@ -29,7 +29,7 @@ class OphDrPrescription_API extends BaseAPI
 	public function getLetterPrescription($patient)
 	{
 		if ($episode = $patient->getEpisodeForCurrentSubspecialty()) {
-			if ($details = $this->getElementForLatestEventInEpisode($patient, $episode, 'Element_OphDrPrescription_Details')) {
+			if ($details = $this->getElementForLatestEventInEpisode($episode, 'Element_OphDrPrescription_Details')) {
 				return $details->getLetterText();
 			}
 		}
