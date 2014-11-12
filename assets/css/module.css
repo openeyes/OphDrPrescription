@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /** Phasing */
 /**
  * OpenEyes
@@ -23,11 +22,30 @@
 }
 /* line 19, ../sass/components/_event.scss */
 .event .event-content {
-  background-image: url('../img/watermark.png?1387445458');
+  background-image: url('../img/watermark.png?1389618170');
 }
 /* line 22, ../sass/components/_event.scss */
 .event .event-title {
-  background-image: url('../img/medium.png?1383822517');
+  background-image: url('../img/medium.png?1382439347');
+}
+
+/* line 29, ../sass/components/_event.scss */
+.banner .letter-seal {
+  width: 50% !important;
+  display: inline-block;
+}
+/* line 32, ../sass/components/_event.scss */
+.banner .letter-seal img {
+  width: 80px !important;
+}
+/* line 36, ../sass/components/_event.scss */
+.banner .ophdrprescription-letter-logo {
+  width: 49%;
+  display: inline-block;
+}
+/* line 40, ../sass/components/_event.scss */
+.banner .ophdrprescription-letter-logo img {
+  width: 350px;
 }
 
 /* line 18, ../sass/components/_prescriptions_table.scss */
@@ -40,7 +58,7 @@ table.prescriptions tr.allergyWarning td {
 }
 /* line 27, ../sass/components/_prescriptions_table.scss */
 table.prescriptions tr td.prescription-actions {
-  font-size: 0.75em;
+  font-size: 0.75rem;
 }
 /* line 31, ../sass/components/_prescriptions_table.scss */
 table.prescriptions tr.prescription-item {
@@ -58,7 +76,7 @@ table.prescriptions tr.prescription-tapier .prescription-label {
 }
 /* line 44, ../sass/components/_prescriptions_table.scss */
 table.prescriptions tr.prescription-tapier .prescription-label span {
-  background: url('../img/icons/taper.png?1387445458') -10px 100% no-repeat;
+  background: url('../img/icons/taper.png?1389618170') -10px 100% no-repeat;
   padding-left: 20px;
 }
 

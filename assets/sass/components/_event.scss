@@ -23,3 +23,21 @@
 		background-image: image-url("medium.png");
 	}
 }
+
+
+.banner {
+	.letter-seal {
+		width: 50% !important;
+		display: inline-block;
+		img {
+			width: 80px !important;
+		}
+	}
+	.ophdrprescription-letter-logo {
+		width: 49%;
+		display: inline-block;
+	}
+	.ophdrprescription-letter-logo img {
+		width: 350px;
+	}
+}

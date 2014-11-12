@@ -16,8 +16,6 @@
 * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
 */
 
-var prescription_print_url;
-
 $(document).ready(function() {
 
 	$('#Element_OphDrPrescription_Details_comments').autosize();

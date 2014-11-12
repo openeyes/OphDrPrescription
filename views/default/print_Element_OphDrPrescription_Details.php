@@ -17,54 +17,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
-<style>
-h2 {
-	font-size: 1.2em;
-	line-height: 1em;
-}
-
-.prescription_header th {
-	width: 20%;
-}
-
-.prescription_header td {
-	width: 30%;
-}
-.prescription_items td,
-.prescription_items th {
-	width: 12%;
-}
-
-.prescription_items .prescriptionLabel {
-	width: 28%;
-}
-
-.prescription_items .prescriptionTaper td.prescriptionLabel {
-	text-align: right;
-}
-.checkbox {
-	font-family: zapfdingbats;
-}
-.pharmacy_checkboxes th {
-	width: 30%;
-}
-
-.pharmacy_checkboxes td {
-	width: 20%;
-}
-.done_bys th {
-	width: 22%;
-}
-
-.done_bys td  {
-	width: 28%;
-}
-
-tr.handWritten td {
-	height: 30px;
-}
-</style>
-
 <?php $copy = $data['copy']; ?>
 
 <h1>Prescription Form</h1>
@@ -109,31 +61,31 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach ($element->items as $key => $item) { ?>
+		<?php foreach ($element->items as $key => $item) {?>
 		<tr
-			class="prescriptionItem<?php if ($this->patient->hasDrugAllergy($item->drug_id)) { ?> allergyWarning<?php } ?>">
+			class="prescriptionItem<?php if ($this->patient->hasDrugAllergy($item->drug_id)) {?> allergyWarning<?php }?>">
 			<td class="prescriptionLabel"><?php echo $item->drug->label; ?></td>
 			<td><?php echo $item->dose ?></td>
 			<td><?php echo $item->route->name ?> <?php if ($item->route_option) {
 				echo ' ('.$item->route_option->name.')';
-			} ?></td>
-			<td><?php if ($data['copy'] == 'patient') { echo $item->frequency->long_name; } else { echo $item->frequency->name; } ?></td>
+			}?></td>
+			<td><?php if ($data['copy'] == 'patient') { echo $item->frequency->long_name; } else { echo $item->frequency->name; }?></td>
 			<td><?php echo $item->duration->name ?></td>
 			<td></td>
 			<td></td>
 		</tr>
-		<?php foreach ($item->tapers as $taper) { ?>
+		<?php foreach ($item->tapers as $taper) {?>
 		<tr class="prescriptionTaper">
 			<td class="prescriptionLabel">then</td>
 			<td><?php echo $taper->dose ?></td>
 			<td>-</td>
-			<td><?php if ($data['copy'] == 'patient') { echo $taper->frequency->long_name; } else { echo $taper->frequency->name; } ?></td>
+			<td><?php if ($data['copy'] == 'patient') { echo $taper->frequency->long_name; } else { echo $taper->frequency->name; }?></td>
 			<td><?php echo $taper->duration->name ?></td>
 			<td>-</td>
 			<td>-</td>
 		</tr>
 		<?php	}
-} ?>
+}?>
 	</tbody>
 </table>
 <div class="spacer"></div>
@@ -141,7 +93,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 <table class="borders continued_by_gp_checkbox">
 	<tr>
 		<th>Continued by GP?</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 	</tr>
 </table>
 <div class="spacer"></div>
@@ -150,35 +102,35 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 
 <h2>Allergies</h2>
 <table class="borders">
-<tr>
-<td><?php echo $this->patient->getAllergiesString(); ?></td>
-</tr>
+	<tr>
+		<td><?php echo $this->patient->getAllergiesString(); ?></td>
+	</tr>
 </table>
 
 <h2>Comments</h2>
 <table class="borders">
-<tr>
-<td><?php echo $element->textWithLineBreaks('comments')?></td>
-</tr>
+	<tr>
+		<td><?php echo $element->comments ? $element->textWithLineBreaks('comments') : '&nbsp;'?></td>
+	</tr>
 </table>
 
 <h2>Pharmacy Use Only</h2>
 <table class="borders pharmacy_checkboxes">
 	<tr>
 		<th>Used medication before?</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 		<th>Allergies / reactions</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 	</tr>
 	<tr>
 		<th>Heart problems</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 		<th>Respiratory problems</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 	</tr>
 	<tr>
 		<th>Drug history</th>
-		<td>Yes <span class="checkbox">o</span> / No <span class="checkbox">o</span></td>
+		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
 	</tr>
 </table>
 <div class="spacer"></div>
@@ -200,6 +152,6 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 	</tr>
 </table>
 
-<?php if (!$data['copy']) { ?>
-<p>Doctor's Signature:</p>
-<?php } ?>
+<?php if (!$data['copy']) {?>
+	<p>Doctor's Signature:</p>
+<?php }?>

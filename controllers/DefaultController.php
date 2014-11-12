@@ -184,53 +184,6 @@ class DefaultController extends BaseEventTypeController
 	}
 
 	/**
-	 * Always print with the PDF function
-	 *
-	 * @TODO: Should/is this method ever be called for prescription?
-	 * @param int $id
-	 * @param BaseEventTypeElement[] $elements
-	 * @param string $template
-	 */
-	protected function printHTML($id, $elements, $template='print')
-	{
-		$this->printPDF($id, $elements);
-	}
-
-	protected function printPDF($id, $elements, $template='print', $params=array())
-	{
-		Yii::app()->assetManager->reset();
-		$this->layout = '//layouts/pdf';
-		$pdf_print = new OEPDFPrint('Openeyes', 'PDF', 'PDF');
-		$address = $this->site->getLetterAddress(array(
-				'delimiter' => "\n",
-				'include_telephone' => true,
-				'include_fax' => true,
-			));
-
-		foreach(array(
-				false => false,
-				'notes' => 'Copy for notes',
-				'patient' => 'Copy for patient',
-			) as $copy => $copy_text) {
-			$oeletter = new OELetter(null,$address);
-			$oeletter->setBarcode('E:'.$id);
-			$oeletter->setHideDate(true);
-			$oeletter->setFont('helvetica','10');
-			$body = $this->render('print', array(
-					'elements' => $elements,
-					'eventId' => $id,
-					'copy' => $copy,
-			), true);
-			$oeletter->addBody($body);
-			if ($copy_text) {
-				$oeletter->setWatermark($copy_text);
-			}
-			$pdf_print->addLetter($oeletter);
-		}
-		$pdf_print->output();
-	}
-
-	/**
 	 * Set flash message for patient allergies
 	 */
 	protected function showAllergyWarning()
@@ -305,7 +258,6 @@ class DefaultController extends BaseEventTypeController
 	 */
 	public function getPreviousPrescription($current_id = null)
 	{
-
 		if ($this->episode) {
 			$condition = 'episode_id = :episode_id';
 			$params = array(':episode_id' => $this->episode->id);
@@ -498,6 +450,29 @@ class DefaultController extends BaseEventTypeController
 				$element->updateItems(isset($data['prescription_item']) ? $data['prescription_item'] : array());
 			}
 		}
+	}
+
+	public function actionPrint($id)
+	{
+		$this->printInit($id);
+		$this->layout = '//layouts/print';
+
+		$this->render('print');
+		$this->render('print',array('copy' => 'notes'));
+		$this->render('print',array('copy' => 'patient'));
+	}
+
+	public function actionPDFPrint($id)
+	{
+		$this->pdf_print_suffix = Site::model()->findByPk(Yii::app()->session['selected_site_id'])->id;
+		$this->pdf_print_documents = 3;
+
+		Yii::app()->params['wkhtmltopdf_top_margin'] = '';
+		Yii::app()->params['wkhtmltopdf_bottom_margin'] = '';
+		Yii::app()->params['wkhtmltopdf_left_margin'] = '';
+		Yii::app()->params['wkhtmltopdf_right_margin'] = '';
+
+		return parent::actionPDFPrint($id);
 	}
 
 	/**
