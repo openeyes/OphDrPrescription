@@ -38,25 +38,6 @@ table {
 	position: relative;
 }
 
-.watermark {
-	position: absolute;
-	z-index: -1;
-	left: 0;
-	top: 500px;
-	font-size: 80pt;
-	opacity: 0.1;
-	font-weight: bold;
-	text-align: right;
-	width: 100%;
-	height: 100%;
-	-webkit-transform: rotate(-60deg);
-	-moz-transform: rotate(-60deg);
-	white-space:nowrap;
-	line-height: 0;
-	margin: 0;
-	padding: 0;
-}
-
 tr.handWritten td {
 	height: 30px;
 }
@@ -143,13 +124,12 @@ tr.handWritten td {
 }
 
 .watermark {
-	-ms-transform: rotate(-60deg);
-	-webkit-transform: rotate(-60deg);
-	transform: rotate(-60deg);
-	font-size: 90pt !important;
-	position: relative !important;
-	color: #f4f4f4;
-	float: left !important;
-	top: 5.2em !important;
-	margin-left: -0.4em !important;
+	position: relative;
+}
+
+.watermark img {
+	position: absolute;
+	z-index: -1;
+	top: 120px;
+	left: 60px;
 }

@@ -19,7 +19,9 @@
 ?>
 <div class="print-form-div">
 	<?php if (@$copy) {?>
-		<div class="watermark">copy for <?php echo $copy?></div>
+		<div class="watermark">
+			<img src="<?= $this->assetPath . '/img/copy_for_'.$copy.'.png' ?>"/>
+		</div>
 	<?php }?>
 	<div class="banner clearfix">
 		<div class="letter-seal">
