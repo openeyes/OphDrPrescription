@@ -187,6 +187,25 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 		));
 	}
 
+
+	/**
+	 * Get all drug sets for admin page
+	 * @return mixed
+	 */
+	public function drugSetsAll()
+	{
+		$drugSets = DrugSet::model()->findAll(array(
+			'with' => 'subspecialty',
+			'order' => 't.name'
+		));
+
+		foreach ($drugSets as $drugSet) {
+			$drugSet->name = $drugSet->name . " - " . $drugSet->subspecialty->name;
+		}
+
+		return $drugSets;
+	}
+
 	/**
 	 * Gets listdata for the drugtypes
 	 *

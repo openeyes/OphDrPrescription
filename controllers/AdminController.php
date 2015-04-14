@@ -19,15 +19,6 @@
  */
 class AdminController extends BaseAdminController
 {
-
-	/**
-	 * Render the main admin screen - currently not used
-	 */
-	public function actionIndex()
-	{
-
-	}
-
 	/**
 	 * @description Common drugs administration page - it lists the common drugs based on site and subspecialty
 	 * @return html (rendered page)
@@ -113,4 +104,14 @@ class AdminController extends BaseAdminController
 			}
 		}
 	}
+
+
+	/**
+	 * Render the basic drug set admin page
+	 */
+	public function actionDrugSets()
+	{
+		$this->render("drugsetsadmin", array("errors" => ""));
+	}
+
 }
