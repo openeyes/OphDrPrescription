@@ -59,7 +59,7 @@ class AdminController extends BaseAdminController
 	 * @param $ssd_id
 	 * @return html
 	 */
-	public function actionCommonDrugsDelete($ssd_id)
+	public function actionCommonDrugsDelete($ssdId)
 	{
 		/*
 		 * We make sure to not allow deleting directly with the URL, user must come from the commondrugs list page
@@ -67,7 +67,7 @@ class AdminController extends BaseAdminController
 		if (!Yii::app()->request->isAjaxRequest) {
 			$this->render("errorpage", array("errorMessage" => "notajaxcall"));
 		} else {
-			if ($site_subspec_drug = SiteSubspecialtyDrug::model()->findByPk($ssd_id)) {
+			if ($site_subspec_drug = SiteSubspecialtyDrug::model()->findByPk($ssdId)) {
 				$site_subspec_drug->delete();
 				echo "success";
 			} else {

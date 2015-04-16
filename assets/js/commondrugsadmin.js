@@ -11,13 +11,13 @@ $(document).ready(function () {
     });
 });
 
-function DeleteCommonDrug(ssd_id) {
-    if (ssd_id === undefined) {
+function DeleteCommonDrug(ssdId) {
+    if (ssdId === undefined) {
         return false;
     } else {
 
         $.ajax({
-                url: "/OphDrPrescription/admin/commondrugsdelete?ssd_id=" + ssd_id,
+                url: "/OphDrPrescription/admin/commondrugsdelete?ssdId=" + ssdId,
                 error: function () {
                     console.log("ERROR, something went wrong!");
                 },
@@ -30,9 +30,9 @@ function DeleteCommonDrug(ssd_id) {
     }
 }
 
-function addItem(drug_id) {
+function addItem(drugId) {
     $.ajax({
-            url: "/OphDrPrescription/admin/commondrugsadd?drug_id=" + drug_id + "&site_id=" + $('#site_id').val() + "&subspec_id=" + $('#subspecialty_id').val(),
+            url: "/OphDrPrescription/admin/commondrugsadd?drugId=" + drugId + "&siteId=" + $('#site_id').val() + "&subspecId=" + $('#subspecialty_id').val(),
             error: function () {
                 console.log("ERROR, something went wrong!");
             },
