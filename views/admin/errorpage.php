@@ -18,7 +18,7 @@
  */
 
 
-$errormessages = array(
+$errorMessages = array(
 	"badreferer" => "ERROR: Bad referer, you are not allowed to open this page directly! Use the administration menu for managing common drugs list.",
 	"recordmissing" => "ERROR: The requested record is not exists in the database!",
 	"notajaxcall" => "ERROR: This page cannot be accessed directly, please use the Manage Common Drugs list to add new record!"
@@ -26,6 +26,6 @@ $errormessages = array(
 ?>
 <div class="large-12 column">
 	<div class="alert-box with-icon warning" id="flash-prescription_allergy">
-		<?php echo $errormessages[$errormessage] ?>
+		<?php echo $errorMessages[$errorMessage] ?>
 	</div>
 </div>

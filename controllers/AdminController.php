@@ -30,27 +30,27 @@ class AdminController extends BaseAdminController
 		 * We try to set default values for the selects
 		 */
 		if (isset($_GET["site_id"])) {
-			$activesite = $_GET["site_id"];
+			$activeSite = $_GET["site_id"];
 		} else {
-			$activesite = Yii::app()->session['selected_site_id'];
+			$activeSite = Yii::app()->session['selected_site_id'];
 		}
 
 		if (isset($_GET["subspecialty_id"])) {
-			$activesubspecialty = $_GET["subspecialty_id"];
+			$activeSubspecialty = $_GET["subspecialty_id"];
 		} else {
 			$firm = Firm::model()->findByPk(Yii::app()->session['selected_firm_id']);
 			if (isset($firm->serviceSubspecialtyAssignment->subspecialty_id)) {
-				$activesubspecialty = $firm->serviceSubspecialtyAssignment->subspecialty_id;
+				$activeSubspecialty = $firm->serviceSubspecialtyAssignment->subspecialty_id;
 			} else {
-				$activesubspecialty = null;
+				$activeSubspecialty = null;
 			}
 		}
 
 		$this->render('druglist', array(
-			"selectedsite" => $activesite,
-			"selectedsubspecialty" => $activesubspecialty,
-			"site_subspecialty_drugs" => Element_OphDrPrescription_Details::model()->commonDrugsBySiteAndSpec($activesite,
-				$activesubspecialty)
+			"selectedsite" => $activeSite,
+			"selectedsubspecialty" => $activeSubspecialty,
+			"site_subspecialty_drugs" => Element_OphDrPrescription_Details::model()->commonDrugsBySiteAndSpec($activeSite,
+				$activeSubspecialty)
 		));
 	}
 
@@ -65,7 +65,7 @@ class AdminController extends BaseAdminController
 		 * We make sure to not allow deleting directly with the URL, user must come from the commondrugs list page
 		 */
 		if (!Yii::app()->request->isAjaxRequest) {
-			$this->render("errorpage", array("errormessage" => "notajaxcall"));
+			$this->render("errorpage", array("errorMessage" => "notajaxcall"));
 		} else {
 			if ($site_subspec_drug = SiteSubspecialtyDrug::model()->findByPk($ssd_id)) {
 				$site_subspec_drug->delete();
@@ -80,23 +80,23 @@ class AdminController extends BaseAdminController
 
 	/**
 	 * @description Adds new drug into the site_subspecialty_drug table - AJAX call only
-	 * @param $drug_id
-	 * @param $site_id
+	 * @param $drugId
+	 * @param $siteId
 	 * @param $subspecialty_id
 	 * @return string
 	 */
-	public function actionCommonDrugsAdd($drug_id, $site_id, $subspec_id)
+	public function actionCommonDrugsAdd($drugId, $siteId, $subspecId)
 	{
 		if (!Yii::app()->request->isAjaxRequest) {
 			$this->render("errorpage", array("errormessage" => "notajaxcall"));
 		} else {
-			if (!is_numeric($drug_id) || !is_numeric($site_id) || !is_numeric($subspec_id)) {
+			if (!is_numeric($drugId) || !is_numeric($siteId) || !is_numeric($subspecId)) {
 				echo "error";
 			} else {
 				$newSSD = new SiteSubspecialtyDrug();
-				$newSSD->site_id = $site_id;
-				$newSSD->subspecialty_id = $subspec_id;
-				$newSSD->drug_id = $drug_id;
+				$newSSD->site_id = $siteId;
+				$newSSD->subspecialty_id = $subspecId;
+				$newSSD->drug_id = $drugId;
 				if ($newSSD->save()) {
 					echo "success";
 				} else {
