@@ -58,12 +58,12 @@
 		<tbody>
 		<?php
 		foreach ($site_subspecialty_drugs as $site_subspecialty_drug) {
-			echo '<TR>
-							<TD>' . $site_subspecialty_drug->drugs->name . '</TD>
-							<TD>' . $site_subspecialty_drug->drugs->dose_unit . '</TD>
-							<TD>
-								<A OnCLick="DeleteCommonDrug(' . $site_subspecialty_drug->id . ')">Delete</TD>
-						</TR>';
+			echo '<tr>
+							<td>' . $site_subspecialty_drug->drugs->name . '</td>
+							<td>' . $site_subspecialty_drug->drugs->dose_unit . '</td>
+							<td>
+								<a OnCLick="DeleteCommonDrug(' . $site_subspecialty_drug->id . ')">Delete</a>></td>
+						</tr>';
 		}
 		?>
 		<tr>
