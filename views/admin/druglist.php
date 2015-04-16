@@ -62,7 +62,7 @@
 							<td>' . $site_subspecialty_drug->drugs->name . '</td>
 							<td>' . $site_subspecialty_drug->drugs->dose_unit . '</td>
 							<td>
-								<a OnCLick="DeleteCommonDrug(' . $site_subspecialty_drug->id . ')">Delete</a>></td>
+								<a OnCLick="DeleteCommonDrug(' . $site_subspecialty_drug->id . ')">Delete</a></td>
 						</tr>';
 		}
 		?>
