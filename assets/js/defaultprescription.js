@@ -1,10 +1,12 @@
+// we can hide the set data form on admin page when the page loaded
 if ($('#drug_set_id').val() == '' && controllerName == 'AdminController') {
-    $('#prescription-create').hide();
+    $('#drugsetdata').hide();
 }
 
+// when adding new drug set we need to show the form when a subspecialty had been chosen
 $('body').delegate('#subspecialty_id', 'change', function () {
     if ($('#subspecialty_id').val() > 0) {
-        $('#prescription-create').show();
+        $('#drugsetdata').show();
     }
 });
 
@@ -37,7 +39,8 @@ $('body').delegate('#drug_set_id', 'change', function () {
             $(this).val('');
         }
         if (controllerName == 'AdminController') {
-            $('#prescription-create').show();
+            $('#drugsetdata').show();
+            $('.alert-box').hide();
         }
     }
     return false;

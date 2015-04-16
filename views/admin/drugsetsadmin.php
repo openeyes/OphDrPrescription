@@ -20,18 +20,29 @@
 
 <?php
 $element = Element_OphDrPrescription_Details::model();
+$form = $this->beginWidget('BaseEventTypeCActiveForm', array(
+	'id' => 'prescription-create',
+	'action' => '/OphDrPrescription/PrescriptionCommon/SaveDrugSetAdmin',
+	'enableAjaxValidation' => false,
+));
+
 ?>
 
 <div class="box admin">
 	<h2>Edit Drug Sets</h2>
-
+	<?php if (Yii::app()->user->hasFlash('info.save_message')) { ?>
+		<div class="alert-box with-icon warning">
+			<?php echo Yii::app()->user->getFlash('info.save_message'); ?>
+		</div>
+	<?php } ?>
 	<div class="row field-row">
 		<div class="large-4 column"><h3>Select a set:</h3></div>
 	</div>
 	<div class="row field-row">
 		<div class="large-2 column"><label for="set_name">Saved sets:</label></div>
 		<div class="large-4 column">
-			<?php echo CHtml::dropDownList('drug_set_id', null, CHtml::listData($element->drugSetsAll(), 'id', 'name'),
+			<?php
+			echo CHtml::dropDownList('drug_set_id', null, CHtml::listData($element->drugSetsAll(), 'id', 'name'),
 				array('empty' => '-- Select this to add new --')); ?>
 		</div>
 		<div class="large-6 column end"></div>
@@ -54,33 +65,21 @@ $element = Element_OphDrPrescription_Details::model();
 			?>
 		</div>
 	</div>
-
-
-	<section class="element">
-		<?php
-		$form = $this->beginWidget('BaseEventTypeCActiveForm', array(
-			'id' => 'prescription-create',
-			'enableAjaxValidation' => false,
-		));
-
-		//$this->displayErrors($errors)
-		?>
-
+	<section class="element" id="drugsetdata">
 		<?php
 
 		$this->renderPartial("/default/form_Element_OphDrPrescription_Details",
 			array("form" => $form, "element" => $element));
 
 		//$this->displayErrors($errors, true);
-		$this->endWidget();
 		?>
-	</section>
-	<div class="box-header">
-		<div class="box-actions">
-			<button type="button" class="small"
-					id="save_set_data" name="save_set_data">
-				Save this set
-			</button>
+		<div class="box-header">
+			<div class="box-actions">
+				<button class="small" type="submit" id="save_set_data" name="save_set_data">
+					Save this set
+				</button>
+			</div>
 		</div>
-	</div>
+	</section>
+	<?php $this->endWidget(); ?>
 </div>

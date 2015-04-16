@@ -24,6 +24,7 @@ class PrescriptionCommonController extends DefaultController
 		'setFormAdmin' => self::ACTION_TYPE_FORM,
 		'itemForm' => self::ACTION_TYPE_FORM,
 		'itemFormAdmin' => self::ACTION_TYPE_FORM,
+		'saveDrugSetAdmin' => self::ACTION_TYPE_FORM,
 	);
 
 	/**
@@ -192,4 +193,61 @@ class PrescriptionCommonController extends DefaultController
 
 	}
 
+	/**
+	 * Save drug set data from the admin interface
+	 *
+	 */
+	public function actionSaveDrugSetAdmin()
+	{
+		// we need to decide if it's a new set or modification
+		if ($_POST["drug_set_id"] > 0) {
+			$drugset = DrugSet::model()->findByPk($_POST["drug_set_id"]);
+		} else {
+			$drugset = new DrugSet();
+		}
+		$drugset->name = $_POST["set_name"];
+		$drugset->subspecialty_id = $_POST["subspecialty_id"];
+
+		if ($drugset->save()) {
+
+			// we delete previous tapers and items, and insert the new ones
+
+			$currentDrugRows = DrugSetitem::model()->findAll(new CDbCriteria(array('condition' => "drug_set_id = '" . $drugset->id . "'")));
+			foreach ($currentDrugRows as $currentDrugRow) {
+				DrugSetitemTaper::model()->deleteAll(new CDbCriteria(array('condition' => "item_id = '" . $currentDrugRow->id . "'")));
+				$currentDrugRow->delete();
+			}
+
+			if (isset($_POST['prescription_item']) && is_array($_POST['prescription_item'])) {
+				foreach ($_POST['prescription_item'] as $item) {
+					$item_model = new DrugSetitem();
+					$item_model->drug_set_id = $drugset->id;
+					$item_model->attributes = $item;
+					$item_model->save(); // we need an id to save tapers
+					if (isset($item['taper'])) {
+						$tapers = array();
+						foreach ($item['taper'] as $taper) {
+							$taper_model = new DrugSetitemTaper();
+							$taper_model->attributes = $taper;
+							$taper_model->item_id = $item_model->id;
+							$taper_model->save();
+							$tapers[] = $taper_model;
+						}
+						//$item_model->tapers = $tapers;
+					}
+					//$items[] = $item_model;
+					//$item_model->save();
+				}
+				Yii::app()->user->setFlash('info.save_message', "Save successful.");
+			} else {
+				Yii::app()->user->setFlash('info.save_message',
+					"Unable to save drugs, please add at least one drug to the set. Set name and subspecialty saved.");
+			}
+			$this->redirect('/OphDrPrescription/admin/DrugSets');
+		} else {
+			// TODO: maybe more error handling need to be added here!!
+			throw new Exception("Unable to save drug set: " . print_r($drugset->getErrors(), true));
+		}
+
+	}
 }
