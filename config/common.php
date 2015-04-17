@@ -21,11 +21,5 @@
 return array(
 	'import' => array(
 		'OphDrPrescriptionModule'
-	),
-	'params' => array(
-		'admin_menu' => array(
-			'Common Drugs List' => '/OphDrPrescription/admin/CommonDrugs',
-			'Drug Sets' => '/OphDrPrescription/admin/DrugSets'
-		)
 	)
 );
