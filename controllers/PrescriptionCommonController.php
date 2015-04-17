@@ -212,7 +212,7 @@ class PrescriptionCommonController extends DefaultController
 
 			// we delete previous tapers and items, and insert the new ones
 
-			$currentDrugRows = DrugSetitem::model()->findAll(new CDbCriteria(array('condition' => "drug_set_id = '" . $drugset->id . "'")));
+			$currentDrugRows = DrugSetItem::model()->findAll(new CDbCriteria(array('condition' => "drug_set_id = '" . $drugset->id . "'")));
 			foreach ($currentDrugRows as $currentDrugRow) {
 				DrugSetitemTaper::model()->deleteAll(new CDbCriteria(array('condition' => "item_id = '" . $currentDrugRow->id . "'")));
 				$currentDrugRow->delete();
@@ -220,7 +220,7 @@ class PrescriptionCommonController extends DefaultController
 
 			if (isset($_POST['prescription_item']) && is_array($_POST['prescription_item'])) {
 				foreach ($_POST['prescription_item'] as $item) {
-					$item_model = new DrugSetitem();
+					$item_model = new DrugSetItem();
 					$item_model->drug_set_id = $drugset->id;
 					$item_model->attributes = $item;
 					$item_model->save(); // we need an id to save tapers
