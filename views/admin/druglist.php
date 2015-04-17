@@ -23,7 +23,7 @@
 	<?php
 	$modulePath = Yii::app()->assetManager->publish(Yii::getPathOfAlias('application.modules.OphDrPrescription.assets'));
 	Yii::app()->clientScript->registerScriptFile($modulePath . "/js/commondrugsadmin.js", CClientScript::POS_HEAD);
-	echo CHtml::beginForm('', 'get', array('id' => 'set_site_subspec_form'));
+	echo CHtml::beginForm('CommonDrugs', 'get', array('id' => 'set_site_subspec_form'));
 	?>
 
 	<div class="row field-row">

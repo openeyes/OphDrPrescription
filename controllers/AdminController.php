@@ -105,4 +105,14 @@ class AdminController extends BaseAdminController
 			}
 		}
 	}
+
+
+	/**
+	 * Render the basic drug set admin page
+	 */
+	public function actionDrugSets()
+	{
+		$this->render("drugsetsadmin", array("errors" => ""));
+	}
+
 }
