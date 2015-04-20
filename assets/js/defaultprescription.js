@@ -1,15 +1,5 @@
-// we can hide the set data form on admin page when the page loaded
-if ($('#drug_set_id').val() == '' && controllerName == 'AdminController') {
-    $('#drugsetdata').hide();
-}
-
-// when adding new drug set we need to show the form when a subspecialty had been chosen
-$('body').delegate('#subspecialty_id', 'change', function () {
-    if ($('#subspecialty_id').val() > 0) {
-        $('#drugsetdata').show();
-    }
-});
-
+// we need to initialize the list of drug items
+addSet($('#DrugSet_id').val());
 
 // Disable currently prescribed drugs in dropdown
 $('#prescription_items input[name$="[drug_id]"]').each(function (index) {

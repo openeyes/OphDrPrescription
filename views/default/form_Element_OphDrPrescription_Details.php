@@ -18,7 +18,10 @@
  */
 ?>
 <?php
-echo $form->hiddenInput($element, 'draft', 1);
+// we need to separate the public and admin view
+if (is_a(Yii::app()->getController(), "DefaultController")) {
+	echo $form->hiddenInput($element, 'draft', 1);
+}
 ?>
 <section class="element <?php echo $element->elementType->class_name?>"
 		 data-element-type-id="<?php echo $element->elementType->id ?>"
