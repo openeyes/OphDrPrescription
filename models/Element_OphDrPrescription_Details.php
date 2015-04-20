@@ -151,6 +151,25 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 	}
 
 	/**
+	 * Get the drug list for a specified site and subspecialty
+	 *
+	 * @param $site_id
+	 * @param $subspecialty_id
+	 * @return SiteSubspecialtyDrug[]
+	 */
+	public function commonDrugsBySiteAndSpec($site_id, $subspecialty_id)
+	{
+		$params = array(':subSpecialtyId' => $subspecialty_id, ':siteId' => $site_id);
+
+		return SiteSubspecialtyDrug::model()->with('drugs')->findAll(array(
+			'condition' => 't.subspecialty_id = :subSpecialtyId AND t.site_id = :siteId',
+			'order' => 'name',
+			'params' => $params,
+		));
+	}
+
+
+	/**
 	 * Get the drug sets for the current firm
 	 *
 	 * @TODO: move this out of the model - it's not the right place for it as it's relying on session information
@@ -166,6 +185,25 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 			'order' => 'name',
 			'params' => $params,
 		));
+	}
+
+
+	/**
+	 * Get all drug sets for admin page
+	 * @return mixed
+	 */
+	public function drugSetsAll()
+	{
+		$drugSets = DrugSet::model()->findAll(array(
+			'with' => 'subspecialty',
+			'order' => 't.name'
+		));
+
+		/*foreach ($drugSets as $drugSet) {
+			$drugSet->name = $drugSet->name . " - " . $drugSet->subspecialty->name;
+		}*/
+
+		return $drugSets;
 	}
 
 	/**
