@@ -228,7 +228,7 @@ class PrescriptionCommonController extends DefaultController
 					if (isset($item['taper'])) {
 						$tapers = array();
 						foreach ($item['taper'] as $taper) {
-							$taper_model = new DrugSetitemTaper();
+							$taper_model = new DrugSetItemTaper();
 							$taper_model->attributes = $taper;
 							$taper_model->item_id = $item_model->id;
 							$taper_model->save();
