@@ -215,7 +215,7 @@ class PrescriptionCommonController extends DefaultController
 
 			$currentDrugRows = DrugSetItem::model()->findAll(new CDbCriteria(array('condition' => "drug_set_id = '" . $drugset->id . "'")));
 			foreach ($currentDrugRows as $currentDrugRow) {
-				DrugSetitemTaper::model()->deleteAll(new CDbCriteria(array('condition' => "item_id = '" . $currentDrugRow->id . "'")));
+				DrugSetItemTaper::model()->deleteAll(new CDbCriteria(array('condition' => "item_id = '" . $currentDrugRow->id . "'")));
 				$currentDrugRow->delete();
 			}
 
