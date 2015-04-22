@@ -41,9 +41,21 @@ $form = $this->beginWidget('BaseEventTypeCActiveForm', array(
 	<div class="row field-row">
 		<div class="large-2 column"><label for="set_name">Saved sets:</label></div>
 		<div class="large-4 column">
+			<table class="grid">
+				<tr>
+					<th>Name</th>
+					<th>Subspecialty</th>
+					<th>Active</th>
+					<th>Action</th>
+				</tr>
 			<?php
+			$currentDrugSets = $element->drugSetsAll();
+			foreach ($currentDrugSets as $drugSet) {
+				echo '<tr></tr>';
+			}
 			echo CHtml::dropDownList('drug_set_id', null, CHtml::listData($element->drugSetsAll(), 'id', 'name'),
 				array('empty' => '-- Select this to add new --')); ?>
+			</table>
 		</div>
 		<div class="large-6 column end"></div>
 	</div>

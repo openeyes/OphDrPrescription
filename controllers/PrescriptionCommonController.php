@@ -200,13 +200,14 @@ class PrescriptionCommonController extends DefaultController
 	public function actionSaveDrugSetAdmin()
 	{
 		// we need to decide if it's a new set or modification
-		if ($_POST["drug_set_id"] > 0) {
-			$drugset = DrugSet::model()->findByPk($_POST["drug_set_id"]);
+		if ($_POST["DrugSet"]["id"] > 0) {
+			$drugset = DrugSet::model()->findByPk($_POST["DrugSet"]["id"]);
 		} else {
 			$drugset = new DrugSet();
 		}
-		$drugset->name = $_POST["set_name"];
-		$drugset->subspecialty_id = $_POST["subspecialty_id"];
+		$drugset->name = $_POST["DrugSet"]["name"];
+		$drugset->subspecialty_id = $_POST["DrugSet"]["subspecialty"];
+		$drugset->active = $_POST["DrugSet"]["active"];
 
 		if ($drugset->save()) {
 

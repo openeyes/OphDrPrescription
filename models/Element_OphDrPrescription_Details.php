@@ -199,9 +199,9 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 			'order' => 't.name'
 		));
 
-		foreach ($drugSets as $drugSet) {
+		/*foreach ($drugSets as $drugSet) {
 			$drugSet->name = $drugSet->name . " - " . $drugSet->subspecialty->name;
-		}
+		}*/
 
 		return $drugSets;
 	}
