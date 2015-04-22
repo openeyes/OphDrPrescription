@@ -23,14 +23,13 @@ class CommonDrugAdminController extends BaseAdminController
 		$admin->setCustomSaveURL('/OphDrPrescription/admin/commondrugsadd');
 		$admin->setFilterFields(
 			array(
-				'site' =>
-					array(
-						'label' => 'Site',
-						'dropDownName' => 'site_id',
-						'defaultValue' => Yii::app()->session['selected_site_id'],
-						'listModel' => Site::model(),
-						'listIdField' => 'id',
-						'listDisplayField' => 'short_name'
+				array(
+					'label' => 'Site',
+					'dropDownName' => 'site_id',
+					'defaultValue' => Yii::app()->session['selected_site_id'],
+					'listModel' => Site::model(),
+					'listIdField' => 'id',
+					'listDisplayField' => 'short_name'
 					),
 				array(
 					'label' => 'Subspecialty',
@@ -42,6 +41,18 @@ class CommonDrugAdminController extends BaseAdminController
 				)
 			)
 		);
+		// we set default search options
+		if ($this->request->getParam('search') == '') {
+			$admin->getSearch()->initSearch(array(
+					'filterid' =>
+						array(
+							'site_id' => Yii::app()->session['selected_site_id']
+						),
+					'subspecialty_id' => Firm::model()->findByPk(Yii::app()->session['selected_firm_id'])->serviceSubspecialtyAssignment->subspecialty_id
+				)
+			);
+		}
+
 		$admin->setAutocompleteField(
 			array(
 				'fieldName' => 'drug_id',
@@ -49,7 +60,7 @@ class CommonDrugAdminController extends BaseAdminController
 				'placeholder' => 'search for drugs'
 			)
 		);
-		$admin->searchAll();
+		//$admin->searchAll();
 		$admin->listModel();
 	}
 

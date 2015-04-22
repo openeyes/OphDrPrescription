@@ -80,23 +80,26 @@ class AdminController extends BaseAdminController
 
 	/**
 	 * @description Adds new drug into the site_subspecialty_drug table - AJAX call only
-	 * @param $drug_id
-	 * @param $site_id
-	 * @param $subspecialty_id
+	 * @param $drugId
+	 * @param $siteId
+	 * @param $subspecialtyId
 	 * @return string
 	 */
-	public function actionCommonDrugsAdd($drug_id, $site_id, $subspecialty_id)
+	public function actionCommonDrugsAdd()
 	{
+		$drugId = $this->request->getParam("drug_id");
+		$siteId = $this->request->getParam("site_id");
+		$subspecialtyId = $this->request->getParam("subspecialty_id");
 		if (!Yii::app()->request->isAjaxRequest) {
 			$this->render("errorpage", array("errormessage" => "notajaxcall"));
 		} else {
-			if (!is_numeric($drug_id) || !is_numeric($site_id) || !is_numeric($subspecialty_id)) {
+			if (!is_numeric($drugId) || !is_numeric($siteId) || !is_numeric($subspecialtyId)) {
 				echo "error";
 			} else {
 				$newSSD = new SiteSubspecialtyDrug();
-				$newSSD->site_id = $site_id;
-				$newSSD->subspecialty_id = $subspecialty_id;
-				$newSSD->drug_id = $drug_id;
+				$newSSD->site_id = $siteId;
+				$newSSD->subspecialty_id = $subspecialtyId;
+				$newSSD->drug_id = $drugId;
 				if ($newSSD->save()) {
 					echo "success";
 				} else {
