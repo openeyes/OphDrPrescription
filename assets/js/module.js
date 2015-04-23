@@ -94,3 +94,4 @@ function do_print_prescription() {
 		}
 	});
 }
+
