@@ -56,7 +56,7 @@ class AdminController extends BaseAdminController
 
 	/**
 	 * @description Deletes a drug from the site_subspecialty_drug table - AJAX call only
-	 * @param $ssd_id
+	 * @param $itemId
 	 * @return html
 	 */
 	public function actionCommonDrugsDelete($itemId)
@@ -80,9 +80,6 @@ class AdminController extends BaseAdminController
 
 	/**
 	 * @description Adds new drug into the site_subspecialty_drug table - AJAX call only
-	 * @param $drugId
-	 * @param $siteId
-	 * @param $subspecialtyId
 	 * @return string
 	 */
 	public function actionCommonDrugsAdd()
