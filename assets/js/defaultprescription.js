@@ -155,7 +155,7 @@ function addSet(set_id) {
             markUsed();
             applyFilter();
         });
-    } else if (controllerName == 'AdminController') {
+    } else {
         $.getJSON(baseUrl + "/OphDrPrescription/PrescriptionCommon/SetFormAdmin", {
             key: getNextKey(),
             set_id: set_id

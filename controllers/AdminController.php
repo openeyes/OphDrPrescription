@@ -21,11 +21,6 @@ class AdminController extends BaseAdminController
 {
 
 	/**
-	 * @var int
-	 */
-	public $itemsPerPage = 100;
-
-	/**
 	 * @description Common drugs administration page - it lists the common drugs based on site and subspecialty
 	 * @return html (rendered page)
 	 */
@@ -112,76 +107,5 @@ class AdminController extends BaseAdminController
 	}
 
 
-	/**
-	 * Render the basic drug set admin page
-	 */
-	public function actionDrugSets()
-	{
-		$admin = new Admin(DrugSet::model(), $this);
-		$admin->setListFields(array(
-			'id',
-			'name',
-			'subspecialty.name',
-			'active'
-		));
-		$admin->searchAll();
-		$admin->getSearch()->setItemsPerPage($this->itemsPerPage);
-		$admin->listModel();
-	}
-
-	/**
-	 * Edits or adds drug sets
-	 *
-	 * @param bool|int $id
-	 * @throws CHttpException
-	 */
-	public function actionEdit($id = false)
-	{
-		$admin = new Admin(DrugSet::model(), $this);
-		if ($id) {
-			$admin->setModelId($id);
-		}
-		$element = Element_OphDrPrescription_Details::model();
-		$admin->setCustomSaveURL('/OphDrPrescription/PrescriptionCommon/SaveDrugSetAdmin');
-		$admin->setCustomCancelURL('/OphDrPrescription/admin/DrugSets');
-
-		$admin->setEditFields(array(
-			'active' => 'checkbox',
-			'name' => 'text',
-			'subspecialty' => array(
-				'widget' => 'DropDownList',
-				'options' => CHtml::listData(Subspecialty::model()->findAll(), 'id', 'name'),
-				'htmlOptions' => null,
-				'hidden' => false,
-				'layoutColumns' => null
-			),
-			'setItems' => array(
-				'widget' => 'CustomView',
-				'viewName' => '/default/form_Element_OphDrPrescription_Details',
-				'viewArguments' => array("element" => $element)
-			),
-		));
-
-		$admin->editModel();
-	}
-
-	/**
-	 * Deletes rows for the model
-	 */
-	public function actionDelete()
-	{
-		// instead of delete we just set the active field to false
-		if (Yii::app()->request->isPostRequest) {
-			$ids = Yii::app()->request->getPost('DrugSet');
-			foreach ($ids as $id) {
-				$model = DrugSet::model()->findByPk($id);
-				if ($model) {
-					$model->active = 0;
-					$model->save();
-				}
-			}
-		}
-		echo 1;
-	}
 
 }
