@@ -31,7 +31,7 @@
 		<div class="large-4 column">
 			<?php
 			echo CHtml::dropDownList('site_id', $selectedsite,
-				CHtml::listData(Institution::model()->getCurrent()->sites, 'id', 'short_name'));
+				CHtml::listData(Site::model()->findAll(), 'id', 'short_name'));
 			?>
 		</div>
 		<div class="large-2 column"><label for="site_id">Subspeciality:</label></div>

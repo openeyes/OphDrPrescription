@@ -61,10 +61,10 @@ class AdminController extends BaseAdminController
 
 	/**
 	 * @description Deletes a drug from the site_subspecialty_drug table - AJAX call only
-	 * @param $ssd_id
+	 * @param $itemId
 	 * @return html
 	 */
-	public function actionCommonDrugsDelete($ssdId)
+	public function actionCommonDrugsDelete($itemId)
 	{
 		/*
 		 * We make sure to not allow deleting directly with the URL, user must come from the commondrugs list page
@@ -72,7 +72,7 @@ class AdminController extends BaseAdminController
 		if (!Yii::app()->request->isAjaxRequest) {
 			$this->render("errorpage", array("errorMessage" => "notajaxcall"));
 		} else {
-			if ($site_subspec_drug = SiteSubspecialtyDrug::model()->findByPk($ssdId)) {
+			if ($site_subspec_drug = SiteSubspecialtyDrug::model()->findByPk($itemId)) {
 				$site_subspec_drug->delete();
 				echo "success";
 			} else {
@@ -85,22 +85,22 @@ class AdminController extends BaseAdminController
 
 	/**
 	 * @description Adds new drug into the site_subspecialty_drug table - AJAX call only
-	 * @param $drugId
-	 * @param $siteId
-	 * @param $subspecialty_id
 	 * @return string
 	 */
-	public function actionCommonDrugsAdd($drugId, $siteId, $subspecId)
+	public function actionCommonDrugsAdd()
 	{
+		$drugId = $this->request->getParam("drug_id");
+		$siteId = $this->request->getParam("site_id");
+		$subspecialtyId = $this->request->getParam("subspecialty_id");
 		if (!Yii::app()->request->isAjaxRequest) {
 			$this->render("errorpage", array("errormessage" => "notajaxcall"));
 		} else {
-			if (!is_numeric($drugId) || !is_numeric($siteId) || !is_numeric($subspecId)) {
+			if (!is_numeric($drugId) || !is_numeric($siteId) || !is_numeric($subspecialtyId)) {
 				echo "error";
 			} else {
 				$newSSD = new SiteSubspecialtyDrug();
 				$newSSD->site_id = $siteId;
-				$newSSD->subspecialty_id = $subspecId;
+				$newSSD->subspecialty_id = $subspecialtyId;
 				$newSSD->drug_id = $drugId;
 				if ($newSSD->save()) {
 					echo "success";
