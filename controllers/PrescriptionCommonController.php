@@ -247,7 +247,8 @@ class PrescriptionCommonController extends DefaultController
 			$this->redirect('/OphDrPrescription/admin/DrugSets');
 		} else {
 			// TODO: maybe more error handling need to be added here!!
-			throw new Exception("Unable to save drug set: " . print_r($drugset->getErrors(), true));
+			echo $this->renderPartial('//admin/_form_errors', array('errors' => $drugset->getErrors()));
+
 		}
 
 	}
