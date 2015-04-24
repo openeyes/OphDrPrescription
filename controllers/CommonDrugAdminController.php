@@ -21,6 +21,7 @@ class CommonDrugAdminController extends BaseAdminController
 
 		$admin->setCustomDeleteURL('/OphDrPrescription/admin/commondrugsdelete');
 		$admin->setCustomSaveURL('/OphDrPrescription/admin/commondrugsadd');
+		$admin->setModelDisplayName('Common Drugs List');
 		$admin->setFilterFields(
 			array(
 				array(
