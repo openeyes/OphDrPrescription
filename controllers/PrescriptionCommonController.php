@@ -192,5 +192,5 @@ class PrescriptionCommonController extends DefaultController
 		}
 
 	}
-	
+
 }
