@@ -46,9 +46,9 @@ class CommonDrugAdminController extends BaseAdminController
 			$admin->getSearch()->initSearch(array(
 					'filterid' =>
 						array(
-							'site_id' => Yii::app()->session['selected_site_id']
-						),
-					'subspecialty_id' => Firm::model()->findByPk(Yii::app()->session['selected_firm_id'])->serviceSubspecialtyAssignment->subspecialty_id
+							'site_id' => Yii::app()->session['selected_site_id'],
+							'subspecialty_id' => Firm::model()->findByPk(Yii::app()->session['selected_firm_id'])->serviceSubspecialtyAssignment->subspecialty_id
+						)
 				)
 			);
 		}
