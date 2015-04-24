@@ -139,7 +139,7 @@ class DrugSetAdminController extends BaseAdminController
 
 			$currentDrugRows = DrugSetItem::model()->findAll(new CDbCriteria(array('condition' => "drug_set_id = '" . $drugset->id . "'")));
 			foreach ($currentDrugRows as $currentDrugRow) {
-				DrugSetitemTaper::model()->deleteAll(new CDbCriteria(array('condition' => "item_id = '" . $currentDrugRow->id . "'")));
+				DrugSetItemTaper::model()->deleteAll(new CDbCriteria(array('condition' => "item_id = '" . $currentDrugRow->id . "'")));
 				$currentDrugRow->delete();
 			}
 
@@ -153,7 +153,7 @@ class DrugSetAdminController extends BaseAdminController
 					if (isset($item['taper'])) {
 						$tapers = array();
 						foreach ($item['taper'] as $taper) {
-							$taper_model = new DrugSetitemTaper();
+							$taper_model = new DrugSetItemTaper();
 							$taper_model->attributes = $taper;
 							$taper_model->item_id = $item_model->id;
 							$taper_model->save();
