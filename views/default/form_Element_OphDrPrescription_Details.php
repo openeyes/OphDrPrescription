@@ -17,7 +17,12 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
-<?php echo $form->hiddenInput($element, 'draft', 1)?>
+<?php
+// we need to separate the public and admin view
+if (is_a(Yii::app()->getController(), "DefaultController")) {
+	echo $form->hiddenInput($element, 'draft', 1);
+}
+?>
 <section class="element <?php echo $element->elementType->class_name?>"
 		 data-element-type-id="<?php echo $element->elementType->id ?>"
 		 data-element-type-class="<?php echo $element->elementType->class_name ?>"
@@ -36,11 +41,19 @@
 						</div>
 						<div class="field-row">
 							<?php
+							// we need to separate the public and admin view
+							if (is_a(Yii::app()->getController(), "DefaultController")) {
+								$searchListURL = $this->createUrl('DrugList');
+							} else {
+								$searchListURL = "/" . Yii::app()->getModule('OphDrPrescription')->id . "/" . Yii::app()->getModule('OphDrPrescription')->defaultController . "/DrugList";
+							}
+
+
 							$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
 								'name' => 'drug_id',
 								'id' => 'autocomplete_drug_id',
 								'source' => "js:function(request, response) {
-									$.getJSON('".$this->createUrl('DrugList')."', {
+									$.getJSON('" . $searchListURL . "', {
 										term : request.term,
 										type_id: $('#drug_type_id').val(),
 										preservative_free: ($('#preservative_free').is(':checked') ? '1' : ''),
@@ -73,28 +86,46 @@
 				</fieldset>
 			</div>
 		</div>
-		<div class="row field-row">
-			<div class="large-2 column">
-				<label for="drug_set_id">Add Standard Set:</label>
+		<?php
+		// we need to separate the public and admin view
+		if (is_a(Yii::app()->getController(), "DefaultController")) {
+			?>
+			<div class="row field-row">
+				<div class="large-2 column">
+					<label for="drug_set_id">Add Standard Set:</label>
+				</div>
+				<div class="large-3 column end">
+					<?php echo CHtml::dropDownList('drug_set_id', null,
+						CHtml::listData($element->drugSets(), 'id', 'name'), array('empty' => '-- Select --')); ?>
+				</div>
 			</div>
-			<div class="large-3 column end">
-				<?php echo CHtml::dropDownList('drug_set_id', null, CHtml::listData($element->drugSets(), 'id', 'name'), array('empty' => '-- Select --')); ?>
-			</div>
-		</div>
+		<?php
+		}
+		?>
 		<div class="row field-row">
 			<div class="large-2 column">
 				<div class="field-label">Other Actions</div>
 			</div>
 			<div class="large-10 column">
-				<?php if ($this->getPreviousPrescription($element->id)) { ?>
-					<button type="button" class="button small"
-							id="repeat_prescription" name="repeat_prescription">
-						Add Repeat Prescription
-					</button>
-				<?php } ?>
+				<?php
+				// we need to separate the public and admin view
+				if (is_a(Yii::app()->getController(), "DefaultController")) {
+					if ($this->getPreviousPrescription($element->id)) { ?>
+						<button type="button" class="button small"
+								id="repeat_prescription" name="repeat_prescription">
+							Add Repeat Prescription
+						</button>
+					<?php
+					}
+				}
+				?>
+
 				<button type="button" class="small"
 						id="clear_prescription" name="clear_prescription">
-					Clear Prescription</button>
+					Clear <?php if (is_a(Yii::app()->getController(), "DefaultController")) {
+						echo "Prescription";
+					} ?>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -120,223 +151,32 @@
 	</tbody>
 </table>
 
-<section class="element">
-	<div class="element-fields">
-		<?php echo $form->textArea($element, 'comments', array('rows' => 4)) ?>
-	</div>
-</section>
-
-
-<script type="text/javascript">
-// Disable currently prescribed drugs in dropdown
-$('#prescription_items input[name$="[drug_id]"]').each(function(index) {
-	var option = $('#common_drug_id option[value="' + $(this).val() + '"]');
-	if (option) {
-		option.data('used', true);
-	}
-});
-applyFilter();
-
-// Add selected common drug to prescription
-$('body').delegate('#common_drug_id', 'change', function() {
-	var selected = $(this).children('option:selected');
-	if (selected.val().length) {
-		addItem(selected.text(), selected.val());
-		$(this).val('');
-	}
-	return false;
-});
-
-// Add selected drug set to prescription
-$('body').delegate('#drug_set_id', 'change', function() {
-	var selected = $(this).children('option:selected');
-	if (selected.val().length) {
-		addSet(selected.val());
-		$(this).val('');
-	}
-	return false;
-});
-
-// Add repeat to prescription
-$('body').delegate('#repeat_prescription', 'click', function() {
-	addRepeat();
-	return false;
-});
-
-// Clear prescription
-$('body').delegate('#clear_prescription', 'click', function() {
-	$('#prescription_items tbody tr').remove();
-	$('#common_drug_id option').data('used', false);
-	applyFilter();
-	return false;
-});
-
-// Update drug route options for selected route
-$('body').delegate('select.drugRoute', 'change', function() {
-	var selected = $(this).children('option:selected');
-	if (selected.val().length) {
-		var options_td = $(this).parent().next();
-		var key = $(this).closest('tr').attr('data-key');
-		$.get(baseUrl+"/OphDrPrescription/Default/RouteOptions", { key: key, route_id: selected.val() }, function(data) {
-			options_td.html(data);
-		});
-	}
-	return false;
-});
-
-// Remove item from prescription
-$('#prescription_items').delegate('a.removeItem', 'click', function() {
-	var row =  $(this).closest('tr');
-	var drug_id = row.find('input[name$="[drug_id]"]').first().val();
-	var key = row.attr('data-key');
-	$('#prescription_items tr[data-key="'+key+'"]').remove();
-	decorateRows();
-	var option = $('#common_drug_id option[value="' + drug_id + '"]');
-	if (option) {
-		option.data('used', false);
-		applyFilter();
-	}
-	return false;
-});
-
-// Add taper to item
-$('#prescription_items').delegate('a.taperItem:not(.processing)', 'click', function() {
-	var row = $(this).closest('tr');
-	var key = row.attr('data-key');
-	var last_row = $('#prescription_items tr[data-key="'+key+'"]').last();
-	var taper_key = (last_row.attr('data-taper')) ? parseInt(last_row.attr('data-taper')) + 1 : 0;
-
-	// Clone item fields to create taper row
-	var dose_input = row.find('td.prescriptionItemDose input').first().clone();
-	dose_input.attr('name', dose_input.attr('name').replace(/\[dose\]/, "[taper]["+taper_key+"][dose]"));
-	dose_input.attr('id', dose_input.attr('id').replace(/_dose$/, "_taper_"+taper_key+"_dose"));
-	var frequency_input = row.find('td.prescriptionItemFrequencyId select').first().clone();
-	frequency_input.attr('name', frequency_input.attr('name').replace(/\[frequency_id\]/, "[taper]["+taper_key+"][frequency_id]"));
-	frequency_input.attr('id', frequency_input.attr('id').replace(/_frequency_id$/, "_taper_"+taper_key+"_frequency_id"));
-	frequency_input.val(row.find('td.prescriptionItemFrequencyId select').val());
-	var duration_input = row.find('td.prescriptionItemDurationId select').first().clone();
-	duration_input.attr('name', duration_input.attr('name').replace(/\[duration_id\]/, "[taper]["+taper_key+"][duration_id]"));
-	duration_input.attr('id', duration_input.attr('id').replace(/_duration_id$/, "_taper_"+taper_key+"_duration_id"));
-	duration_input.val(row.find('td.prescriptionItemDurationId select').val());
-
-	// Insert taper row
-	var odd_even = (row.hasClass('odd')) ? 'odd' : 'even';
-	var new_row = $('<tr data-key="'+key+'" data-taper="'+taper_key+'" class="prescription-tapier '+odd_even+'"></tr>');
-	new_row.append($('<td class="prescription-label"><span>then</span></td>'), $('<td></td>').append(dose_input), $('<td colspan="2"></td>'), $('<td></td>').append(frequency_input), $('<td></td>').append(duration_input), $('<td class="prescriptionItemActions"><a class="removeTaper"	href="#">Remove</a></td>'));
-	last_row.after(new_row);
-
-	return false;
-});
-
-// Remove taper from item
-$('#prescription_items').delegate('a.removeTaper', 'click', function() {
-	var row =  $(this).closest('tr');
-	row.remove();
-	return false;
-});
-
-// Apply selected drug filter
-$('body').delegate('.drugFilter', 'change', function() {
-	applyFilter();
-	return false;
-});
-
-// Add repeat to prescription
-function addRepeat()
-{
-	$.get(baseUrl+"/OphDrPrescription/Default/RepeatForm", { key: getNextKey(), patient_id: OE_patient_id }, function(data) {
-		$('#prescription_items').append(data);
-		decorateRows();
-		markUsed();
-		applyFilter();
-	});
+<?php
+// we need to separate the public and admin view
+if (is_a(Yii::app()->getController(), "DefaultController")) {
+	?>
+	<section class="element">
+		<div class="element-fields">
+			<?php echo $form->textArea($element, 'comments', array('rows' => 4)) ?>
+		</div>
+	</section>
+<?php
 }
+?>
 
-// Add set to prescription
-function addSet(set_id)
-{
-	$.get(baseUrl+"/OphDrPrescription/Default/SetForm", { key: getNextKey(), patient_id: OE_patient_id, set_id: set_id }, function(data) {
-		$('#prescription_items').append(data);
-		decorateRows();
-		markUsed();
-		applyFilter();
-	});
-}
+<?php
 
-// Add item to prescription
-function addItem(label, item_id)
-{
-	$.get(baseUrl+"/OphDrPrescription/Default/ItemForm", { key: getNextKey(), patient_id: OE_patient_id, drug_id: item_id }, function(data){
-		$('#prescription_items').append(data);
-		decorateRows();
-	});
-	var option = $('#common_drug_id option[value="' + item_id + '"]');
-	if (option) {
-		option.data('used', true);
-		applyFilter();
-	}
-}
+/*
+ * We need to decide which JS file need to be loaded regarding to the controller
+ * Unfortunatelly jsVars[] won't work from here because processJsVars function already called
+ */
 
-// Mark used common drugs
-function markUsed()
-{
-	$('#prescription_items input[name$="\[drug_id\]"]').each(function(index) {
-		var option = $('#common_drug_id option[value="' + $(this).val() + '"]');
-		if (option) {
-			option.data('used', true);
-		}
-	});
-}
+$modulePath = Yii::app()->assetManager->publish(Yii::getPathOfAlias('application.modules.OphDrPrescription.assets'));
 
-// Filter drug choices
-function applyFilter()
-{
-	var filter_type_id = $('#drug_type_id').val();
-	var filter_preservative_free = $('#preservative_free').is(':checked');
-	$('#common_drug_id option').each(function() {
-		var show = true;
-		var drug_id = $(this).val();
-		if (drug_id) {
-			if (filter_type_id && common_drug_metadata[drug_id].type_id != filter_type_id) {
-				show = false;
-			}
-			if (filter_preservative_free && common_drug_metadata[drug_id].preservative_free == '0') {
-				show = false;
-			}
-			if (show) {
-				$(this).removeAttr("disabled");
-			} else {
-				$(this).attr("disabled", "disabled");
-			}
-		}
-	});
-}
+Yii::app()->getClientScript()->registerScript('scr_controllerName',
+	"controllerName = '" . get_class(Yii::app()->getController()) . "';", CClientScript::POS_HEAD);
 
-// Fix odd/even classes on all rows
-function decorateRows()
-{
-	$('#prescription_items .prescriptionItem').each(function(i) {
-		if (i % 2) {
-			$(this).removeClass('even').addClass('odd');
-		} else {
-			$(this).removeClass('odd').addClass('even');
-		}
-		var key = $(this).attr('data-key');
-		$('#prescription_items .prescriptionTaper[data-key="'+key+'"]').each(function() {
-			if (i % 2) {
-				$(this).removeClass('even').addClass('odd');
-			} else {
-				$(this).removeClass('odd').addClass('even');
-			}
-		});
-	});
-}
+Yii::app()->clientScript->registerScriptFile($modulePath . "/js/defaultprescription.js", CClientScript::POS_END);
 
-// Get next key for adding rows
-function getNextKey()
-{
-	var last_item = $('#prescription_items .prescriptionItem').last();
-	return (last_item.attr('data-key')) ? parseInt(last_item.attr('data-key')) + 1 : 0;
-}
+?>
 
-</script>
