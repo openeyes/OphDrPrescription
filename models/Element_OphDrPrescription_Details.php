@@ -260,6 +260,7 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 	 */
 	public function updateItems($items)
 	{
+
 		if (!$this->id) {
 			throw new Exception("Cannot call updateItems on unsaved instance.");
 		}
@@ -298,6 +299,11 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
 			}
 			$item_model->frequency_id = $item['frequency_id'];
 			$item_model->duration_id = $item['duration_id'];
+			if (isset($item['continue_by_gp'])) {
+				$item_model->continue_by_gp = $item['continue_by_gp'];
+			} else {
+				$item_model->continue_by_gp = 0;
+			}
 			$item_model->save();
 
 			// Tapering

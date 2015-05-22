@@ -114,7 +114,15 @@ class PrescriptionCommonController extends DefaultController
 		if (is_a($source, 'OphDrPrescription_Item')) {
 
 			// Source is a prescription item, so we should clone it
-			foreach (array('drug_id', 'duration_id', 'frequency_id', 'dose', 'route_option_id', 'route_id') as $field) {
+			foreach (array(
+						 'drug_id',
+						 'duration_id',
+						 'frequency_id',
+						 'dose',
+						 'route_option_id',
+						 'route_id',
+						 'continue_by_gp'
+					 ) as $field) {
 				$item->$field = $source->$field;
 			}
 			if ($source->tapers) {
