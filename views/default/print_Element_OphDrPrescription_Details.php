@@ -54,10 +54,11 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 			<th class="prescriptionLabel">Prescription details</th>
 			<th>Dose</th>
 			<th>Route</th>
-			<th>Frequency</th>
+			<th>Freq.</th>
 			<th>Duration</th>
 			<th>Dispensed</th>
 			<th>Checked</th>
+			<th>Continued by GP</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -73,6 +74,7 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 			<td><?php echo $item->duration->name ?></td>
 			<td></td>
 			<td></td>
+			<td><?php echo ($item->continue_by_gp) ? 'Yes' : '--'; ?></td>
 		</tr>
 		<?php foreach ($item->tapers as $taper) {?>
 		<tr class="prescriptionTaper">
@@ -87,14 +89,6 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 		<?php	}
 }?>
 	</tbody>
-</table>
-<div class="spacer"></div>
-
-<table class="borders continued_by_gp_checkbox">
-	<tr>
-		<th>Continued by GP?</th>
-		<td>Yes <span class="checkbox">❑</span> / No <span class="checkbox">❑</span></td>
-	</tr>
 </table>
 <div class="spacer"></div>
 

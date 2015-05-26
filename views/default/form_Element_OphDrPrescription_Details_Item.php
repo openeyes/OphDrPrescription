@@ -47,6 +47,14 @@
 	<td class="prescriptionItemActions">
 		<a class="removeItem"	href="#">Remove</a>&nbsp;|&nbsp;<a class="taperItem"	href="#">+Taper</a>
 	</td>
+	<?php if (isset($patient)) { ?>
+		<td>
+			<?php
+			echo CHtml::checkBox('prescription_item[' . $key . '][continue_by_gp]',
+				($item->continue_by_gp == 1) ? true : false);
+			?>
+		</td>
+	<?php } ?>
 </tr>
 <?php
 	$count = 0;

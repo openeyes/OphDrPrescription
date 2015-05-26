@@ -142,6 +142,9 @@ if (is_a(Yii::app()->getController(), "DefaultController")) {
 		<th>Frequency</th>
 		<th>Duration</th>
 		<th></th>
+		<?php if (strpos($this->uniqueid, 'default')) { // we need to display this column on the front-end only?>
+			<th>Continued by GP</th>
+		<?php } ?>
 	</tr>
 	</thead>
 	<tbody>
