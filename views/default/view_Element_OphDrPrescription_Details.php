@@ -25,7 +25,7 @@
 			<th>Route</th>
 			<th>Frequency</th>
 			<th>Duration</th>
-			<th>Continued by GP</th>
+			<th>Continue by GP</th>
 		</tr>
 	</thead>
 	<tbody>
