@@ -20,34 +20,40 @@
 <?php $this->beginContent('//patient/event_container'); ?>
 
 	<?php
-		// Event actions
-		if ($this->checkPrintAccess()) {
-			$this->event_actions[] = EventAction::button('Print', 'print', null, array('id' => 'et_print', 'class'=>'button small'));
-		}
-	?>
+        // Event actions
+        if ($this->checkPrintAccess()) {
+            $this->event_actions[] = EventAction::button('Print', 'print', null, array('id' => 'et_print', 'class'=>'button small'));
+        }
+    ?>
 
 	<?php $this->renderPartial('//base/_messages'); ?>
 
-	<?php if ($this->event->delete_pending) {?>
+	<?php if ($this->event->delete_pending) {
+    ?>
 		<div class="alert-box alert with-icon">
 			This event is pending deletion and has been locked.
 		</div>
-	<?php } elseif (Element_OphDrPrescription_Details::model()->find('event_id=?',array($this->event->id))->draft) {?>
+	<?php 
+} elseif (Element_OphDrPrescription_Details::model()->find('event_id=?', array($this->event->id))->draft) {
+    ?>
 		<div class="alert-box alert with-icon">
 			This prescription is a draft and can still be edited
 		</div>
-	<?php }?>
+	<?php 
+}?>
 
 	<?php $this->renderOpenElements($this->action->id); ?>
 	<?php $this->renderOptionalElements($this->action->id); ?>
 
 	<script type="text/javascript">
 		<?php if (isset(Yii::app()->session['print_prescription'])) {
-			unset(Yii::app()->session['print_prescription']); ?>
+    unset(Yii::app()->session['print_prescription']);
+    ?>
 		$(document).ready(function() {
 			do_print_prescription();
 		});
-		<?php } ?>
+		<?php 
+} ?>
 	</script>
 
 <?php $this->endContent() ;?>

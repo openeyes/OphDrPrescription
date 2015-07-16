@@ -62,31 +62,50 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach ($element->items as $key => $item) {?>
+		<?php foreach ($element->items as $key => $item) {
+    ?>
 		<tr
-			class="prescriptionItem<?php if ($this->patient->hasDrugAllergy($item->drug_id)) {?> allergyWarning<?php }?>">
-			<td class="prescriptionLabel"><?php echo $item->drug->label; ?></td>
+			class="prescriptionItem<?php if ($this->patient->hasDrugAllergy($item->drug_id)) {
+    ?> allergyWarning<?php 
+}
+    ?>">
+			<td class="prescriptionLabel"><?php echo $item->drug->label;
+    ?></td>
 			<td><?php echo $item->dose ?></td>
 			<td><?php echo $item->route->name ?> <?php if ($item->route_option) {
-				echo ' ('.$item->route_option->name.')';
-			}?></td>
-			<td><?php if ($data['copy'] == 'patient') { echo $item->frequency->long_name; } else { echo $item->frequency->name; }?></td>
+    echo ' ('.$item->route_option->name.')';
+}
+    ?></td>
+			<td><?php if ($data['copy'] == 'patient') {
+    echo $item->frequency->long_name;
+} else {
+    echo $item->frequency->name;
+}
+    ?></td>
 			<td><?php echo $item->duration->name ?></td>
 			<td></td>
 			<td></td>
-			<td><?php echo ($item->continue_by_gp) ? 'Yes' : '--'; ?></td>
+			<td><?php echo ($item->continue_by_gp) ? 'Yes' : '--';
+    ?></td>
 		</tr>
-		<?php foreach ($item->tapers as $taper) {?>
+		<?php foreach ($item->tapers as $taper) {
+    ?>
 		<tr class="prescriptionTaper">
 			<td class="prescriptionLabel">then</td>
 			<td><?php echo $taper->dose ?></td>
 			<td>-</td>
-			<td><?php if ($data['copy'] == 'patient') { echo $taper->frequency->long_name; } else { echo $taper->frequency->name; }?></td>
+			<td><?php if ($data['copy'] == 'patient') {
+    echo $taper->frequency->long_name;
+} else {
+    echo $taper->frequency->name;
+}
+    ?></td>
 			<td><?php echo $taper->duration->name ?></td>
 			<td>-</td>
 			<td>-</td>
 		</tr>
-		<?php	}
+		<?php	
+}
 }?>
 	</tbody>
 </table>
@@ -146,6 +165,8 @@ $subspecialty = $firm->serviceSubspecialtyAssignment->subspecialty;
 	</tr>
 </table>
 
-<?php if (!$data['copy']) {?>
+<?php if (!$data['copy']) {
+    ?>
 	<p>Doctor's Signature:</p>
-<?php }?>
+<?php 
+}?>

@@ -19,7 +19,7 @@
 
 
 return array(
-	'import' => array(
-		'OphDrPrescriptionModule'
-	)
+    'import' => array(
+        'OphDrPrescriptionModule'
+    )
 );

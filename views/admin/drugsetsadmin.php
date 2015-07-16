@@ -21,20 +21,23 @@
 <?php
 $element = Element_OphDrPrescription_Details::model();
 $form = $this->beginWidget('BaseEventTypeCActiveForm', array(
-	'id' => 'prescription-create',
-	'action' => '/OphDrPrescription/PrescriptionCommon/SaveDrugSetAdmin',
-	'enableAjaxValidation' => false,
+    'id' => 'prescription-create',
+    'action' => '/OphDrPrescription/PrescriptionCommon/SaveDrugSetAdmin',
+    'enableAjaxValidation' => false,
 ));
 
 ?>
 
 <div class="box admin">
 	<h2>Edit Drug Sets</h2>
-	<?php if (Yii::app()->user->hasFlash('info.save_message')) { ?>
+	<?php if (Yii::app()->user->hasFlash('info.save_message')) {
+    ?>
 		<div class="alert-box with-icon warning">
-			<?php echo Yii::app()->user->getFlash('info.save_message'); ?>
+			<?php echo Yii::app()->user->getFlash('info.save_message');
+    ?>
 		</div>
-	<?php } ?>
+	<?php 
+} ?>
 	<div class="row field-row">
 		<div class="large-4 column"><h3>Select a set:</h3></div>
 	</div>
@@ -49,12 +52,12 @@ $form = $this->beginWidget('BaseEventTypeCActiveForm', array(
 					<th>Action</th>
 				</tr>
 			<?php
-			$currentDrugSets = $element->drugSetsAll();
-			foreach ($currentDrugSets as $drugSet) {
-				echo '<tr></tr>';
-			}
-			echo CHtml::dropDownList('drug_set_id', null, CHtml::listData($element->drugSetsAll(), 'id', 'name'),
-				array('empty' => '-- Select this to add new --')); ?>
+            $currentDrugSets = $element->drugSetsAll();
+            foreach ($currentDrugSets as $drugSet) {
+                echo '<tr></tr>';
+            }
+            echo CHtml::dropDownList('drug_set_id', null, CHtml::listData($element->drugSetsAll(), 'id', 'name'),
+                array('empty' => '-- Select this to add new --')); ?>
 			</table>
 		</div>
 		<div class="large-6 column end"></div>
@@ -71,20 +74,20 @@ $form = $this->beginWidget('BaseEventTypeCActiveForm', array(
 		<div class="large-2 column"><label for="site_id">Subspeciality:</label></div>
 		<div class="large-4 column end">
 			<?php
-			// $selectedsubspecialty
-			echo CHtml::dropDownList('subspecialty_id', "",
-				CHtml::listData(Subspecialty::model()->findAll(), 'id', 'name'), array("empty" => "-- Select --"));
-			?>
+            // $selectedsubspecialty
+            echo CHtml::dropDownList('subspecialty_id', "",
+                CHtml::listData(Subspecialty::model()->findAll(), 'id', 'name'), array("empty" => "-- Select --"));
+            ?>
 		</div>
 	</div>
 	<section class="element" id="drugsetdata">
 		<?php
 
-		$this->renderPartial("/default/form_Element_OphDrPrescription_Details",
-			array("form" => $form, "element" => $element));
+        $this->renderPartial("/default/form_Element_OphDrPrescription_Details",
+            array("form" => $form, "element" => $element));
 
-		//$this->displayErrors($errors, true);
-		?>
+        //$this->displayErrors($errors, true);
+        ?>
 		<div class="box-header">
 			<div class="box-actions">
 				<button class="small" type="submit" id="save_set_data" name="save_set_data">

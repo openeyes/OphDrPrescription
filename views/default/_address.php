@@ -17,14 +17,16 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
-<?php if ($site) {?>
+<?php if ($site) {
+    ?>
 	<div class="from-address">
 		<?php
-		echo $site->getLetterAddress(array(
-			'include_name' => true,
-			'delimiter' => '<br />',
-			'include_telephone' => true,
-			'include_fax' => true,
-		))?>
+        echo $site->getLetterAddress(array(
+            'include_name' => true,
+            'delimiter' => '<br />',
+            'include_telephone' => true,
+            'include_fax' => true,
+        ))?>
 	</div>
-<?php }?>
+<?php 
+}?>
