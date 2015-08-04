@@ -357,4 +357,23 @@ class Element_OphDrPrescription_Details extends BaseEventTypeElement
     {
         return 'print_'.$this->getDefaultView();
     }
+
+
+    public function prescriptionExistsForPatientAndEpisodeToday($patientId, $firmId, $episodeId)
+    {
+        $count = $this->countBySql('select count(et_ophdrprescription_details.id), episode.id from et_ophdrprescription_details
+                                      left join event on event.id = et_ophdrprescription_details.event_id
+                                      left join episode on episode.id = event.episode_id
+                                    where et_ophdrprescription_details.created_date > DATE_SUB(NOW(),INTERVAL 1 DAY)
+                                      and episode.id = :episode
+                                      and episode.firm_id = :firm
+                                      and episode.patient_id = :patient',
+            array(
+                'episode' => $episodeId,
+                'firm' => $firmId,
+                'patient' => $patientId
+            ));
+
+        return (int)$count > 0;
+    }
 }
