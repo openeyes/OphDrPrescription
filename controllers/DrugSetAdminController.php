@@ -145,7 +145,6 @@ class DrugSetAdminController extends BaseAdminController
 
 			if (isset($prescriptionItem) && is_array($prescriptionItem)) {
 				foreach ($prescriptionItem as $item) {
-					var_dump($item);
 					$item_model = new DrugSetItem();
 					$item_model->drug_set_id = $drugset->id;
 					$item_model->attributes = $item;
