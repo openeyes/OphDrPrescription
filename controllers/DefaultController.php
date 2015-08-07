@@ -191,7 +191,7 @@ class DefaultController extends BaseEventTypeController
 			Yii::app()->user->setFlash('info.prescription_allergy', $this->patient->getAllergiesString());
 		}
 		else {
-			Yii::app()->user->setFlash('warning.prescription_allergy', $this->patient->getAllergiesString());
+			Yii::app()->user->setFlash('patient.prescription_allergy', $this->patient->getAllergiesString());
 		}
 	}
 

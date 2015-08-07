@@ -58,7 +58,7 @@ class OphDrPrescription_Item extends BaseActiveRecordVersioned
 		return array(
 				array('drug_id, dose, route_id, frequency_id, duration_id', 'required'),
 				array('route_option_id', 'validateRouteOption'),
-				array('route_option_id', 'safe'),
+			array('route_option_id, continue_by_gp', 'safe'),
 				//array('', 'required'),
 				// The following rule is used by search().
 				// Please remove those attributes that should not be searched.
@@ -113,7 +113,8 @@ class OphDrPrescription_Item extends BaseActiveRecordVersioned
 				'duration_id' => 'Duration',
 				'frequency_id' => 'Frequency',
 				'route_id' => 'Route',
-				'route_option_id' => 'Options'
+			'route_option_id' => 'Options',
+			'continue_by_gp' => 'Continue by GP'
 		);
 	}
 

@@ -25,6 +25,7 @@
 			<th>Route</th>
 			<th>Frequency</th>
 			<th>Duration</th>
+			<th>Continue by GP</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -35,6 +36,7 @@
 			<td><?php echo $item->route->name ?><?php if ($item->route_option) { echo ' ('.$item->route_option->name.')'; } ?></td>
 			<td><?php echo $item->frequency->name ?></td>
 			<td><?php echo $item->duration->name ?></td>
+			<td><?php echo ($item->continue_by_gp) ? 'Yes' : 'No'; ?></td>
 		</tr>
 		<?php foreach ($item->tapers as $taper) { ?>
 		<tr class="prescription-tapier <?php echo (($key % 2) == 0) ? 'even' : 'odd'; ?>">
