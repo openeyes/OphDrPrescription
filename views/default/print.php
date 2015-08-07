@@ -18,11 +18,13 @@
  */
 ?>
 <div class="print-form-div">
-	<?php if (@$copy) {?>
+	<?php if (@$copy) {
+    ?>
 		<div class="watermark">
 			<img src="<?= $this->assetPath . '/img/copy_for_'.$copy.'.png' ?>"/>
 		</div>
-	<?php }?>
+	<?php 
+}?>
 	<div class="banner clearfix">
 		<div class="letter-seal">
 			<img src="<?php echo Yii::app()->assetManager->createUrl('img/_print/letterhead_seal.jpg')?>" alt="letterhead_seal" width="80" />
@@ -31,6 +33,6 @@
 			<img src="<?php echo Yii::app()->assetManager->createUrl('img/_print/letterhead_Moorfields_NHS.jpg')?>" alt="letterhead_Moorfields_NHS" width="350" />
 		</div>
 	</div>
-	<?php $this->renderPartial('_address',array('site' => $this->site))?>
+	<?php $this->renderPartial('_address', array('site' => $this->site))?>
 	<?php $this->renderOpenElements($this->action->id, null, array('copy' => @$copy)); ?>
 </div>

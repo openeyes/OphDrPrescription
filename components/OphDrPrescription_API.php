@@ -19,26 +19,26 @@
 
 class OphDrPrescription_API extends BaseAPI
 {
-	/**
-	 * get the prescription letter text for the latest prescription in the episode for the patient
-	 *
-	 * @param Patient $patient
-	 * @param Episode $episode
-	 * @return string
-	 */
-	public function getLetterPrescription($patient)
-	{
-		if ($episode = $patient->getEpisodeForCurrentSubspecialty()) {
-			if ($details = $this->getElementForLatestEventInEpisode($episode, 'Element_OphDrPrescription_Details')) {
-				return $details->getLetterText();
-			}
-		}
-	}
+    /**
+     * get the prescription letter text for the latest prescription in the episode for the patient
+     *
+     * @param Patient $patient
+     * @param Episode $episode
+     * @return string
+     */
+    public function getLetterPrescription($patient)
+    {
+        if ($episode = $patient->getEpisodeForCurrentSubspecialty()) {
+            if ($details = $this->getElementForLatestEventInEpisode($episode, 'Element_OphDrPrescription_Details')) {
+                return $details->getLetterText();
+            }
+        }
+    }
 
-	public function canUpdate($event_id)
-	{
-		$details = Element_OphDrPrescription_Details::model()->find('event_id=?',array($event_id));
+    public function canUpdate($event_id)
+    {
+        $details = Element_OphDrPrescription_Details::model()->find('event_id=?', array($event_id));
 
-		return $details->isEditable();
-	}
+        return $details->isEditable();
+    }
 }
