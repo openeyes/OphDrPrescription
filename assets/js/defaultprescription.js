@@ -264,8 +264,6 @@ $(document).ready(function() {
     if(window.location.href.indexOf("/update/") > -1) return;
 
     var error_count = $('div.errorlink').length;
-
-
     var today = $.datepicker.formatDate('dd-M-yy', new Date());
     var show_warning = false;
     var ol_list = $("body").find("ol.events");
@@ -299,7 +297,7 @@ $(document).ready(function() {
         })
     })
 
-    if(show_warning && error_count > 0)
+    if(show_warning && error_count == 0)
     {
         var warning_message = 'Prescriptions have already been created for this patient today.';
         if(prescription_count == 1)
