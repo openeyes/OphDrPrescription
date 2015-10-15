@@ -263,7 +263,7 @@ function getNextKey() {
 $(document).ready(function() {
     if(window.location.href.indexOf("/update/") > -1) return;
 
-    var error_count = $('div.errorlink').length;
+    var error_count = $('a.errorlink').length;
     var today = $.datepicker.formatDate('dd-M-yy', new Date());
     var show_warning = false;
     var ol_list = $("body").find("ol.events");
