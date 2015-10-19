@@ -317,7 +317,7 @@ $(document).ready(function() {
             '<input class="warning small" id="prescription-no" type="submit" name="yt0" value="No" onclick="goBack()">' +
             '</div>';
 
-        var blackout_box = '<div id="blackout-box" style="position:absolute;top:0;left:0;width:100%;height:100%;background-color:black;opacity:0.6;z-index:10000"><div style="margin:150px auto;width:450px">';
+        var blackout_box = '<div id="blackout-box" style="position:fixed;top:0;left:0;width:100%;height:100%;background-color:black;opacity:0.6;z-index:10000">';
 
 
         $(dialog_msg).prependTo("body");
