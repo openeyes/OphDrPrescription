@@ -103,7 +103,7 @@ $('#prescription_items').delegate('a.taperItem:not(.processing)', 'click', funct
     // Insert taper row
     var odd_even = (row.hasClass('odd')) ? 'odd' : 'even';
     var new_row = $('<tr data-key="' + key + '" data-taper="' + taper_key + '" class="prescription-tapier ' + odd_even + '"></tr>');
-    new_row.append($('<td class="prescription-label"><span>then</span></td>'), $('<td></td>').append(dose_input), $('<td colspan="2"></td>'), $('<td></td>').append(frequency_input), $('<td></td>').append(duration_input), $('<td class="prescriptionItemActions"><a class="removeTaper"	href="#">Remove</a></td>'));
+    new_row.append($('<td class="prescription-label"><span>then</span></td>'), $('<td></td>').append(dose_input), $('<td colspan="2"></td>'), $('<td></td>').append(frequency_input), $('<td></td>').append(duration_input), $('<td class="prescriptionItemActions"><a class="removeTaper"  href="#">Remove</a></td>'));
     last_row.after(new_row);
 
     return false;
@@ -257,4 +257,91 @@ function getNextKey() {
     var last_item = $('#prescription_items .prescriptionItem').last();
     return (last_item.attr('data-key')) ? parseInt(last_item.attr('data-key')) + 1 : 0;
 }
+
+
+// Check for existing prescriptions for today - warn if creating only
+$(document).ready(function() {
+    if(window.location.href.indexOf("/update/") > -1) return;
+
+    var error_count = $('a.errorlink').length;
+    var today = $.datepicker.formatDate('dd-M-yy', new Date());
+    var show_warning = false;
+    var ol_list = $("body").find("ol.events");
+    var prescription_count = 0;
+    ol_list.each(function(idx, ol)
+    {
+        var li_list = $(ol).find("li");
+        li_list.each(function(idx, li)
+        {
+
+            if($(li).html().indexOf("OphDrPrescription/default/view") > 0)
+            {
+                var p_day =  $(li).find("span.day").first().html();
+
+                if(p_day.length < 2)
+                {
+                    p_day = '0' + p_day;
+                }
+                var prescription_date =
+                    p_day + '-'
+                    + $(li).find("span.mth").first().html() + '-'
+                    + $(li).find("span.yr").html();
+
+                if (today == prescription_date)
+                {
+                    show_warning = true;
+                    prescription_count += 1;
+
+                }
+            }
+        })
+    })
+
+    if(show_warning && error_count == 0)
+    {
+        var warning_message = 'Prescriptions have already been created for this patient today.';
+        if(prescription_count == 1)
+        {
+            warning_message = 'A Prescription has already been created for this patient today.';
+        }
+
+
+        var dialog_msg = '<div class="ui-dialog ui-widget ui-widget-content ui-corner-all dialog" id="dialog-msg" tabindex="-1" role="dialog" aria-labelledby="ui-id-1" style="outline: 0px; z-index: 10002; height: auto; width: 600px; top: 314px; left: 500px; display: block;">' +
+            '<div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">' +
+            '<span id="ui-id-1" class="ui-dialog-title">Confirm Prescription</span>' +
+            '</div><div id="site-and-firm-dialog" class="ui-dialog-content ui-widget-content" scrolltop="0" scrollleft="0" style="display: block; width: auto; min-height: 0px; height: auto;">' +
+            '<div class="alert-box alert with-icon"> <strong>WARNING: ' +  warning_message + ' </strong></div>' +
+            '<p>Do you want to continue with a new prescription?</p>' +
+            '<div style = "margin-top:20px; float:right">'+
+            '<input class="secondary small" id="prescription-yes" type="submit" name="yt0" style = "margin-right:10px" value="Yes" onclick="hide_dialog()">' +
+            '<input class="warning small" id="prescription-no" type="submit" name="yt0" value="No" onclick="goBack()">' +
+            '</div>';
+
+        var blackout_box = '<div id="blackout-box" style="position:fixed;top:0;left:0;width:100%;height:100%;background-color:black;opacity:0.6;z-index:10000">';
+
+
+        $(dialog_msg).prependTo("body");
+        $(blackout_box).prependTo("body");
+        $('div#blackout_box').css.opacity = 0.6;
+        $("input#prescription-no").focus();
+        $("input#prescription-yes").keyup(function (e) {
+            hide_dialog();
+        });
+    }
+
+});
+
+
+function hide_dialog()
+{
+    $('#blackout-box').hide();
+    $('#dialog-msg').hide();
+
+}
+
+function goBack()
+{
+    window.history.back();
+}
+
 
