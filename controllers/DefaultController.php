@@ -215,7 +215,7 @@ class DefaultController extends BaseEventTypeController
 			}
 			$criteria->order = 'name';
 			// we don't need 'select *' here
-			$criteria->select = 'id, tallman';
+			$criteria->select = 'id, tallman, preservative_free';
 			$criteria->params = $params;
 
 			$drugs = Drug::model()->active()->findAll($criteria);
