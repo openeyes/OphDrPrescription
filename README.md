@@ -1,6 +1,5 @@
-OphDrPrescription
-=================
+## THIS REPOSITORY IS NO LONGER IN USE
 
-This event is for issuing prescriptions.
+As of Openeyes release 1.12.1, the OphTrLaser module has been merged into the core [openeyes](https://github.com/openeyes/openeyes) repository.
 
-Initial release version was 1.0
+This repository is kept for historic purposes only
